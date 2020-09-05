@@ -62,14 +62,14 @@ func (g *gridImpl) SetMark(p Position, m player.Mark) error {
 	return nil
 }
 
-func (g *gridImpl) PositionRows() []PositionRow {
+func (g *gridImpl) Rows() []Row {
 	p := func(x, y int) Position {
 		return Position{
 			X: x,
 			Y: y,
 		}
 	}
-	return []PositionRow{
+	return []Row{
 		// Horizontal
 		{p(0, 0), p(1, 0), p(2, 0)},
 		{p(0, 1), p(1, 1), p(2, 1)},
@@ -84,19 +84,4 @@ func (g *gridImpl) PositionRows() []PositionRow {
 		{p(0, 0), p(1, 1), p(2, 2)},
 		{p(0, 2), p(1, 1), p(2, 1)},
 	}
-}
-
-func (g *gridImpl) SpaceRows() []SpaceRow {
-	var rows []SpaceRow
-	for _, posRow := range g.PositionRows() {
-		rows = append(
-			rows,
-			SpaceRow{
-				g.spaces[posRow[0].X][posRow[0].Y],
-				g.spaces[posRow[1].X][posRow[1].Y],
-				g.spaces[posRow[2].X][posRow[2].Y],
-			},
-		)
-	}
-	return rows
 }

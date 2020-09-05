@@ -10,5 +10,5 @@ type Checker interface {
 }
 
 type RowChecker interface {
-	Winner(grid.SpaceRow) *player.Mark
+	Winner(grid.Row) *player.Mark
 }

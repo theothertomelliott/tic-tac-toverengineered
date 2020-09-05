@@ -85,9 +85,9 @@ func TestCanOnlyMarkSpaceOnce(t *testing.T) {
 	}
 }
 
-func TestSpaceRows(t *testing.T) {
+func TestRows(t *testing.T) {
 	g := grid.NewInMemory()
-	sr := g.SpaceRows()
+	sr := g.Rows()
 	if len(sr) != 8 {
 		t.Errorf("expected 8 rows, got %d", len(sr))
 	}

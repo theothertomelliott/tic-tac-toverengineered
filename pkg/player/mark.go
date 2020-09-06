@@ -7,3 +7,20 @@ const (
 	X Mark = iota
 	O
 )
+
+func (m *Mark) String() string {
+	if m == nil {
+		return "nil"
+	}
+	if *m == X {
+		return "X"
+	}
+	if *m == O {
+		return "O"
+	}
+	return ""
+}
+
+func MarkToPointer(m Mark) *Mark {
+	return &m
+}

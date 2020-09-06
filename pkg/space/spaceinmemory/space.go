@@ -11,6 +11,12 @@ func New() space.Space {
 	return &Space{}
 }
 
+func NewWithMark(m *player.Mark) space.Space {
+	return &Space{
+		mark: m,
+	}
+}
+
 // Space implements the Space interface in memory
 type Space struct {
 	mark *player.Mark

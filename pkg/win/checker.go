@@ -5,5 +5,5 @@ import (
 )
 
 type Checker interface {
-	Winner() *player.Mark
+	Winner() (*player.Mark, error)
 }

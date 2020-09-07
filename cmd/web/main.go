@@ -7,12 +7,15 @@ import (
 	"net/http"
 	"text/template"
 
+	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+	r := mux.NewRouter()
+	r.HandleFunc("/{game}", func(w http.ResponseWriter, req *http.Request) {
+		gameID := game.ID(mux.Vars(req)["game"])
 		t, err := template.New("webpage").Parse(tmpl)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -20,19 +23,22 @@ func main() {
 		}
 
 		data := struct {
+			Game       game.ID
 			NextPlayer player.Mark
 			Winner     *player.Mark
 			Grid       [][]*player.Mark
-		}{}
-		if err := apiGet("http://localhost:8081/mygame/grid", &data.Grid); err != nil {
+		}{
+			Game: gameID,
+		}
+		if err := apiGet("http://localhost:8081/%v/grid", gameID, &data.Grid); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := apiGet("http://localhost:8081/mygame/player/current", &data.NextPlayer); err != nil {
+		if err := apiGet("http://localhost:8081/%v/player/current", gameID, &data.NextPlayer); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := apiGet("http://localhost:8081/mygame/winner", &data.Winner); err != nil {
+		if err := apiGet("http://localhost:8081/%v/winner", gameID, &data.Winner); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -43,7 +49,8 @@ func main() {
 			return
 		}
 	})
-	mux.HandleFunc("/play", func(w http.ResponseWriter, req *http.Request) {
+	r.HandleFunc("/{game}/play", func(w http.ResponseWriter, req *http.Request) {
+		gameID := game.ID(mux.Vars(req)["game"])
 		playerParams, ok := req.URL.Query()["player"]
 		if !ok || len(playerParams) == 0 {
 			http.Error(w, "player is required", http.StatusInternalServerError)
@@ -55,23 +62,29 @@ func main() {
 			return
 		}
 
-		resp, err := http.Get(fmt.Sprintf("http://localhost:8081/mygame/play?player=%v&pos=%v", playerParams[0], posParams[0]))
+		resp, err := http.Get(fmt.Sprintf("http://localhost:8081/%v/play?player=%v&pos=%v", gameID, playerParams[0], posParams[0]))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		if resp.StatusCode != http.StatusOK {
-			http.Error(w, resp.Status, http.StatusInternalServerError)
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			var msg string = string(body)
+			if err != nil {
+				msg = err.Error()
+			}
+			http.Error(w, msg, http.StatusInternalServerError)
 			return
 		}
-		http.Redirect(w, req, "/", http.StatusFound)
+		http.Redirect(w, req, fmt.Sprintf("/%v", gameID), http.StatusFound)
 	})
 
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":8080", r)
 }
 
-func apiGet(url string, out interface{}) error {
-	resp, err := http.Get(url)
+func apiGet(urlFmt string, g game.ID, out interface{}) error {
+	resp, err := http.Get(fmt.Sprintf(urlFmt, g))
 	if err != nil {
 		return err
 	}
@@ -91,7 +104,7 @@ const tmpl = `
 	<script language="javascript">
 		function play(p,x,y){
 			{{if not .Winner}}
-			location.href = "/play?player=" + p + "&pos={\"X\":" + x + ",\"Y\":" + y + "}";
+			location.href = "/{{.Game}}/play?player=" + p + "&pos={\"X\":" + x + ",\"Y\":" + y + "}";
 			{{end}}
 		}
 	</script>

@@ -1,6 +1,7 @@
 package inmemoryturns
 
 import (
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
 )
@@ -8,23 +9,32 @@ import (
 // NewCurrentTurn creates an in-memory instance of turn.Current
 func NewCurrentTurn() turn.Current {
 	return &current{
-		mark: player.X,
+		mark: make(map[game.ID]player.Mark),
 	}
 }
 
 type current struct {
-	mark player.Mark
+	mark map[game.ID]player.Mark
 }
 
-func (c *current) Player() (player.Mark, error) {
-	return c.mark, nil
+func (c *current) Player(g game.ID) (player.Mark, error) {
+	m, exists := c.mark[g]
+	if !exists {
+		m = player.X
+		c.mark[g] = m
+	}
+	return m, nil
 }
 
-func (c *current) Next() error {
-	if c.mark == player.X {
-		c.mark = player.O
+func (c *current) Next(g game.ID) error {
+	prev, err := c.Player(g)
+	if err != nil {
+		return err
+	}
+	if prev == player.X {
+		c.mark[g] = player.O
 		return nil
 	}
-	c.mark = player.X
+	c.mark[g] = player.X
 	return nil
 }

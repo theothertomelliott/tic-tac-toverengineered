@@ -3,6 +3,7 @@ package gridchecker
 import (
 	"fmt"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win"
@@ -19,12 +20,12 @@ type checker struct {
 	grid grid.Grid
 }
 
-func (c *checker) Winner() (*player.Mark, error) {
+func (c *checker) Winner(game game.ID) (*player.Mark, error) {
 	rows := c.grid.Rows()
 	for _, row := range rows {
 		var markCounts = make(map[player.Mark]int)
 		for _, pos := range row {
-			m, err := c.grid.Mark(pos)
+			m, err := c.grid.Mark(game, pos)
 			if err != nil {
 				return nil, fmt.Errorf("%v: %w", pos, err)
 			}

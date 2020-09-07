@@ -3,11 +3,14 @@ package grid_test
 import (
 	"testing"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/spaceinmemory"
 )
+
+const testID = game.ID("test")
 
 // TestNewErrors verifies that grids can only be created
 // with a 3x3 array of spaces.
@@ -65,8 +68,8 @@ func TestNewErrors(t *testing.T) {
 func TestMarkSpace(t *testing.T) {
 	g := grid.NewInMemory()
 	pos := grid.Position{X: 0, Y: 0}
-	g.SetMark(pos, player.X)
-	gotMark, err := g.Mark(pos)
+	g.SetMark(testID, pos, player.X)
+	gotMark, err := g.Mark(testID, pos)
 	if err != nil {
 		t.Error(err)
 	}
@@ -77,10 +80,10 @@ func TestMarkSpace(t *testing.T) {
 func TestCanOnlyMarkSpaceOnce(t *testing.T) {
 	g := grid.NewInMemory()
 	pos := grid.Position{X: 0, Y: 0}
-	if err := g.SetMark(pos, player.X); err != nil {
+	if err := g.SetMark(testID, pos, player.X); err != nil {
 		t.Error(err)
 	}
-	if err := g.SetMark(pos, player.X); err == nil {
+	if err := g.SetMark(testID, pos, player.X); err == nil {
 		t.Error("Expected an error when attempting to mark a space again")
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
@@ -11,6 +12,8 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
 )
+
+const testID = game.ID("test")
 
 func TestControllerAppliesMark(t *testing.T) {
 	g := grid.NewInMemory()
@@ -22,10 +25,10 @@ func TestControllerAppliesMark(t *testing.T) {
 	pos := grid.Position{X: 0, Y: 0}
 
 	// X goes first
-	if err := c.TakeTurn(player.X, pos); err != nil {
+	if err := c.TakeTurn(testID, player.X, pos); err != nil {
 		t.Fatal(err)
 	}
-	m, err := g.Mark(pos)
+	m, err := g.Mark(testID, pos)
 	if err != nil {
 		t.Error(err)
 	}
@@ -45,17 +48,17 @@ func TestControllerTurns(t *testing.T) {
 		gridchecker.New(g),
 	)
 	// X goes first
-	if err := c.TakeTurn(player.X, grid.Position{X: 0, Y: 0}); err != nil {
+	if err := c.TakeTurn(testID, player.X, grid.Position{X: 0, Y: 0}); err != nil {
 		t.Fatal(err)
 	}
 
 	// X cannot go again
-	if err := c.TakeTurn(player.X, grid.Position{X: 0, Y: 0}); err == nil {
+	if err := c.TakeTurn(testID, player.X, grid.Position{X: 0, Y: 0}); err == nil {
 		t.Fatal("expected an error")
 	}
 
 	// O goes second
-	if err := c.TakeTurn(player.O, grid.Position{X: 1, Y: 0}); err != nil {
+	if err := c.TakeTurn(testID, player.O, grid.Position{X: 1, Y: 0}); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -63,11 +66,11 @@ func TestControllerTurns(t *testing.T) {
 func TestCannotPlayAfterWin(t *testing.T) {
 	x := func() space.Space {
 		m := player.X
-		return spaceinmemory.NewWithMark(&m)
+		return spaceinmemory.NewWithMark(testID, &m)
 	}
 	o := func() space.Space {
 		m := player.O
-		return spaceinmemory.NewWithMark(&m)
+		return spaceinmemory.NewWithMark(testID, &m)
 	}
 	g, _ := grid.New([][]space.Space{
 		{x(), x(), o()},
@@ -81,11 +84,11 @@ func TestCannotPlayAfterWin(t *testing.T) {
 		gridchecker.New(g),
 	)
 	// X cannot play
-	if err := c.TakeTurn(player.X, grid.Position{X: 0, Y: 0}); err == nil {
+	if err := c.TakeTurn(testID, player.X, grid.Position{X: 0, Y: 0}); err == nil {
 		t.Fatal("expected an error")
 	}
 	// O cannot play
-	if err := c.TakeTurn(player.O, grid.Position{X: 0, Y: 0}); err == nil {
+	if err := c.TakeTurn(testID, player.O, grid.Position{X: 0, Y: 0}); err == nil {
 		t.Fatal("expected an error")
 	}
 }

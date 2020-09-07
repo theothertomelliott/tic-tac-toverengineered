@@ -24,15 +24,15 @@ func main() {
 			Winner     *player.Mark
 			Grid       [][]*player.Mark
 		}{}
-		if err := apiGet("http://localhost:8081/grid", &data.Grid); err != nil {
+		if err := apiGet("http://localhost:8081/mygame/grid", &data.Grid); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := apiGet("http://localhost:8081/player/current", &data.NextPlayer); err != nil {
+		if err := apiGet("http://localhost:8081/mygame/player/current", &data.NextPlayer); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := apiGet("http://localhost:8081/winner", &data.Winner); err != nil {
+		if err := apiGet("http://localhost:8081/mygame/winner", &data.Winner); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -55,7 +55,7 @@ func main() {
 			return
 		}
 
-		resp, err := http.Get(fmt.Sprintf("http://localhost:8081/play?player=%v&pos=%v", playerParams[0], posParams[0]))
+		resp, err := http.Get(fmt.Sprintf("http://localhost:8081/mygame/play?player=%v&pos=%v", playerParams[0], posParams[0]))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

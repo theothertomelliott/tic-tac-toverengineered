@@ -1,13 +1,14 @@
 package grid
 
 import (
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 
 // Grid provides functions to interact with a grid
 type Grid interface {
-	Mark(Position) (*player.Mark, error)
-	SetMark(Position, player.Mark) error
+	Mark(game.ID, Position) (*player.Mark, error)
+	SetMark(game.ID, Position, player.Mark) error
 	Rows() []Row
 }
 

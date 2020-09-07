@@ -3,6 +3,7 @@ package grid
 import (
 	"fmt"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/spaceinmemory"
@@ -42,21 +43,21 @@ type gridImpl struct {
 	spaces [][]space.Space
 }
 
-func (g *gridImpl) Mark(p Position) (*player.Mark, error) {
-	m, err := g.spaces[p.X][p.Y].Mark()
+func (g *gridImpl) Mark(game game.ID, p Position) (*player.Mark, error) {
+	m, err := g.spaces[p.X][p.Y].Mark(game)
 	if err != nil {
 		return nil, fmt.Errorf("%v: %w", p, err)
 	}
 	return m, nil
 }
 
-func (g *gridImpl) SetMark(p Position, m player.Mark) error {
-	if existing, err := g.Mark(p); err != nil {
+func (g *gridImpl) SetMark(game game.ID, p Position, m player.Mark) error {
+	if existing, err := g.Mark(game, p); err != nil {
 		return fmt.Errorf("could not confirm space was not marked: %w", err)
 	} else if existing != nil {
 		return fmt.Errorf("%v: space has already been marked", p)
 	}
-	if err := g.spaces[p.X][p.Y].SetMark(m); err != nil {
+	if err := g.spaces[p.X][p.Y].SetMark(game, m); err != nil {
 		return fmt.Errorf("%v: %w", p, err)
 	}
 	return nil

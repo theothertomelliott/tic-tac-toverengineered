@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
@@ -29,13 +31,15 @@ type Server struct {
 	checker win.Checker
 }
 
-func (s *Server) CreateRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("/grid", func(w http.ResponseWriter, req *http.Request) {
+func (s *Server) CreateRoutes(m *http.ServeMux) {
+	r := mux.NewRouter()
+	r.HandleFunc("/{game}/grid", func(w http.ResponseWriter, req *http.Request) {
+		gameID := game.ID(mux.Vars(req)["game"])
 		var out [][]*player.Mark
 		for i := 0; i < 3; i++ {
 			var row []*player.Mark
 			for j := 0; j < 3; j++ {
-				m, err := s.grid.Mark(grid.Position{X: i, Y: j})
+				m, err := s.grid.Mark(gameID, grid.Position{X: i, Y: j})
 				if err != nil {
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
@@ -46,23 +50,26 @@ func (s *Server) CreateRoutes(mux *http.ServeMux) {
 		}
 		jsonResponse(w, out)
 	})
-	mux.HandleFunc("/player/current", func(w http.ResponseWriter, req *http.Request) {
-		current, err := s.turn.NextPlayer()
+	r.HandleFunc("/{game}/player/current", func(w http.ResponseWriter, req *http.Request) {
+		gameID := game.ID(mux.Vars(req)["game"])
+		current, err := s.turn.NextPlayer(gameID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		jsonResponse(w, current)
 	})
-	mux.HandleFunc("/winner", func(w http.ResponseWriter, req *http.Request) {
-		winner, err := s.checker.Winner()
+	r.HandleFunc("/{game}/winner", func(w http.ResponseWriter, req *http.Request) {
+		gameID := game.ID(mux.Vars(req)["game"])
+		winner, err := s.checker.Winner(gameID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		jsonResponse(w, winner)
 	})
-	mux.HandleFunc("/play", func(w http.ResponseWriter, req *http.Request) {
+	r.HandleFunc("/{game}/play", func(w http.ResponseWriter, req *http.Request) {
+		gameID := game.ID(mux.Vars(req)["game"])
 		playerParams, ok := req.URL.Query()["player"]
 		if !ok || len(playerParams) == 0 {
 			http.Error(w, "player is required", http.StatusInternalServerError)
@@ -82,13 +89,15 @@ func (s *Server) CreateRoutes(mux *http.ServeMux) {
 			return
 		}
 
-		if err := s.turn.TakeTurn(player, pos); err != nil {
+		if err := s.turn.TakeTurn(gameID, player, pos); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		jsonResponse(w, "ok")
 	})
+	m.Handle("/", r)
+
 }
 
 func jsonResponse(w http.ResponseWriter, value interface{}) {

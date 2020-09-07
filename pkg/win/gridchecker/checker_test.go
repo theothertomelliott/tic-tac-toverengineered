@@ -3,6 +3,7 @@ package gridchecker_test
 import (
 	"testing"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
@@ -10,14 +11,16 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
 )
 
+const testID = game.ID("test")
+
 func TestChecker(t *testing.T) {
 	x := func() space.Space {
 		m := player.X
-		return spaceinmemory.NewWithMark(&m)
+		return spaceinmemory.NewWithMark(testID, &m)
 	}
 	o := func() space.Space {
 		m := player.O
-		return spaceinmemory.NewWithMark(&m)
+		return spaceinmemory.NewWithMark(testID, &m)
 	}
 	var tests = []struct {
 		name     string
@@ -57,7 +60,7 @@ func TestChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			c := gridchecker.New(test.grid)
-			got, err := c.Winner()
+			got, err := c.Winner(testID)
 			if err != nil {
 				t.Error(err)
 			}

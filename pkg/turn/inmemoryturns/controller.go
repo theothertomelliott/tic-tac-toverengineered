@@ -3,6 +3,7 @@ package inmemoryturns
 import (
 	"fmt"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
@@ -27,13 +28,13 @@ type controller struct {
 	checker win.Checker
 }
 
-func (c *controller) NextPlayer() (player.Mark, error) {
-	return c.current.Player()
+func (c *controller) NextPlayer(g game.ID) (player.Mark, error) {
+	return c.current.Player(g)
 }
 
-func (c *controller) TakeTurn(m player.Mark, p grid.Position) error {
+func (c *controller) TakeTurn(g game.ID, m player.Mark, p grid.Position) error {
 	// Ensure it's this player's turn
-	curM, err := c.current.Player()
+	curM, err := c.current.Player(g)
 	if err != nil {
 		return fmt.Errorf("could not confirm player turn: %w", err)
 	}
@@ -43,7 +44,7 @@ func (c *controller) TakeTurn(m player.Mark, p grid.Position) error {
 	}
 
 	// Don't allow play after the game is won
-	w, err := c.checker.Winner()
+	w, err := c.checker.Winner(g)
 	if err != nil {
 		return fmt.Errorf("could not check win status: %w", err)
 	}
@@ -52,11 +53,11 @@ func (c *controller) TakeTurn(m player.Mark, p grid.Position) error {
 	}
 
 	// Make the mark
-	if err := c.grid.SetMark(p, m); err != nil {
+	if err := c.grid.SetMark(g, p, m); err != nil {
 		return fmt.Errorf("could not take turn: %w", err)
 	}
 
-	if err := c.current.Next(); err != nil {
+	if err := c.current.Next(g); err != nil {
 		return fmt.Errorf("could not advance turn: %w", err)
 	}
 	return nil

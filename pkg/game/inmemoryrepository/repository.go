@@ -16,15 +16,15 @@ type repository struct {
 }
 
 // New creates a new game and creates a unique ID
-func (r *repository) New() game.ID {
+func (r *repository) New() (game.ID, error) {
 	u := uuid.New()
 	id := game.ID(u.String())
 	r.games = append(r.games, id)
-	return id
+	return id, nil
 }
 
 // List obtains game IDs, ordered by creation date.
 // Pagination is managed through the max and offset params.
-func (r *repository) List(max int64, offset int64) []game.ID {
+func (r *repository) List(max int64, offset int64) ([]game.ID, error) {
 	panic("not implemented") // TODO: Implement
 }

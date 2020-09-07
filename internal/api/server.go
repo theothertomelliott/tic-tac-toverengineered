@@ -14,11 +14,13 @@ import (
 )
 
 func New(
+	repo game.Repository,
 	turn turn.Controller,
 	grid grid.Grid,
 	checker win.Checker,
 ) *Server {
 	return &Server{
+		repo:    repo,
 		turn:    turn,
 		grid:    grid,
 		checker: checker,
@@ -26,6 +28,7 @@ func New(
 }
 
 type Server struct {
+	repo    game.Repository
 	turn    turn.Controller
 	grid    grid.Grid
 	checker win.Checker
@@ -95,6 +98,14 @@ func (s *Server) CreateRoutes(m *http.ServeMux) {
 		}
 
 		jsonResponse(w, "ok")
+	})
+	r.HandleFunc("/new", func(w http.ResponseWriter, req *http.Request) {
+		gameID, err := s.repo.New()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		jsonResponse(w, gameID)
 	})
 	m.Handle("/", r)
 

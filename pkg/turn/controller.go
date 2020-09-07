@@ -7,4 +7,5 @@ import (
 
 type Controller interface {
 	TakeTurn(player.Mark, grid.Position) error
+	NextPlayer() (player.Mark, error)
 }

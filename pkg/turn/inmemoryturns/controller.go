@@ -27,6 +27,10 @@ type controller struct {
 	checker win.Checker
 }
 
+func (c *controller) NextPlayer() (player.Mark, error) {
+	return c.current.Player()
+}
+
 func (c *controller) TakeTurn(m player.Mark, p grid.Position) error {
 	// Ensure it's this player's turn
 	curM, err := c.current.Player()

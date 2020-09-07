@@ -1,24 +1,18 @@
 package player
 
 // Mark is a value representing a player's mark. Either X or O.
-type Mark int8
+type Mark string
 
 const (
-	X Mark = iota
-	O
+	X = Mark("X")
+	O = Mark("O")
 )
 
 func (m *Mark) String() string {
 	if m == nil {
 		return "nil"
 	}
-	if *m == X {
-		return "X"
-	}
-	if *m == O {
-		return "O"
-	}
-	return ""
+	return string(*m)
 }
 
 func MarkToPointer(m Mark) *Mark {

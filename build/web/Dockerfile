@@ -1,14 +1,15 @@
-FROM golang:1.15.1 AS builder
-WORKDIR /go/src/github.com/theothertomelliott/tic-tac-toeverengineered
-COPY cmd ./cmd
-COPY internal ./internal
-COPY pkg ./pkg
-COPY go.mod .
-COPY go.sum .
-RUN ls
-RUN CGO_ENABLED=0 GOOS=linux go build -a -o app ./cmd/web
+FROM golang:1.15.2-alpine AS modcache
+WORKDIR /workspace
+COPY go.mod go.sum ./
+RUN go mod download
+
+FROM golang:1.15.2-alpine AS builder
+WORKDIR /workspace
+COPY --from=modcache /go/pkg /go/pkg
+COPY . .
+RUN go build -v -o /build/app ./cmd/web
 
 FROM alpine:latest  
 WORKDIR /root/
-COPY --from=builder /go/src/github.com/theothertomelliott/tic-tac-toeverengineered/app .
+COPY --from=builder /build/app .
 CMD ["./app"]  

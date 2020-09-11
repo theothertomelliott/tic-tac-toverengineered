@@ -1,2 +1,9 @@
-local_resource("api", "echo 'api'", serve_cmd="go run ./cmd/api")
-local_resource("web", "echo 'web'", serve_cmd="go run ./cmd/web")
+docker_build('api-image', '.', 
+    dockerfile='build/api/Dockerfile')
+k8s_yaml('deploy/api/deploy.yaml')
+k8s_resource('api')
+
+docker_build('web-image', '.', 
+    dockerfile='build/web/Dockerfile')
+k8s_yaml('deploy/web/deploy.yaml')
+k8s_resource('web', port_forwards="8080:8080")

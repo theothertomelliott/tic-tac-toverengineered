@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -12,7 +13,18 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 
+func getAPIBaseURL() string {
+	if apiBaseURL := os.Getenv("API_BASE_URL"); apiBaseURL != "" {
+		return apiBaseURL
+	}
+	return "http://localhost:8081"
+}
+
 func main() {
+	client := &apiClient{
+		baseURL: getAPIBaseURL(),
+	}
+
 	r := mux.NewRouter()
 	r.HandleFunc("/{game}", func(w http.ResponseWriter, req *http.Request) {
 		gameID := game.ID(mux.Vars(req)["game"])
@@ -30,15 +42,15 @@ func main() {
 		}{
 			Game: gameID,
 		}
-		if err := apiGet("http://localhost:8081/%v/grid", gameID, &data.Grid); err != nil {
+		if err := client.apiGet(gameID, "grid", &data.Grid); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := apiGet("http://localhost:8081/%v/player/current", gameID, &data.NextPlayer); err != nil {
+		if err := client.apiGet(gameID, "player/current", &data.NextPlayer); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := apiGet("http://localhost:8081/%v/winner", gameID, &data.Winner); err != nil {
+		if err := client.apiGet(gameID, "winner", &data.Winner); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -62,7 +74,7 @@ func main() {
 			return
 		}
 
-		resp, err := http.Get(fmt.Sprintf("http://localhost:8081/%v/play?player=%v&pos=%v", gameID, playerParams[0], posParams[0]))
+		resp, err := client.get(gameID, fmt.Sprintf("play?player=%v&pos=%v", playerParams[0], posParams[0]))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -83,8 +95,16 @@ func main() {
 	http.ListenAndServe(":8080", r)
 }
 
-func apiGet(urlFmt string, g game.ID, out interface{}) error {
-	resp, err := http.Get(fmt.Sprintf(urlFmt, g))
+type apiClient struct {
+	baseURL string
+}
+
+func (c *apiClient) get(g game.ID, endpoint string) (*http.Response, error) {
+	return http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
+}
+
+func (c *apiClient) apiGet(g game.ID, endpoint string, out interface{}) error {
+	resp, err := http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
 	if err != nil {
 		return err
 	}

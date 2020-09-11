@@ -24,5 +24,5 @@ func main() {
 	server := api.New(r, controller, g, checker)
 	server.CreateRoutes(mux)
 
-	http.ListenAndServe(":8081", mux)
+	http.ListenAndServe(":8080", mux)
 }

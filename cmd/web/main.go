@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"text/template"
@@ -21,6 +22,7 @@ func getAPIBaseURL() string {
 }
 
 func main() {
+	log.Println("Starting web")
 	client := &apiClient{
 		baseURL: getAPIBaseURL(),
 	}
@@ -92,6 +94,7 @@ func main() {
 		http.Redirect(w, req, fmt.Sprintf("/%v", gameID), http.StatusFound)
 	})
 
+	log.Println("Listening on port :8080")
 	http.ListenAndServe(":8080", r)
 }
 

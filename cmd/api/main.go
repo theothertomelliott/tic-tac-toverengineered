@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/api"
@@ -11,6 +12,7 @@ import (
 )
 
 func main() {
+	log.Println("Starting api server")
 	mux := http.NewServeMux()
 	g := grid.NewInMemory()
 	checker := gridchecker.New(g)
@@ -24,5 +26,6 @@ func main() {
 	server := api.New(r, controller, g, checker)
 	server.CreateRoutes(mux)
 
+	log.Println("Listening on port :8080")
 	http.ListenAndServe(":8080", mux)
 }

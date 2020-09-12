@@ -11,7 +11,7 @@ import (
 
 func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 	gameID := game.ID(mux.Vars(req)["game"])
-	t, err := template.New("webpage").Parse(tmpl)
+	t, err := template.New("webpage").Parse(gameviewTmpl)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -45,7 +45,7 @@ func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-const tmpl = `
+const gameviewTmpl = `
 <html>
 <head>
 	<title>Tic Tac Toe</title>

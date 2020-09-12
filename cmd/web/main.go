@@ -1,17 +1,12 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"text/template"
 
-	"github.com/gorilla/mux"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
+	"github.com/theothertomelliott/tic-tac-toverengineered/internal/web"
+	"github.com/theothertomelliott/tic-tac-toverengineered/internal/web/apiclient"
 )
 
 func getAPIBaseURL() string {
@@ -23,138 +18,11 @@ func getAPIBaseURL() string {
 
 func main() {
 	log.Println("Starting web")
-	client := &apiClient{
-		baseURL: getAPIBaseURL(),
-	}
+	server := web.New(apiclient.New(getAPIBaseURL()))
 
-	r := mux.NewRouter()
-	r.HandleFunc("/{game}", func(w http.ResponseWriter, req *http.Request) {
-		gameID := game.ID(mux.Vars(req)["game"])
-		t, err := template.New("webpage").Parse(tmpl)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		data := struct {
-			Game       game.ID
-			NextPlayer player.Mark
-			Winner     *player.Mark
-			Grid       [][]*player.Mark
-		}{
-			Game: gameID,
-		}
-		if err := client.apiGet(gameID, "grid", &data.Grid); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if err := client.apiGet(gameID, "player/current", &data.NextPlayer); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if err := client.apiGet(gameID, "winner", &data.Winner); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		err = t.Execute(w, data)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-	})
-	r.HandleFunc("/{game}/play", func(w http.ResponseWriter, req *http.Request) {
-		gameID := game.ID(mux.Vars(req)["game"])
-		playerParams, ok := req.URL.Query()["player"]
-		if !ok || len(playerParams) == 0 {
-			http.Error(w, "player is required", http.StatusInternalServerError)
-			return
-		}
-		posParams, ok := req.URL.Query()["pos"]
-		if !ok || len(posParams) == 0 {
-			http.Error(w, "pos is required", http.StatusInternalServerError)
-			return
-		}
-
-		resp, err := client.get(gameID, fmt.Sprintf("play?player=%v&pos=%v", playerParams[0], posParams[0]))
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if resp.StatusCode != http.StatusOK {
-			defer resp.Body.Close()
-			body, err := ioutil.ReadAll(resp.Body)
-			var msg string = string(body)
-			if err != nil {
-				msg = err.Error()
-			}
-			http.Error(w, msg, http.StatusInternalServerError)
-			return
-		}
-		http.Redirect(w, req, fmt.Sprintf("/%v", gameID), http.StatusFound)
-	})
+	mux := http.NewServeMux()
+	server.CreateRoutes(mux)
 
 	log.Println("Listening on port :8080")
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":8080", mux)
 }
-
-type apiClient struct {
-	baseURL string
-}
-
-func (c *apiClient) get(g game.ID, endpoint string) (*http.Response, error) {
-	return http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
-}
-
-func (c *apiClient) apiGet(g game.ID, endpoint string, out interface{}) error {
-	resp, err := http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(body, out)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-const tmpl = `
-<html>
-<head>
-	<title>Tic Tac Toe</title>
-	<script language="javascript">
-		function play(p,x,y){
-			{{if not .Winner}}
-			location.href = "/{{.Game}}/play?player=" + p + "&pos={\"X\":" + x + ",\"Y\":" + y + "}";
-			{{end}}
-		}
-	</script>
-</head>
-<body>
-	<h1>Tic Tac Toe</h1>
-	{{if .Winner}}
-		<p>Winner: {{.Winner}}</p>
-	{{else}}
-		<p>Next Player: {{.NextPlayer}}</p>
-	{{end}}
-
-	{{range $i, $r := .Grid}}
-		<p>
-			{{range $j, $s := $r}}
-				<button type="button" onclick="javascript: play('{{$.NextPlayer}}',{{$i}},{{$j}});">
-					{{if not $s }}
-						&nbsp;&nbsp;
-					{{else}}
-						{{$s}}
-					{{end}}
-				</button>&nbsp;&nbsp;
-			{{end}}
-		</p>
-	{{else}}
-		<p>No grid</p>
-	{{end}}
-</body>
-</html>
-`

@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func index(w http.ResponseWriter, req *http.Request) {
+func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 	t, err := template.New("webpage").Parse(indexTmpl)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -28,7 +28,7 @@ const indexTmpl = `
 </head>
 <body>
 	<h1>Tic Tac Toe</h1>
-	<p>Welcome</p>
+	<p><a href="/new">New Game</a></p>
 </body>
 </html>
 `

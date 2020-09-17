@@ -23,6 +23,20 @@ func (c *Client) Get(g game.ID, endpoint string) (*http.Response, error) {
 	return http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
 }
 
+func (c *Client) RawApiGet(endpoint string, out interface{}) error {
+	resp, err := http.Get(fmt.Sprintf("%v/%v", c.baseURL, endpoint))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	err = json.Unmarshal(body, out)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) ApiGet(g game.ID, endpoint string, out interface{}) error {
 	resp, err := http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
 	if err != nil {

@@ -19,7 +19,8 @@ type Server struct {
 
 func (s *Server) CreateRoutes(m *http.ServeMux) {
 	r := mux.NewRouter()
-	r.HandleFunc("/", index)
+	r.HandleFunc("/", s.index)
+	r.HandleFunc("/new", s.newGame)
 	r.HandleFunc("/{game}", s.gameview)
 	r.HandleFunc("/{game}/play", s.play)
 	m.Handle("/", r)

@@ -1,6 +1,10 @@
 package api
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/param"
+)
 
 func (s *Server) newGameHandler(w http.ResponseWriter, req *http.Request) {
 	gameID, err := s.repo.New()
@@ -13,13 +17,13 @@ func (s *Server) newGameHandler(w http.ResponseWriter, req *http.Request) {
 
 func (s *Server) listGamesHandler(w http.ResponseWriter, req *http.Request) {
 	var max int64
-	if err := parseParam(req, "max", &max); err != nil {
+	if err := param.Parse(req, "max", &max, param.ParseOptions{Default: 10}); err != nil {
 		http.Error(w, err.Error(), http.StatusBadGateway)
 		return
 	}
 
 	var offset int64
-	if err := parseParam(req, "offset", &offset); err != nil {
+	if err := param.Parse(req, "offset", &offset, param.ParseOptions{Default: 0}); err != nil {
 		http.Error(w, err.Error(), http.StatusBadGateway)
 		return
 	}

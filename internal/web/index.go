@@ -27,8 +27,18 @@ func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 	}
 
 	data := struct {
-		Games []game.ID
-	}{}
+		Games      []game.ID
+		PrevOffset int32
+		NextOffset int32
+		Max        int32
+	}{
+		PrevOffset: offset - max,
+		NextOffset: offset + max,
+		Max:        max,
+	}
+	if data.PrevOffset < 0 {
+		data.PrevOffset = 0
+	}
 
 	if err := s.client.RawApiGet(fmt.Sprintf("/?max=%v&offset=%v", max, offset), &data.Games); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -50,6 +60,11 @@ const indexTmpl = `
 <body>
 	<h1>Tic Tac Toe</h1>
 	<p><a href="/new">New Game</a></p>
+	<p>
+		<a href="/?max={{.Max}}&offset={{.PrevOffset}}">&lt; Prev</a>
+		&nbsp;
+		<a href="/?max={{.Max}}&offset={{.NextOffset}}">Next &gt;</a>
+	</p>
 	<ul>
 	{{ range .Games}}
 		<li><a href="/{{ . }}">{{ . }}</a></li>

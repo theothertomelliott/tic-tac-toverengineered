@@ -1,7 +1,6 @@
 package api
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -12,22 +11,16 @@ import (
 
 func (s *Server) playHandler(w http.ResponseWriter, req *http.Request) {
 	gameID := game.ID(mux.Vars(req)["game"])
-	playerParams, ok := req.URL.Query()["player"]
-	if !ok || len(playerParams) == 0 {
-		http.Error(w, "player is required", http.StatusInternalServerError)
-		return
-	}
-	player := player.Mark(playerParams[0])
 
-	posParams, ok := req.URL.Query()["pos"]
-	if !ok || len(posParams) == 0 {
-		http.Error(w, "pos is required", http.StatusInternalServerError)
+	var player player.Mark
+	if err := parseParam(req, "player", &player); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	var pos grid.Position
-	if err := json.Unmarshal([]byte(posParams[0]), &pos); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	if err := parseParam(req, "pos", &pos); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

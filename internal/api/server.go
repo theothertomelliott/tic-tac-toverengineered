@@ -52,3 +52,18 @@ func jsonResponse(w http.ResponseWriter, value interface{}) {
 	}
 	fmt.Fprint(w, string(out))
 }
+
+func parseParam(req *http.Request, key string, value interface{}) error {
+	params, ok := req.URL.Query()[key]
+	if !ok || len(params) == 0 {
+		return fmt.Errorf("%q is required", key)
+	}
+	err := json.Unmarshal([]byte(params[0]), value)
+	if err != nil {
+		// Allow for string-type inputs that aren't quote delimited
+		if err2 := json.Unmarshal([]byte(fmt.Sprintf("\"%v\"", params[0])), value); err2 != nil {
+			return fmt.Errorf("parsing %q: %w", key, err)
+		}
+	}
+	return nil
+}

@@ -1,13 +1,25 @@
 package web
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/param"
 )
 
 func (s *Server) index(w http.ResponseWriter, req *http.Request) {
+	var max, offset int32
+	if err := param.Parse(req, "max", &max, param.ParseOptions{Default: 10}); err != nil {
+		http.Error(w, err.Error(), http.StatusBadGateway)
+		return
+	}
+	if err := param.Parse(req, "offset", &offset, param.ParseOptions{Default: 0}); err != nil {
+		http.Error(w, err.Error(), http.StatusBadGateway)
+		return
+	}
+
 	t, err := template.New("webpage").Parse(indexTmpl)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -18,7 +30,7 @@ func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 		Games []game.ID
 	}{}
 
-	if err := s.client.RawApiGet("/?max=10&offset=0", &data.Games); err != nil {
+	if err := s.client.RawApiGet(fmt.Sprintf("/?max=%v&offset=%v", max, offset), &data.Games); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

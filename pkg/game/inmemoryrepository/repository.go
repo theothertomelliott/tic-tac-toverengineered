@@ -26,5 +26,12 @@ func (r *repository) New() (game.ID, error) {
 // List obtains game IDs, ordered by creation date.
 // Pagination is managed through the max and offset params.
 func (r *repository) List(max int64, offset int64) ([]game.ID, error) {
-	panic("not implemented") // TODO: Implement
+	total := int64(len(r.games))
+	if offset >= total {
+		return []game.ID{}, nil
+	}
+	if offset+max >= total {
+		return r.games[offset:], nil
+	}
+	return r.games[offset : offset+max], nil
 }

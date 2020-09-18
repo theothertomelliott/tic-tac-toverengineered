@@ -35,6 +35,7 @@ type Server struct {
 
 func (s *Server) CreateRoutes(m *http.ServeMux) {
 	r := mux.NewRouter()
+	r.HandleFunc("/", s.listGamesHandler)
 	r.HandleFunc("/{game}/grid", s.gridHandler)
 	r.HandleFunc("/{game}/player/current", s.currentPlayerHandler)
 	r.HandleFunc("/{game}/winner", s.winnerHandler)

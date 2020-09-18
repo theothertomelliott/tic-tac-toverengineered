@@ -30,6 +30,9 @@ func (c *Client) RawApiGet(endpoint string, out interface{}) error {
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf(string(body))
+	}
 	err = json.Unmarshal(body, out)
 	if err != nil {
 		return err
@@ -38,15 +41,5 @@ func (c *Client) RawApiGet(endpoint string, out interface{}) error {
 }
 
 func (c *Client) ApiGet(g game.ID, endpoint string, out interface{}) error {
-	resp, err := http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	err = json.Unmarshal(body, out)
-	if err != nil {
-		return err
-	}
-	return nil
+	return c.RawApiGet(fmt.Sprintf("%v/%v", g, endpoint), out)
 }

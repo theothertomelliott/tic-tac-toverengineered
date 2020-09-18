@@ -8,11 +8,14 @@ import (
 // New creates a new game.Repository with
 // games recorded in memory.
 func New() game.Repository {
-	return &repository{}
+	return &repository{
+		gameSet: make(map[game.ID]struct{}),
+	}
 }
 
 type repository struct {
-	games []game.ID
+	games   []game.ID
+	gameSet map[game.ID]struct{} // lookup table for game IDs
 }
 
 // New creates a new game and creates a unique ID
@@ -20,6 +23,7 @@ func (r *repository) New() (game.ID, error) {
 	u := uuid.New()
 	id := game.ID(u.String())
 	r.games = append(r.games, id)
+	r.gameSet[id] = struct{}{}
 	return id, nil
 }
 
@@ -34,4 +38,10 @@ func (r *repository) List(max int64, offset int64) ([]game.ID, error) {
 		return r.games[offset:], nil
 	}
 	return r.games[offset : offset+max], nil
+}
+
+// Exists returns true iff the given game ID was previously created with New
+func (r *repository) Exists(id game.ID) (bool, error) {
+	_, exists := r.gameSet[id]
+	return exists, nil
 }

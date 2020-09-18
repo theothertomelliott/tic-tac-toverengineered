@@ -13,6 +13,17 @@ import (
 func (s *Server) playHandler(w http.ResponseWriter, req *http.Request) {
 	gameID := game.ID(mux.Vars(req)["game"])
 
+	// Verify this game exists
+	exists, err := s.repo.Exists(gameID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if !exists {
+		http.Error(w, "game not found", http.StatusNotFound)
+		return
+	}
+
 	var player player.Mark
 	if err := param.Parse(req, "player", &player, param.ParseOptions{Required: true}); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

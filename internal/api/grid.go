@@ -11,6 +11,18 @@ import (
 
 func (s *Server) gridHandler(w http.ResponseWriter, req *http.Request) {
 	gameID := game.ID(mux.Vars(req)["game"])
+
+	// Verify this game exists
+	exists, err := s.repo.Exists(gameID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if !exists {
+		http.Error(w, "game not found", http.StatusNotFound)
+		return
+	}
+
 	var out [][]*player.Mark
 	for i := 0; i < 3; i++ {
 		var row []*player.Mark

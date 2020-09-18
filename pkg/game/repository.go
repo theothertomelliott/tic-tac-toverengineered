@@ -7,4 +7,6 @@ type Repository interface {
 	// List obtains game IDs, ordered by creation date.
 	// Pagination is managed through the max and offset params.
 	List(max int64, offset int64) ([]ID, error)
+	// Exists returns true iff the given game ID was previously created with New
+	Exists(ID) (bool, error)
 }

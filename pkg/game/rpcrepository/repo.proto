@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "github.com/theothertomelliott/tic-tac-toeverengineered/pkg/game/rpcrepository";
+
+message NewResponse {
+    string ID = 1;
+}
+
+message NewRequest{}
+
+message ListRequest {
+    int64 max = 1;
+    int64 offset = 2;
+}
+
+message ListResponse {
+    repeated string ID = 1;
+}
+
+message ExistsRequest {
+    string ID = 1;
+}
+
+message ExistsResponse {
+    bool exists = 1;
+}
+
+service Repo {
+    rpc New(NewRequest) returns (NewResponse) {}
+    rpc List(ListRequest) returns (ListResponse) {} 
+    rpc Exists(ExistsRequest) returns (ExistsResponse) {} 
+}

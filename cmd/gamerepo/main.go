@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/fullstorydev/grpcui/standalone"
+	"github.com/theothertomelliott/tic-tac-toverengineered/internal/gamerepo"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/inmemoryrepository"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository"
 	"google.golang.org/grpc"
@@ -25,7 +26,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 	repoBackend := inmemoryrepository.New()
-	rpcrepository.RegisterRepoServer(grpcServer, rpcrepository.NewServer(repoBackend))
+	rpcrepository.RegisterRepoServer(grpcServer, gamerepo.NewServer(repoBackend))
 	log.Printf("gRPC listening on port :%v", port)
 	go grpcServer.Serve(lis)
 

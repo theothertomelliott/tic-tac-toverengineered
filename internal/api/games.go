@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) newGameHandler(w http.ResponseWriter, req *http.Request) {
-	gameID, err := s.repo.New()
+	gameID, err := s.repo.New(req.Context())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -28,7 +28,7 @@ func (s *Server) listGamesHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	games, err := s.repo.List(max, offset)
+	games, err := s.repo.List(req.Context(), max, offset)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

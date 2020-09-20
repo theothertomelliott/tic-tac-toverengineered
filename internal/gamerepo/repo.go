@@ -19,7 +19,7 @@ type repoServer struct {
 
 func (r *repoServer) New(ctx context.Context, req *rpcrepository.NewRequest) (*rpcrepository.NewResponse, error) {
 	var resp *rpcrepository.NewResponse = &rpcrepository.NewResponse{}
-	id, err := r.repo.New()
+	id, err := r.repo.New(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +29,7 @@ func (r *repoServer) New(ctx context.Context, req *rpcrepository.NewRequest) (*r
 
 func (r *repoServer) List(ctx context.Context, req *rpcrepository.ListRequest) (*rpcrepository.ListResponse, error) {
 	resp := &rpcrepository.ListResponse{}
-	ids, err := r.repo.List(req.Max, req.Offset)
+	ids, err := r.repo.List(ctx, req.Max, req.Offset)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (r *repoServer) List(ctx context.Context, req *rpcrepository.ListRequest) (
 
 func (r *repoServer) Exists(ctx context.Context, req *rpcrepository.ExistsRequest) (*rpcrepository.ExistsResponse, error) {
 	resp := &rpcrepository.ExistsResponse{}
-	exists, err := r.repo.Exists(game.ID(req.ID))
+	exists, err := r.repo.Exists(ctx, game.ID(req.ID))
 	if err != nil {
 		return nil, err
 	}

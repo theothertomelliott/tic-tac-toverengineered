@@ -31,8 +31,8 @@ func (c *Client) Close() error {
 }
 
 // New creates a new game and creates a unique ID
-func (c *Client) New() (game.ID, error) {
-	resp, err := c.client.New(context.TODO(), &rpcrepository.NewRequest{})
+func (c *Client) New(ctx context.Context) (game.ID, error) {
+	resp, err := c.client.New(ctx, &rpcrepository.NewRequest{})
 	if err != nil {
 		return game.ID(""), err
 	}
@@ -41,8 +41,8 @@ func (c *Client) New() (game.ID, error) {
 
 // List obtains game IDs, ordered by creation date.
 // Pagination is managed through the max and offset params.
-func (c *Client) List(max int64, offset int64) ([]game.ID, error) {
-	resp, err := c.client.List(context.TODO(), &rpcrepository.ListRequest{Max: max, Offset: offset})
+func (c *Client) List(ctx context.Context, max int64, offset int64) ([]game.ID, error) {
+	resp, err := c.client.List(ctx, &rpcrepository.ListRequest{Max: max, Offset: offset})
 	if err != nil {
 		return nil, err
 	}
@@ -54,8 +54,8 @@ func (c *Client) List(max int64, offset int64) ([]game.ID, error) {
 }
 
 // Exists returns true iff the given game ID was previously created with New
-func (c *Client) Exists(id game.ID) (bool, error) {
-	resp, err := c.client.Exists(context.TODO(), &rpcrepository.ExistsRequest{ID: string(id)})
+func (c *Client) Exists(ctx context.Context, id game.ID) (bool, error) {
+	resp, err := c.client.Exists(ctx, &rpcrepository.ExistsRequest{ID: string(id)})
 	if err != nil {
 		return false, err
 	}

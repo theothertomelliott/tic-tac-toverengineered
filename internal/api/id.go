@@ -12,7 +12,7 @@ func (s *Server) verifyID(w http.ResponseWriter, req *http.Request) (game.ID, er
 	gameID := game.ID(mux.Vars(req)["game"])
 
 	// Verify this game exists
-	exists, err := s.repo.Exists(gameID)
+	exists, err := s.repo.Exists(req.Context(), gameID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return game.ID(""), err

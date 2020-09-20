@@ -1,6 +1,7 @@
 package inmemoryturns_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -25,7 +26,7 @@ func TestControllerAppliesMark(t *testing.T) {
 	pos := grid.Position{X: 0, Y: 0}
 
 	// X goes first
-	if err := c.TakeTurn(testID, player.X, pos); err != nil {
+	if err := c.TakeTurn(context.Background(), testID, player.X, pos); err != nil {
 		t.Fatal(err)
 	}
 	m, err := g.Mark(testID, pos)
@@ -48,17 +49,17 @@ func TestControllerTurns(t *testing.T) {
 		gridchecker.New(g),
 	)
 	// X goes first
-	if err := c.TakeTurn(testID, player.X, grid.Position{X: 0, Y: 0}); err != nil {
+	if err := c.TakeTurn(context.Background(), testID, player.X, grid.Position{X: 0, Y: 0}); err != nil {
 		t.Fatal(err)
 	}
 
 	// X cannot go again
-	if err := c.TakeTurn(testID, player.X, grid.Position{X: 0, Y: 0}); err == nil {
+	if err := c.TakeTurn(context.Background(), testID, player.X, grid.Position{X: 0, Y: 0}); err == nil {
 		t.Fatal("expected an error")
 	}
 
 	// O goes second
-	if err := c.TakeTurn(testID, player.O, grid.Position{X: 1, Y: 0}); err != nil {
+	if err := c.TakeTurn(context.Background(), testID, player.O, grid.Position{X: 1, Y: 0}); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -84,11 +85,11 @@ func TestCannotPlayAfterWin(t *testing.T) {
 		gridchecker.New(g),
 	)
 	// X cannot play
-	if err := c.TakeTurn(testID, player.X, grid.Position{X: 0, Y: 0}); err == nil {
+	if err := c.TakeTurn(context.Background(), testID, player.X, grid.Position{X: 0, Y: 0}); err == nil {
 		t.Fatal("expected an error")
 	}
 	// O cannot play
-	if err := c.TakeTurn(testID, player.O, grid.Position{X: 0, Y: 0}); err == nil {
+	if err := c.TakeTurn(context.Background(), testID, player.O, grid.Position{X: 0, Y: 0}); err == nil {
 		t.Fatal("expected an error")
 	}
 }

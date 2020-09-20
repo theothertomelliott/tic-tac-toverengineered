@@ -10,7 +10,7 @@ func (s *Server) currentPlayerHandler(w http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	current, err := s.turn.NextPlayer(gameID)
+	current, err := s.turn.NextPlayer(req.Context(), gameID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

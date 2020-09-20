@@ -26,7 +26,7 @@ func (s *Server) playHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if err := s.turn.TakeTurn(gameID, player, pos); err != nil {
+	if err := s.turn.TakeTurn(req.Context(), gameID, player, pos); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

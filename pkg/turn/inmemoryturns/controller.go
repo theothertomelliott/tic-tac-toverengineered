@@ -29,13 +29,13 @@ type controller struct {
 	checker win.Checker
 }
 
-func (c *controller) NextPlayer(g game.ID) (player.Mark, error) {
-	return c.current.Player(g)
+func (c *controller) NextPlayer(ctx context.Context, g game.ID) (player.Mark, error) {
+	return c.current.Player(ctx, g)
 }
 
-func (c *controller) TakeTurn(g game.ID, m player.Mark, p grid.Position) error {
+func (c *controller) TakeTurn(ctx context.Context, g game.ID, m player.Mark, p grid.Position) error {
 	// Ensure it's this player's turn
-	curM, err := c.current.Player(g)
+	curM, err := c.current.Player(ctx, g)
 	if err != nil {
 		return fmt.Errorf("could not confirm player turn: %w", err)
 	}
@@ -45,7 +45,7 @@ func (c *controller) TakeTurn(g game.ID, m player.Mark, p grid.Position) error {
 	}
 
 	// Don't allow play after the game is won
-	w, err := c.checker.Winner(context.TODO(), g)
+	w, err := c.checker.Winner(ctx, g)
 	if err != nil {
 		return fmt.Errorf("could not check win status: %w", err)
 	}
@@ -58,7 +58,7 @@ func (c *controller) TakeTurn(g game.ID, m player.Mark, p grid.Position) error {
 		return fmt.Errorf("could not take turn: %w", err)
 	}
 
-	if err := c.current.Next(g); err != nil {
+	if err := c.current.Next(ctx, g); err != nil {
 		return fmt.Errorf("could not advance turn: %w", err)
 	}
 	return nil

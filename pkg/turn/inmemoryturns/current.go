@@ -1,6 +1,8 @@
 package inmemoryturns
 
 import (
+	"context"
+
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
@@ -17,7 +19,7 @@ type current struct {
 	mark map[game.ID]player.Mark
 }
 
-func (c *current) Player(g game.ID) (player.Mark, error) {
+func (c *current) Player(ctx context.Context, g game.ID) (player.Mark, error) {
 	m, exists := c.mark[g]
 	if !exists {
 		m = player.X
@@ -26,8 +28,8 @@ func (c *current) Player(g game.ID) (player.Mark, error) {
 	return m, nil
 }
 
-func (c *current) Next(g game.ID) error {
-	prev, err := c.Player(g)
+func (c *current) Next(ctx context.Context, g game.ID) error {
+	prev, err := c.Player(ctx, g)
 	if err != nil {
 		return err
 	}

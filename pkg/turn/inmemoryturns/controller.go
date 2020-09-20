@@ -1,6 +1,7 @@
 package inmemoryturns
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
@@ -44,7 +45,7 @@ func (c *controller) TakeTurn(g game.ID, m player.Mark, p grid.Position) error {
 	}
 
 	// Don't allow play after the game is won
-	w, err := c.checker.Winner(g)
+	w, err := c.checker.Winner(context.TODO(), g)
 	if err != nil {
 		return fmt.Errorf("could not check win status: %w", err)
 	}

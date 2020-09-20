@@ -1,6 +1,7 @@
 package gridchecker_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
@@ -60,7 +61,7 @@ func TestChecker(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			c := gridchecker.New(test.grid)
-			got, err := c.Winner(testID)
+			got, err := c.Winner(context.Background(), testID)
 			if err != nil {
 				t.Error(err)
 			}

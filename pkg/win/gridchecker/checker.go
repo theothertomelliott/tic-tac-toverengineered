@@ -1,6 +1,7 @@
 package gridchecker
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
@@ -20,7 +21,7 @@ type checker struct {
 	grid grid.Grid
 }
 
-func (c *checker) Winner(game game.ID) (*player.Mark, error) {
+func (c *checker) Winner(ctx context.Context, game game.ID) (*player.Mark, error) {
 	rows := c.grid.Rows()
 	for _, row := range rows {
 		var markCounts = make(map[player.Mark]int)

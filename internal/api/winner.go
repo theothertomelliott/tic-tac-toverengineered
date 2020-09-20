@@ -10,7 +10,7 @@ func (s *Server) winnerHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	winner, err := s.checker.Winner(gameID)
+	winner, err := s.checker.Winner(req.Context(), gameID)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

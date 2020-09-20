@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/api"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/inmemoryrepository"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
@@ -21,7 +21,10 @@ func main() {
 		g,
 		checker,
 	)
-	r := inmemoryrepository.New()
+	r, err := repoclient.Connect("gamerepo:80")
+	if err != nil {
+		log.Fatalf("could not connect to repo server: %v", err)
+	}
 
 	server := api.New(r, controller, g, checker)
 	server.CreateRoutes(mux)

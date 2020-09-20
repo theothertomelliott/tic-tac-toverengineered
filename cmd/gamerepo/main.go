@@ -47,7 +47,7 @@ func main() {
 
 	// Add to an http server
 	serveMux := http.NewServeMux()
-	serveMux.Handle("/grpcui/", http.StripPrefix("/grpcui", h))
+	serveMux.Handle("/", h)
 	log.Printf("grpcui listening on port :%v", grpcuiPort)
 	http.ListenAndServe(fmt.Sprintf(":%v", grpcuiPort), serveMux)
 }

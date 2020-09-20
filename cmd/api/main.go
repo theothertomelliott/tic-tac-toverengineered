@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/api"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
@@ -10,6 +11,13 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
 )
+
+func getRepoServerTarget() string {
+	if repoServerTarget := os.Getenv("REPO_SERVER_TARGET"); repoServerTarget != "" {
+		return repoServerTarget
+	}
+	return "localhost:8082"
+}
 
 func main() {
 	log.Println("Starting api server")
@@ -21,7 +29,7 @@ func main() {
 		g,
 		checker,
 	)
-	r, err := repoclient.Connect("gamerepo:80")
+	r, err := repoclient.Connect(getRepoServerTarget())
 	if err != nil {
 		log.Fatalf("could not connect to repo server: %v", err)
 	}

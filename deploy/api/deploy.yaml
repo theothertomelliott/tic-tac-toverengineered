@@ -16,6 +16,9 @@ spec:
       containers:
       - name: api
         image: api-image
+        env:
+          - name: REPO_SERVER_TARGET
+            value: "gamerepo:80"
         ports:
         - containerPort: 8080
 ---

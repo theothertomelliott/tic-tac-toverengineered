@@ -58,7 +58,7 @@ func (g *gridImpl) SetMark(ctx context.Context, game game.ID, p Position, m play
 	} else if existing != nil {
 		return fmt.Errorf("%v: space has already been marked", p)
 	}
-	if err := g.spaces[p.X][p.Y].SetMark(context.TODO(), game, m); err != nil {
+	if err := g.spaces[p.X][p.Y].SetMark(ctx, game, m); err != nil {
 		return fmt.Errorf("%v: %w", p, err)
 	}
 	return nil

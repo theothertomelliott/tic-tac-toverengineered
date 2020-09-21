@@ -1,6 +1,7 @@
 package grid
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
@@ -44,7 +45,7 @@ type gridImpl struct {
 }
 
 func (g *gridImpl) Mark(game game.ID, p Position) (*player.Mark, error) {
-	m, err := g.spaces[p.X][p.Y].Mark(game)
+	m, err := g.spaces[p.X][p.Y].Mark(context.TODO(), game)
 	if err != nil {
 		return nil, fmt.Errorf("%v: %w", p, err)
 	}
@@ -57,7 +58,7 @@ func (g *gridImpl) SetMark(game game.ID, p Position, m player.Mark) error {
 	} else if existing != nil {
 		return fmt.Errorf("%v: space has already been marked", p)
 	}
-	if err := g.spaces[p.X][p.Y].SetMark(game, m); err != nil {
+	if err := g.spaces[p.X][p.Y].SetMark(context.TODO(), game, m); err != nil {
 		return fmt.Errorf("%v: %w", p, err)
 	}
 	return nil

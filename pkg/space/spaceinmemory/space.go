@@ -1,6 +1,8 @@
 package spaceinmemory
 
 import (
+	"context"
+
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
@@ -28,12 +30,12 @@ type Space struct {
 }
 
 // Mark returns the mark applied to this space, or nil if there is none
-func (s *Space) Mark(game game.ID) (*player.Mark, error) {
+func (s *Space) Mark(ctx context.Context, game game.ID) (*player.Mark, error) {
 	return s.markByGame[game], nil
 }
 
 // SetMark applies the specified mark to this space.
-func (s *Space) SetMark(game game.ID, m player.Mark) error {
+func (s *Space) SetMark(ctx context.Context, game game.ID, m player.Mark) error {
 	s.markByGame[game] = &m
 	return nil
 }

@@ -1,6 +1,7 @@
 package spaceinmemory_test
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -12,7 +13,7 @@ import (
 func TestSpaceCanBeWritten(t *testing.T) {
 	testID := game.ID("test")
 	s := spaceinmemory.New()
-	got, err := s.Mark(testID)
+	got, err := s.Mark(context.Background(), testID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -20,11 +21,11 @@ func TestSpaceCanBeWritten(t *testing.T) {
 		t.Errorf("expected empty space on initialization, got %s", got.String())
 	}
 
-	if err := s.SetMark(testID, player.X); err != nil {
+	if err := s.SetMark(context.Background(), testID, player.X); err != nil {
 		t.Error(err)
 	}
 
-	got, err = s.Mark(testID)
+	got, err = s.Mark(context.Background(), testID)
 	if err != nil {
 		t.Error(err)
 	}
@@ -37,18 +38,18 @@ func TestSpacesHandleSeparateGames(t *testing.T) {
 	firstID := game.ID("game1")
 	secondID := game.ID("game2")
 	s := spaceinmemory.New()
-	if err := s.SetMark(firstID, player.X); err != nil {
+	if err := s.SetMark(context.Background(), firstID, player.X); err != nil {
 		t.Error(err)
 	}
-	if err := s.SetMark(secondID, player.O); err != nil {
+	if err := s.SetMark(context.Background(), secondID, player.O); err != nil {
 		t.Error(err)
 	}
 
-	gotFirst, err := s.Mark(firstID)
+	gotFirst, err := s.Mark(context.Background(), firstID)
 	if err != nil {
 		t.Error(err)
 	}
-	gotSecond, err := s.Mark(secondID)
+	gotSecond, err := s.Mark(context.Background(), secondID)
 	if err != nil {
 		t.Error(err)
 	}

@@ -1,6 +1,7 @@
 package grid_test
 
 import (
+	"context"
 	"testing"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
@@ -68,8 +69,8 @@ func TestNewErrors(t *testing.T) {
 func TestMarkSpace(t *testing.T) {
 	g := grid.NewInMemory()
 	pos := grid.Position{X: 0, Y: 0}
-	g.SetMark(testID, pos, player.X)
-	gotMark, err := g.Mark(testID, pos)
+	g.SetMark(context.Background(), testID, pos, player.X)
+	gotMark, err := g.Mark(context.Background(), testID, pos)
 	if err != nil {
 		t.Error(err)
 	}
@@ -80,17 +81,17 @@ func TestMarkSpace(t *testing.T) {
 func TestCanOnlyMarkSpaceOnce(t *testing.T) {
 	g := grid.NewInMemory()
 	pos := grid.Position{X: 0, Y: 0}
-	if err := g.SetMark(testID, pos, player.X); err != nil {
+	if err := g.SetMark(context.Background(), testID, pos, player.X); err != nil {
 		t.Error(err)
 	}
-	if err := g.SetMark(testID, pos, player.X); err == nil {
+	if err := g.SetMark(context.Background(), testID, pos, player.X); err == nil {
 		t.Error("Expected an error when attempting to mark a space again")
 	}
 }
 
 func TestRows(t *testing.T) {
 	g := grid.NewInMemory()
-	sr := g.Rows()
+	sr := g.Rows(context.Background())
 	if len(sr) != 8 {
 		t.Errorf("expected 8 rows, got %d", len(sr))
 	}

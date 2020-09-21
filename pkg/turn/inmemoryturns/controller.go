@@ -54,7 +54,7 @@ func (c *controller) TakeTurn(ctx context.Context, g game.ID, m player.Mark, p g
 	}
 
 	// Make the mark
-	if err := c.grid.SetMark(g, p, m); err != nil {
+	if err := c.grid.SetMark(ctx, g, p, m); err != nil {
 		return fmt.Errorf("could not take turn: %w", err)
 	}
 

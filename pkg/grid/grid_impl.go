@@ -44,16 +44,16 @@ type gridImpl struct {
 	spaces [][]space.Space
 }
 
-func (g *gridImpl) Mark(game game.ID, p Position) (*player.Mark, error) {
-	m, err := g.spaces[p.X][p.Y].Mark(context.TODO(), game)
+func (g *gridImpl) Mark(ctx context.Context, game game.ID, p Position) (*player.Mark, error) {
+	m, err := g.spaces[p.X][p.Y].Mark(ctx, game)
 	if err != nil {
 		return nil, fmt.Errorf("%v: %w", p, err)
 	}
 	return m, nil
 }
 
-func (g *gridImpl) SetMark(game game.ID, p Position, m player.Mark) error {
-	if existing, err := g.Mark(game, p); err != nil {
+func (g *gridImpl) SetMark(ctx context.Context, game game.ID, p Position, m player.Mark) error {
+	if existing, err := g.Mark(ctx, game, p); err != nil {
 		return fmt.Errorf("could not confirm space was not marked: %w", err)
 	} else if existing != nil {
 		return fmt.Errorf("%v: space has already been marked", p)
@@ -64,7 +64,7 @@ func (g *gridImpl) SetMark(game game.ID, p Position, m player.Mark) error {
 	return nil
 }
 
-func (g *gridImpl) Rows() []Row {
+func (g *gridImpl) Rows(ctx context.Context) []Row {
 	p := func(x, y int) Position {
 		return Position{
 			X: x,

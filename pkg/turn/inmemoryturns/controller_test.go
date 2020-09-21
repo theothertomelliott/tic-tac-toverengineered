@@ -29,7 +29,7 @@ func TestControllerAppliesMark(t *testing.T) {
 	if err := c.TakeTurn(context.Background(), testID, player.X, pos); err != nil {
 		t.Fatal(err)
 	}
-	m, err := g.Mark(testID, pos)
+	m, err := g.Mark(context.Background(), testID, pos)
 	if err != nil {
 		t.Error(err)
 	}

@@ -17,7 +17,7 @@ func (s *Server) gridHandler(w http.ResponseWriter, req *http.Request) {
 	for i := 0; i < 3; i++ {
 		var row []*player.Mark
 		for j := 0; j < 3; j++ {
-			m, err := s.grid.Mark(gameID, grid.Position{X: i, Y: j})
+			m, err := s.grid.Mark(req.Context(), gameID, grid.Position{X: i, Y: j})
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return

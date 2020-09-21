@@ -22,11 +22,11 @@ type checker struct {
 }
 
 func (c *checker) Winner(ctx context.Context, game game.ID) (*player.Mark, error) {
-	rows := c.grid.Rows()
+	rows := c.grid.Rows(ctx)
 	for _, row := range rows {
 		var markCounts = make(map[player.Mark]int)
 		for _, pos := range row {
-			m, err := c.grid.Mark(game, pos)
+			m, err := c.grid.Mark(ctx, game, pos)
 			if err != nil {
 				return nil, fmt.Errorf("%v: %w", pos, err)
 			}

@@ -1,15 +1,17 @@
 package grid
 
 import (
+	"context"
+
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 
 // Grid provides functions to interact with a grid
 type Grid interface {
-	Mark(game.ID, Position) (*player.Mark, error)
-	SetMark(game.ID, Position, player.Mark) error
-	Rows() []Row
+	Mark(context.Context, game.ID, Position) (*player.Mark, error)
+	SetMark(context.Context, game.ID, Position, player.Mark) error
+	Rows(context.Context) []Row
 }
 
 // Position defines a position in the grid

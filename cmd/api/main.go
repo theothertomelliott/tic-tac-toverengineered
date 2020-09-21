@@ -34,7 +34,7 @@ func main() {
 	checker := gridchecker.New(g)
 	ct, err := rpcturn.ConnectCurrent(getCurrentTurnServerTarget())
 	if err != nil {
-		log.Fatal("could not connect to current turn server: %v", err)
+		log.Fatalf("could not connect to current turn server: %v", err)
 	}
 
 	controller := inmemoryturns.New(

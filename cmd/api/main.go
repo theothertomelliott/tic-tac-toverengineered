@@ -9,12 +9,20 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
 )
 
+func getCurrentTurnServerTarget() string {
+	if serverTarget := os.Getenv("CURRENT_TURN_SERVER_TARGET"); serverTarget != "" {
+		return serverTarget
+	}
+	return "localhost:8084"
+}
+
 func getRepoServerTarget() string {
-	if repoServerTarget := os.Getenv("REPO_SERVER_TARGET"); repoServerTarget != "" {
-		return repoServerTarget
+	if serverTarget := os.Getenv("REPO_SERVER_TARGET"); serverTarget != "" {
+		return serverTarget
 	}
 	return "localhost:8082"
 }
@@ -24,8 +32,13 @@ func main() {
 	mux := http.NewServeMux()
 	g := grid.NewInMemory()
 	checker := gridchecker.New(g)
+	ct, err := rpcturn.ConnectCurrent(getCurrentTurnServerTarget())
+	if err != nil {
+		log.Fatal("could not connect to current turn server: %v", err)
+	}
+
 	controller := inmemoryturns.New(
-		inmemoryturns.NewCurrentTurn(),
+		ct,
 		g,
 		checker,
 	)

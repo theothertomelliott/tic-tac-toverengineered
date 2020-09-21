@@ -12,3 +12,8 @@ docker_build('gamerepo-image', '.',
     dockerfile='build/gamerepo/Dockerfile')
 k8s_yaml('deploy/gamerepo/deploy.yaml')
 k8s_resource('gamerepo', port_forwards=["8082:8080", "8083:8081"])
+
+docker_build('currentturn-image', '.', 
+    dockerfile='build/currentturn/Dockerfile')
+k8s_yaml('deploy/currentturn/deploy.yaml')
+k8s_resource('currentturn', port_forwards=["8084:8080", "8085:8081"])

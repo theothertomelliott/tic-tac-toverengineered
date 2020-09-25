@@ -40,11 +40,17 @@ protos:
     BUILD ./pkg/game/rpcrepository/+protos
     BUILD ./pkg/turn/rpcturn/+protos
 
-all:
+build:
     BUILD ./build/web+build
     BUILD ./build/api+build
     BUILD ./build/currentturn+build
     BUILD ./build/gamerepo+build
+
+images:
+    BUILD ./build/web+docker
+    BUILD ./build/api+docker
+    BUILD ./build/currentturn+docker
+    BUILD ./build/gamerepo+docker
 
 testdeps:
     FROM golang:1.15

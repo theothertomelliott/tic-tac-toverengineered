@@ -10,4 +10,6 @@ docker:
     WORKDIR /root
     COPY +build/app .
     ENTRYPOINT ["./app"]
-    SAVE IMAGE api-image:latest
+    ARG VERSION=dev
+    RUN echo "Building image for version $VERSION"
+    SAVE IMAGE api-image:$VERSION

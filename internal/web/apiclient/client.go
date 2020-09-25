@@ -1,6 +1,7 @@
 package apiclient
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -19,12 +20,22 @@ type Client struct {
 	baseURL string
 }
 
-func (c *Client) Get(g game.ID, endpoint string) (*http.Response, error) {
-	return http.Get(fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint))
+func (c *Client) Get(ctx context.Context, g game.ID, endpoint string) (*http.Response, error) {
+	client := &http.Client{}
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint), nil)
+	if err != nil {
+		return nil, err
+	}
+	return client.Do(req)
 }
 
-func (c *Client) RawApiGet(endpoint string, out interface{}) error {
-	resp, err := http.Get(fmt.Sprintf("%v/%v", c.baseURL, endpoint))
+func (c *Client) RawApiGet(ctx context.Context, endpoint string, out interface{}) error {
+	client := &http.Client{}
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/%v", c.baseURL, endpoint), nil)
+	if err != nil {
+		return err
+	}
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -40,6 +51,6 @@ func (c *Client) RawApiGet(endpoint string, out interface{}) error {
 	return nil
 }
 
-func (c *Client) ApiGet(g game.ID, endpoint string, out interface{}) error {
-	return c.RawApiGet(fmt.Sprintf("%v/%v", g, endpoint), out)
+func (c *Client) ApiGet(ctx context.Context, g game.ID, endpoint string, out interface{}) error {
+	return c.RawApiGet(ctx, fmt.Sprintf("%v/%v", g, endpoint), out)
 }

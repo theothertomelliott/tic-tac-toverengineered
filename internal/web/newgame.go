@@ -9,7 +9,7 @@ import (
 
 func (s *Server) newGame(w http.ResponseWriter, req *http.Request) {
 	var gameID game.ID
-	if err := s.client.RawApiGet("/new", &gameID); err != nil {
+	if err := s.client.RawApiGet(req.Context(), "/new", &gameID); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

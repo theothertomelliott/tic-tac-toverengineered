@@ -22,7 +22,7 @@ func (s *Server) play(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	resp, err := s.client.Get(gameID, fmt.Sprintf("play?player=%v&pos=%v", playerParams[0], posParams[0]))
+	resp, err := s.client.Get(req.Context(), gameID, fmt.Sprintf("play?player=%v&pos=%v", playerParams[0], posParams[0]))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -40,7 +40,7 @@ func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 		data.PrevOffset = 0
 	}
 
-	if err := s.client.RawApiGet(fmt.Sprintf("/?max=%v&offset=%v", max, offset), &data.Games); err != nil {
+	if err := s.client.RawApiGet(req.Context(), fmt.Sprintf("/?max=%v&offset=%v", max, offset), &data.Games); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

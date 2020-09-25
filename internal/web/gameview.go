@@ -25,15 +25,15 @@ func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 	}{
 		Game: gameID,
 	}
-	if err := s.client.ApiGet(gameID, "grid", &data.Grid); err != nil {
+	if err := s.client.ApiGet(req.Context(), gameID, "grid", &data.Grid); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := s.client.ApiGet(gameID, "player/current", &data.NextPlayer); err != nil {
+	if err := s.client.ApiGet(req.Context(), gameID, "player/current", &data.NextPlayer); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := s.client.ApiGet(gameID, "winner", &data.Winner); err != nil {
+	if err := s.client.ApiGet(req.Context(), gameID, "winner", &data.Winner); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

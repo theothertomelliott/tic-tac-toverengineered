@@ -1,0 +1,13 @@
+FROM ../../+source
+
+build:
+    RUN --mount=type=cache,target=/root/.cache/go-build \
+        go build -v -o app ./cmd/api
+    SAVE ARTIFACT app app
+
+docker:
+    FROM alpine
+    WORKDIR /root
+    COPY +build/app .
+    ENTRYPOINT ["./app"]
+    SAVE IMAGE api-image:latest

@@ -1,0 +1,8 @@
+FROM ../../../+protobuild
+
+protos:
+    COPY current.proto .
+    RUN protoc --go_out=plugins=grpc:. \
+    --go_opt=paths=source_relative \
+    current.proto 
+    SAVE ARTIFACT current.pb.go current.pb.go AS LOCAL current.pb.go

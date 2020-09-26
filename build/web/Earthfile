@@ -11,5 +11,6 @@ docker:
     COPY +build/app .
     ENTRYPOINT ["./app"]
     ARG VERSION=dev
-    RUN echo "Building image for version $VERSION"
-    SAVE IMAGE web-image:$VERSION
+    ARG IMAGE_REF=api-image:$VERSION
+    RUN echo "Building image with tag $IMAGE_REF"
+    SAVE IMAGE $IMAGE_REF

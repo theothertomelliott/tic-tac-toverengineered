@@ -1,14 +1,8 @@
-FROM ../../+source
-
-build:
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o app ./cmd/api
-    SAVE ARTIFACT app app
+FROM alpine
+WORKDIR /root
 
 docker:
-    FROM alpine
-    WORKDIR /root
-    COPY +build/app .
+    COPY ../../+binaries/api ./app
     ENTRYPOINT ["./app"]
     ARG VERSION=dev
     ARG IMAGE_REF=api-image:$VERSION

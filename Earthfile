@@ -15,15 +15,23 @@ source:
 
 binaries:
     FROM +source
+
+    # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o api ./cmd/api
     SAVE ARTIFACT api api AS LOCAL .output/api
+    
+    # Current turn
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o currentturn ./cmd/currentturn
     SAVE ARTIFACT currentturn currentturn AS LOCAL .output/currentturn 
+    
+    # Game repo
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o gamerepo ./cmd/gamerepo
     SAVE ARTIFACT gamerepo gamerepo AS LOCAL .output/gamerepo
+    
+    # Web
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o web ./cmd/web
     SAVE ARTIFACT web web AS LOCAL .output/web
@@ -39,12 +47,6 @@ protobuild:
 protos:
     BUILD ./pkg/game/rpcrepository/+protos
     BUILD ./pkg/turn/rpcturn/+protos
-
-build:
-    BUILD ./build/web+build
-    BUILD ./build/api+build
-    BUILD ./build/currentturn+build
-    BUILD ./build/gamerepo+build
 
 images:
     BUILD ./build/web+docker

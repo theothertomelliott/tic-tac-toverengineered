@@ -1,3 +1,8 @@
+local_resource('protos', 'earth +protos', deps=[
+    'pkg/game/rpcrepository/repo.proto',
+    'pkg/turn/rpcturn/current.proto'
+])
+
 docker_build('api-image', '.', 
     dockerfile='build/api/Dockerfile')
 k8s_yaml('deploy/api/deploy.yaml')

@@ -32,6 +32,11 @@ binaries:
         go build -v -o web ./cmd/web
     SAVE ARTIFACT web web AS LOCAL .output/web
 
+    # Grid
+    RUN --mount=type=cache,target=/root/.cache/go-build \
+        go build -v -o grid ./cmd/grid
+    SAVE ARTIFACT grid grid AS LOCAL .output/grid
+
     SAVE IMAGE
 
 protobuild:
@@ -44,10 +49,12 @@ protobuild:
 
 protos:
     BUILD ./pkg/game/rpcrepository/+protos
+    BUILD ./pkg/grid/rpcgrid/+protos
     BUILD ./pkg/turn/rpcturn/+protos
 
 images:
     BUILD ./build/web+docker
+    BUILD ./build/grid+docker
     BUILD ./build/api+docker
     BUILD ./build/currentturn+docker
     BUILD ./build/gamerepo+docker

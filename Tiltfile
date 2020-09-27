@@ -59,3 +59,15 @@ custom_build(
 )
 k8s_yaml('deploy/currentturn/deploy.yaml')
 k8s_resource('currentturn', port_forwards=["8084:8080", "8085:8081"], resource_deps=['binary-build'])
+
+custom_build(
+    'grid-image',
+    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/grid/+docker',
+    ['./.output/grid'],
+    live_update = [
+        sync('./.output/grid', '/root/app'),
+        run('./restart.sh'),
+    ]
+)
+k8s_yaml('deploy/grid/deploy.yaml')
+k8s_resource('grid', port_forwards=["8086:8080", "8087:8081"], resource_deps=['binary-build'])

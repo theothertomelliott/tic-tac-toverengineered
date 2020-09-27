@@ -7,7 +7,7 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/api"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
@@ -27,10 +27,20 @@ func getRepoServerTarget() string {
 	return "localhost:8082"
 }
 
+func getGridServerTarget() string {
+	if serverTarget := os.Getenv("GRID_SERVER_TARGET"); serverTarget != "" {
+		return serverTarget
+	}
+	return "localhost:8086"
+}
+
 func main() {
 	log.Println("Starting api server")
 	mux := http.NewServeMux()
-	g := grid.NewInMemory()
+	g, err := rpcgrid.ConnectGrid(getGridServerTarget())
+	if err != nil {
+		log.Fatalf("could not connect to grid server: %v", err)
+	}
 	checker := gridchecker.New(g)
 	ct, err := rpcturn.ConnectCurrent(getCurrentTurnServerTarget())
 	if err != nil {

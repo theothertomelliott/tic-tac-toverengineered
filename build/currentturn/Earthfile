@@ -4,4 +4,4 @@ WORKDIR /root
 docker:
     ARG VERSION=dev
     ARG IMAGE_REF=currentturn-image:$VERSION
-    BUILD --build-arg BINARY=currentturn --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../+docker
+    BUILD --build-arg BINARY=currentturn --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

@@ -77,3 +77,16 @@ test:
     FROM +testdeps
     COPY . .
     RUN go test ./...
+
+docker:
+    FROM alpine
+    WORKDIR /root
+    ARG BINARY
+    COPY ./.output/$BINARY ./app
+    COPY ./build/start.sh .
+    COPY ./build/restart.sh .
+    ENTRYPOINT ["./start.sh", "/root/app"]
+    ARG VERSION=dev
+    ARG IMAGE_REF=api-image:$VERSION
+    RUN echo "Building image with tag $IMAGE_REF"
+    SAVE IMAGE $IMAGE_REF

@@ -4,4 +4,4 @@ WORKDIR /root
 docker:
     ARG VERSION=dev
     ARG IMAGE_REF=checker-image:$VERSION
-    BUILD --build-arg BINARY=checker --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../+docker
+    BUILD --build-arg BINARY=checker --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

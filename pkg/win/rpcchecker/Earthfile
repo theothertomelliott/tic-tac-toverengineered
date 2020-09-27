@@ -1,0 +1,9 @@
+
+FROM ../../../+protobuild
+
+protos:
+    COPY checker.proto .
+    RUN protoc --go_out=plugins=grpc:. \
+    --go_opt=paths=source_relative \
+    checker.proto 
+    SAVE ARTIFACT checker.pb.go checker.pb.go AS LOCAL checker.pb.go

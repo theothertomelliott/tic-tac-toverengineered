@@ -37,6 +37,11 @@ binaries:
         go build -v -o grid ./cmd/grid
     SAVE ARTIFACT grid grid AS LOCAL .output/grid
 
+    # Win Checker
+    RUN --mount=type=cache,target=/root/.cache/go-build \
+        go build -v -o checker ./cmd/checker
+    SAVE ARTIFACT checker checker AS LOCAL .output/checker
+
     SAVE IMAGE
 
 protobuild:
@@ -51,6 +56,7 @@ protos:
     BUILD ./pkg/game/rpcrepository/+protos
     BUILD ./pkg/grid/rpcgrid/+protos
     BUILD ./pkg/turn/rpcturn/+protos
+    BUILD ./pkg/win/rpcchecker/+protos
 
 images:
     BUILD ./build/web+docker
@@ -58,6 +64,7 @@ images:
     BUILD ./build/api+docker
     BUILD ./build/currentturn+docker
     BUILD ./build/gamerepo+docker
+    BUILD ./build/checker+docker
 
 testdeps:
     FROM golang:1.15

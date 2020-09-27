@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "github.com/theothertomelliott/tic-tac-toeverengineered/pkg/win/rpcchecker";
+
+message WinnerRequest{
+    string game_id = 1;
+}
+message WinnerResponse{
+    string mark = 1;
+    bool has_winner = 2;
+}
+
+service Checker {
+    rpc Winner(WinnerRequest) returns (WinnerResponse) {}
+}

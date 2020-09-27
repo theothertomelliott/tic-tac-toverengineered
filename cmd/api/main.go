@@ -10,7 +10,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
 )
 
 func getCurrentTurnServerTarget() string {
@@ -34,6 +34,13 @@ func getGridServerTarget() string {
 	return "localhost:8086"
 }
 
+func getCheckerServerTarget() string {
+	if serverTarget := os.Getenv("CHECKER_SERVER_TARGET"); serverTarget != "" {
+		return serverTarget
+	}
+	return "localhost:8088"
+}
+
 func main() {
 	log.Println("Starting api server")
 	mux := http.NewServeMux()
@@ -41,7 +48,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not connect to grid server: %v", err)
 	}
-	checker := gridchecker.New(g)
+	checker, err := rpcchecker.ConnectChecker(getCheckerServerTarget())
+	if err != nil {
+		log.Fatalf("could not connect to win checker server: %v", err)
+	}
 	ct, err := rpcturn.ConnectCurrent(getCurrentTurnServerTarget())
 	if err != nil {
 		log.Fatalf("could not connect to current turn server: %v", err)

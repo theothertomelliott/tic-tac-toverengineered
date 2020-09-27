@@ -3,5 +3,5 @@ WORKDIR /root
 
 docker:
     ARG VERSION=dev
-    ARG IMAGE_REF=api-image:$VERSION
+    ARG IMAGE_REF=web-image:$VERSION
     BUILD --build-arg BINARY=web --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../+docker

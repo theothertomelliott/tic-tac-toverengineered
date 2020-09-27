@@ -1,0 +1,13 @@
+FROM alpine
+WORKDIR /root
+
+docker:
+    ARG BINARY
+    COPY ../+binaries/$BINARY ./app
+    COPY start.sh .
+    COPY restart.sh .
+    ENTRYPOINT ["./start.sh", "/root/app"]
+    ARG VERSION=dev
+    ARG IMAGE_REF=api-image:$VERSION
+    RUN echo "Building image with tag $IMAGE_REF"
+    SAVE IMAGE $IMAGE_REF

@@ -12,62 +12,21 @@ local_resource(
     resource_deps=['protos']
 )
 
-custom_build(
-    'api-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/api/+docker',
-    ['./.output/api'],
-    live_update = [
-        sync('./.output/api', '/root/app'),
-        run('./restart.sh'),
-    ]
-)
-k8s_yaml('deploy/api/deploy.yaml')
-k8s_resource('api', port_forwards="8081:8080", resource_deps=['binary-build'])
+def server(name, port_forwards):
+    custom_build(
+        name+'-image',
+        'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/' + name + '/+docker',
+        ['./.output/'+name],
+        live_update = [
+            sync('./.output/'+name, '/root/app'),
+            run('./restart.sh'),
+        ]
+    )
+    k8s_yaml('deploy/' + name + '/deploy.yaml')
+    k8s_resource(name, port_forwards=port_forwards, resource_deps=['binary-build'])
 
-custom_build(
-    'web-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/web/+docker',
-    ['./.output/web'],
-    live_update = [
-        sync('./.output/web', '/root/app'),
-        run('./restart.sh'),
-    ]
-)
-k8s_yaml('deploy/web/deploy.yaml')
-k8s_resource('web', port_forwards="8080:8080", resource_deps=['binary-build'])
-
-custom_build(
-    'gamerepo-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/gamerepo/+docker',
-    ['./.output/gamerepo'],
-    live_update = [
-        sync('./.output/gamerepo', '/root/app'),
-        run('./restart.sh'),
-    ]
-)
-k8s_yaml('deploy/gamerepo/deploy.yaml')
-k8s_resource('gamerepo', port_forwards=["8082:8080", "8083:8081"], resource_deps=['binary-build'])
-
-custom_build(
-    'currentturn-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/currentturn/+docker',
-    ['./.output/currentturn'],
-    live_update = [
-        sync('./.output/currentturn', '/root/app'),
-        run('./restart.sh'),
-    ]
-)
-k8s_yaml('deploy/currentturn/deploy.yaml')
-k8s_resource('currentturn', port_forwards=["8084:8080", "8085:8081"], resource_deps=['binary-build'])
-
-custom_build(
-    'grid-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/grid/+docker',
-    ['./.output/grid'],
-    live_update = [
-        sync('./.output/grid', '/root/app'),
-        run('./restart.sh'),
-    ]
-)
-k8s_yaml('deploy/grid/deploy.yaml')
-k8s_resource('grid', port_forwards=["8086:8080", "8087:8081"], resource_deps=['binary-build'])
+server("api", "8081:8080")
+server("web", "8080:8080")
+server("gamerepo", ["8082:8080", "8083:8081"])
+server("currentturn", ["8084:8080", "8085:8081"])
+server("grid",["8086:8080", "8087:8081"])

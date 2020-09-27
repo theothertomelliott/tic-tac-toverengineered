@@ -36,6 +36,8 @@ binaries:
         go build -v -o web ./cmd/web
     SAVE ARTIFACT web web AS LOCAL .output/web
 
+    SAVE IMAGE
+
 protobuild:
     FROM +deps
     RUN apk add protoc

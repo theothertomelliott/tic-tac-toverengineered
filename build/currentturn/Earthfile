@@ -3,7 +3,9 @@ WORKDIR /root
 
 docker:
     COPY ../../+binaries/currentturn ./app
-    ENTRYPOINT ["./app"]
+    COPY start.sh .
+    COPY restart.sh .
+    ENTRYPOINT ["./start.sh", "/root/app"]
     ARG VERSION=dev
     ARG IMAGE_REF=api-image:$VERSION
     RUN echo "Building image with tag $IMAGE_REF"

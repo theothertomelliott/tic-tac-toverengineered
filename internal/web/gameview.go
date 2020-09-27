@@ -59,6 +59,7 @@ const gameviewTmpl = `
 </head>
 <body>
 	<h1>Tic Tac Toe</h1>
+	<p><a href="/">Home</a></p>
 	{{if .Winner}}
 		<p>Winner: {{.Winner}}</p>
 	{{else}}

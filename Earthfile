@@ -8,13 +8,9 @@ deps:
     SAVE ARTIFACT go.sum AS LOCAL go.sum
     SAVE IMAGE
 
-source:
+binaries:
     FROM +deps
     COPY . .
-    SAVE IMAGE
-
-binaries:
-    FROM +source
 
     # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \

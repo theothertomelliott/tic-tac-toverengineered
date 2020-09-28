@@ -42,6 +42,11 @@ binaries:
         go build -v -o checker ./cmd/checker
     SAVE ARTIFACT checker checker AS LOCAL .output/checker
 
+    # Turn Controller
+    RUN --mount=type=cache,target=/root/.cache/go-build \
+        go build -v -o turncontroller ./cmd/turncontroller
+    SAVE ARTIFACT turncontroller turncontroller AS LOCAL .output/turncontroller
+
     SAVE IMAGE
 
 protobuild:
@@ -65,6 +70,7 @@ images:
     BUILD ./build/currentturn+docker
     BUILD ./build/gamerepo+docker
     BUILD ./build/checker+docker
+    BUILD ./build/turncontroller+docker
 
 testdeps:
     FROM golang:1.15

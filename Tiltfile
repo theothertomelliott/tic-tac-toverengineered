@@ -1,6 +1,11 @@
 local_resource('protos', 'earth +protos', deps=[
     'pkg/game/rpcrepository/repo.proto',
-    'pkg/turn/rpcturn/current.proto'
+    'pkg/game/rpcrepository/Earthfile',
+    'pkg/turn/rpcturn/current.proto',
+    'pkg/turn/rpcturn/controller.proto',
+    'pkg/turn/rpcturn/Earthfile',
+    'pkg/grid/rpcgrid/grid.proto',
+    'pkg/grid/rpcgrid/Earthfile'
 ])
 
 local_resource(
@@ -31,3 +36,4 @@ server("gamerepo", ["8082:8080", "8083:8081"])
 server("currentturn", ["8084:8080", "8085:8081"])
 server("grid",["8086:8080", "8087:8081"])
 server("checker",["8088:8080", "8089:8081"])
+server("turncontroller",["8090:8080", "8091:8081"])

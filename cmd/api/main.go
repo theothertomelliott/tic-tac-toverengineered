@@ -8,7 +8,6 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/api"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
 )
@@ -41,6 +40,13 @@ func getCheckerServerTarget() string {
 	return "localhost:8088"
 }
 
+func getTurnControllerServerTarget() string {
+	if serverTarget := os.Getenv("TURN_CONTROLLER_SERVER_TARGET"); serverTarget != "" {
+		return serverTarget
+	}
+	return "localhost:8090"
+}
+
 func main() {
 	log.Println("Starting api server")
 	mux := http.NewServeMux()
@@ -52,16 +58,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not connect to win checker server: %v", err)
 	}
-	ct, err := rpcturn.ConnectCurrent(getCurrentTurnServerTarget())
+	controller, err := rpcturn.ConnectController(getTurnControllerServerTarget())
 	if err != nil {
-		log.Fatalf("could not connect to current turn server: %v", err)
+		log.Fatalf("could not connect to turn controller server: %v", err)
 	}
-
-	controller := inmemoryturns.New(
-		ct,
-		g,
-		checker,
-	)
 	r, err := repoclient.Connect(getRepoServerTarget())
 	if err != nil {
 		log.Fatalf("could not connect to repo server: %v", err)

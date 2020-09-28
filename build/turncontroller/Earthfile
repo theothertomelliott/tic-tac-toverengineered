@@ -1,0 +1,7 @@
+FROM alpine
+WORKDIR /root
+
+docker:
+    ARG VERSION=dev
+    ARG IMAGE_REF=turncontroller-image:$VERSION
+    BUILD --build-arg BINARY=turncontroller --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

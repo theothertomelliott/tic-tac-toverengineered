@@ -13,6 +13,8 @@ import (
 	gridserver "github.com/theothertomelliott/tic-tac-toverengineered/internal/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
+	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/rpcspace"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -25,7 +27,21 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	gridBackend := grid.NewInMemory()
+
+	var spaces [][]space.Space
+	for i := 0; i < 3; i++ {
+		var row []space.Space
+		for j := 0; j < 3; j++ {
+			c, err := rpcspace.ConnectSpace(fmt.Sprintf("space-%d-%d:80", i, j))
+			if err != nil {
+				log.Fatalf("space (%d,%d): %v", i, j, err)
+			}
+			row = append(row, c)
+		}
+		spaces = append(spaces, row)
+	}
+	gridBackend, _ := grid.New(spaces)
+
 	rpcgrid.RegisterGridServer(grpcServer, gridserver.NewServer(gridBackend))
 	log.Printf("gRPC listening on port :%v", port)
 	go grpcServer.Serve(lis)

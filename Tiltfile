@@ -5,7 +5,9 @@ local_resource('protos', 'earth +protos', deps=[
     'pkg/turn/rpcturn/controller.proto',
     'pkg/turn/rpcturn/Earthfile',
     'pkg/grid/rpcgrid/grid.proto',
-    'pkg/grid/rpcgrid/Earthfile'
+    'pkg/grid/rpcgrid/Earthfile',
+    'pkg/space/rpcspace/space.proto',
+    'pkg/space/rpcspace/Earthfile'
 ])
 
 local_resource(
@@ -37,3 +39,15 @@ server("currentturn", ["8084:8080", "8085:8081"])
 server("grid",["8086:8080", "8087:8081"])
 server("checker",["8088:8080", "8089:8081"])
 server("turncontroller",["8090:8080", "8091:8081"])
+
+# Add spaces without port forwards
+custom_build(
+    'space-image',
+    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/space/+docker',
+    ['./.output/space'],
+    live_update = [
+        sync('./.output/space', '/root/app'),
+        run('./restart.sh'),
+    ]
+)
+k8s_yaml('deploy/space/deploy.yaml')

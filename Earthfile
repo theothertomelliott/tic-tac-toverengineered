@@ -47,6 +47,11 @@ binaries:
         go build -v -o turncontroller ./cmd/turncontroller
     SAVE ARTIFACT turncontroller turncontroller AS LOCAL .output/turncontroller
 
+    # Space
+    RUN --mount=type=cache,target=/root/.cache/go-build \
+        go build -v -o space ./cmd/space
+    SAVE ARTIFACT space space AS LOCAL .output/space
+
     SAVE IMAGE
 
 protobuild:
@@ -62,6 +67,7 @@ protos:
     BUILD ./pkg/grid/rpcgrid/+protos
     BUILD ./pkg/turn/rpcturn/+protos
     BUILD ./pkg/win/rpcchecker/+protos
+    BUILD ./pkg/space/rpcspace/+protos
 
 images:
     BUILD ./build/web+docker
@@ -71,6 +77,7 @@ images:
     BUILD ./build/gamerepo+docker
     BUILD ./build/checker+docker
     BUILD ./build/turncontroller+docker
+    BUILD ./build/space+docker
 
 testdeps:
     FROM golang:1.15

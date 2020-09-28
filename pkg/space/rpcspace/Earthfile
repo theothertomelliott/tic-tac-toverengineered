@@ -1,0 +1,9 @@
+
+FROM ../../../+protobuild
+
+protos:
+    COPY space.proto .
+    RUN protoc --go_out=plugins=grpc:. \
+    --go_opt=paths=source_relative \
+    space.proto 
+    SAVE ARTIFACT space.pb.go space.pb.go AS LOCAL space.pb.go

@@ -1,22 +1,27 @@
-local_resource('protos', 'earth +protos', deps=[
-    'pkg/game/rpcrepository/repo.proto',
-    'pkg/game/rpcrepository/Earthfile',
-    'pkg/turn/rpcturn/current.proto',
-    'pkg/turn/rpcturn/controller.proto',
-    'pkg/turn/rpcturn/Earthfile',
-    'pkg/grid/rpcgrid/grid.proto',
-    'pkg/grid/rpcgrid/Earthfile',
-    'pkg/space/rpcspace/space.proto',
-    'pkg/space/rpcspace/Earthfile'
-])
+local_resource(
+    'protos', 
+    'earth +protos', 
+    deps=[
+        'pkg/game/rpcrepository/repo.proto',
+        'pkg/game/rpcrepository/Earthfile',
+        'pkg/turn/rpcturn/current.proto',
+        'pkg/turn/rpcturn/controller.proto',
+        'pkg/turn/rpcturn/Earthfile',
+        'pkg/grid/rpcgrid/grid.proto',
+        'pkg/grid/rpcgrid/Earthfile',
+        'pkg/space/rpcspace/space.proto',
+        'pkg/space/rpcspace/Earthfile'
+    ],
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+)
 
 local_resource(
     'binary-build', 
     'earth +binaries', 
     deps=[
         'cmd', 'internal', 'pkg'
-    ], 
-    resource_deps=['protos']
+    ]
 )
 
 def server(name, port_forwards):

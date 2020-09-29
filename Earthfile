@@ -10,8 +10,10 @@ deps:
 
 binaries:
     FROM +deps
-    COPY . .
-
+    COPY --dir cmd ./cmd
+    COPY --dir internal ./internal
+    COPY --dir pkg ./pkg
+    
     # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o api ./cmd/api

@@ -1,5 +1,7 @@
+# Note that this isn't used by the Earthly builds
 README.md
 LICENSE
 Tiltfile
 build
 deploy
+.output

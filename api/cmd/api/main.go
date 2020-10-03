@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/api"
+	api "github.com/theothertomelliott/tic-tac-toverengineered/api/internal"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"

@@ -13,11 +13,12 @@ binaries:
     COPY --dir cmd ./cmd
     COPY --dir internal ./internal
     COPY --dir pkg ./pkg
-    
+    COPY --dir api ./api
+
     # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o api ./cmd/api
-    SAVE ARTIFACT api api AS LOCAL .output/api
+        go build -v -o ./.output/api ./api/cmd/api
+    SAVE ARTIFACT ./.output/api api AS LOCAL .output/api
     
     # Current turn
     RUN --mount=type=cache,target=/root/.cache/go-build \
@@ -74,7 +75,7 @@ protos:
 images:
     BUILD ./build/web+docker
     BUILD ./build/grid+docker
-    BUILD ./build/api+docker
+    BUILD ./api/build+docker
     BUILD ./build/currentturn+docker
     BUILD ./build/gamerepo+docker
     BUILD ./build/checker+docker

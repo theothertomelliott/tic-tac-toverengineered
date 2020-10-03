@@ -1,3 +1,5 @@
+update_settings(max_parallel_updates=11)
+
 local_resource(
     'protos', 
     'earth +protos', 

@@ -7,7 +7,7 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/spaceinmemory"
+	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
 )
 
 func TestSpaceCanBeWritten(t *testing.T) {

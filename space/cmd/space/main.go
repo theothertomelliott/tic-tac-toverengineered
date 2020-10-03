@@ -6,9 +6,9 @@ import (
 	"net"
 	"os"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/space"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/rpcspace"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/spaceinmemory"
+	space "github.com/theothertomelliott/tic-tac-toverengineered/space/internal"
+	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
+	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
 	"google.golang.org/grpc"
 )
 

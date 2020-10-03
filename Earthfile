@@ -15,6 +15,7 @@ binaries:
     COPY --dir pkg ./pkg
     COPY --dir api ./api
     COPY --dir web ./web
+    COPY --dir space ./space
 
     # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \
@@ -53,8 +54,8 @@ binaries:
 
     # Space
     RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o space ./cmd/space
-    SAVE ARTIFACT space space AS LOCAL .output/space
+        go build -v -o ./.output/space ./space/cmd/space
+    SAVE ARTIFACT ./.output/space space AS LOCAL .output/space
 
     SAVE IMAGE
 
@@ -71,7 +72,7 @@ protos:
     BUILD ./pkg/grid/rpcgrid/+protos
     BUILD ./pkg/turn/rpcturn/+protos
     BUILD ./pkg/win/rpcchecker/+protos
-    BUILD ./pkg/space/rpcspace/+protos
+    BUILD ./space/pkg/rpcspace/+protos
 
 images:
     BUILD ./web/build+docker
@@ -81,7 +82,7 @@ images:
     BUILD ./build/gamerepo+docker
     BUILD ./build/checker+docker
     BUILD ./build/turncontroller+docker
-    BUILD ./build/space+docker
+    BUILD ./space/build+docker
 
 testdeps:
     FROM golang:1.15

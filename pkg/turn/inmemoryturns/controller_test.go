@@ -8,10 +8,10 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/spaceinmemory"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
+	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
+	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
 )
 
 const testID = game.ID("test")

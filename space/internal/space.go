@@ -5,8 +5,8 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/rpcspace"
+	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
+	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
 )
 
 func NewServer(s space.Space) rpcspace.SpaceServer {

@@ -7,8 +7,8 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/space/spaceinmemory"
+	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
+	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
 )
 
 const testID = game.ID("test")

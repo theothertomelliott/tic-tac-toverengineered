@@ -63,11 +63,11 @@ server("turncontroller",["8090:8080", "8091:8081"])
 # Add spaces without port forwards
 custom_build(
     'space-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./build/space/+docker',
+    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./space/build+docker',
     ['./.output/space'],
     live_update = [
         sync('./.output/space', '/root/app'),
         run('./restart.sh'),
     ]
 )
-k8s_yaml('deploy/space/deploy.yaml')
+k8s_yaml('space/deploy/deploy.yaml')

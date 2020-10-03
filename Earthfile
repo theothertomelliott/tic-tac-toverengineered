@@ -14,6 +14,7 @@ binaries:
     COPY --dir internal ./internal
     COPY --dir pkg ./pkg
     COPY --dir api ./api
+    COPY --dir web ./web
 
     # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \
@@ -32,8 +33,8 @@ binaries:
     
     # Web
     RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o web ./cmd/web
-    SAVE ARTIFACT web web AS LOCAL .output/web
+        go build -v -o ./.output/web ./web/cmd/web
+    SAVE ARTIFACT ./.output/web web AS LOCAL .output/web
 
     # Grid
     RUN --mount=type=cache,target=/root/.cache/go-build \
@@ -73,7 +74,7 @@ protos:
     BUILD ./pkg/space/rpcspace/+protos
 
 images:
-    BUILD ./build/web+docker
+    BUILD ./web/build+docker
     BUILD ./build/grid+docker
     BUILD ./api/build+docker
     BUILD ./build/currentturn+docker

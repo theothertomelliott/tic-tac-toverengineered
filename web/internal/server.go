@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/web/apiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/web/internal/apiclient"
 )
 
 func New(client *apiclient.Client) *Server {

@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/web"
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/web/apiclient"
+	web "github.com/theothertomelliott/tic-tac-toverengineered/web/internal"
+	"github.com/theothertomelliott/tic-tac-toverengineered/web/internal/apiclient"
 )
 
 func getAPIBaseURL() string {

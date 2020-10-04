@@ -10,54 +10,19 @@ deps:
 
 binaries:
     FROM +deps
-    COPY --dir cmd ./cmd
-    COPY --dir internal ./internal
-    COPY --dir pkg ./pkg
-    COPY --dir api ./api
-    COPY --dir web ./web
-    COPY --dir space ./space
+    COPY --dir cmd internal pkg api web space  .
 
-    # Api
     RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o ./.output/api ./api/cmd/api
-    SAVE ARTIFACT ./.output/api api AS LOCAL .output/api
-    
-    # Current turn
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o currentturn ./cmd/currentturn
-    SAVE ARTIFACT currentturn currentturn AS LOCAL .output/currentturn 
-    
-    # Game repo
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o gamerepo ./cmd/gamerepo
-    SAVE ARTIFACT gamerepo gamerepo AS LOCAL .output/gamerepo
-    
-    # Web
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o ./.output/web ./web/cmd/web
-    SAVE ARTIFACT ./.output/web web AS LOCAL .output/web
-
-    # Grid
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o grid ./cmd/grid
-    SAVE ARTIFACT grid grid AS LOCAL .output/grid
-
-    # Win Checker
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o checker ./cmd/checker
-    SAVE ARTIFACT checker checker AS LOCAL .output/checker
-
-    # Turn Controller
-    RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o turncontroller ./cmd/turncontroller
-    SAVE ARTIFACT turncontroller turncontroller AS LOCAL .output/turncontroller
-
-    # Space
-    RUN --mount=type=cache,target=/root/.cache/go-build \
+        go build -v -o ./.output/api ./api/cmd/api && \    
+        go build -v -o ./.output/currentturn ./cmd/currentturn && \
+        go build -v -o ./.output/gamerepo ./cmd/gamerepo && \
+        go build -v -o ./.output/web ./web/cmd/web && \
+        go build -v -o ./.output/grid ./cmd/grid && \
+        go build -v -o ./.output/checker ./cmd/checker && \
+        go build -v -o ./.output/turncontroller ./cmd/turncontroller && \
         go build -v -o ./.output/space ./space/cmd/space
-    SAVE ARTIFACT ./.output/space space AS LOCAL .output/space
-
-    SAVE IMAGE
+    
+    SAVE ARTIFACT ./.output/* ./.output/ AS LOCAL ./.output/
 
 protobuild:
     FROM +deps

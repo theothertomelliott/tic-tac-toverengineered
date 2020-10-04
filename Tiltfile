@@ -22,7 +22,7 @@ local_resource(
     'binary-build', 
     'earth +binaries', 
     deps=[
-        'cmd', 'internal', 'pkg'
+        'cmd', 'internal', 'pkg', 'web',  'api', 'space'
     ]
 )
 

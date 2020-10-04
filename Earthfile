@@ -22,7 +22,7 @@ binaries:
         go build -v -o ./.output/turncontroller ./cmd/turncontroller && \
         go build -v -o ./.output/space ./space/cmd/space
     
-    SAVE ARTIFACT ./.output/* ./.output/ AS LOCAL ./.output/
+    SAVE ARTIFACT ./.output/* AS LOCAL ./.output/
 
 protobuild:
     FROM +deps

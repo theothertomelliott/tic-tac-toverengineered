@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
 func (s *Server) verifyID(w http.ResponseWriter, req *http.Request) (game.ID, error) {

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
 // New creates a new game.Repository with

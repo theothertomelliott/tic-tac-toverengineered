@@ -3,8 +3,8 @@ package gamerepo
 import (
 	context "context"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository"
 )
 
 func NewServer(repo game.Repository) rpcrepository.RepoServer {

@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
 func New(baseURL string) *Client {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
 func NewServer(checker win.Checker) rpcchecker.CheckerServer {

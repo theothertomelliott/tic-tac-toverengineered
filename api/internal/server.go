@@ -8,8 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 )
 
 func New(

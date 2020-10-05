@@ -1,4 +1,4 @@
-FROM ../../../+protobuild
+FROM ../../../../+protobuild
 
 protos:
     COPY repo.proto .

@@ -54,7 +54,7 @@ def server2(name, port_forwards):
 
 server2("api", "8081:8080")
 server2("web", "8080:8080")
-server("gamerepo", ["8082:8080", "8083:8081"])
+server2("gamerepo", ["8082:8080", "8083:8081"])
 server2("currentturn", ["8084:8080", "8085:8081"])
 server2("grid",["8086:8080", "8087:8081"])
 server2("checker",["8088:8080", "8089:8081"])

@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 )
 
 func NewServer(grid grid.Grid) rpcgrid.GridServer {

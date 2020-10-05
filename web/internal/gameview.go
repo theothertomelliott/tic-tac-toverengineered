@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
 func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {

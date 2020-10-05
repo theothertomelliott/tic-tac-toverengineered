@@ -10,12 +10,12 @@ deps:
 
 binaries:
     FROM +deps
-    COPY --dir cmd common internal pkg api web space grid checker currentturn .
+    COPY --dir cmd common internal pkg api web space grid checker currentturn gamerepo .
 
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o ./.output/api ./api/cmd/api && \    
         go build -v -o ./.output/currentturn ./currentturn/cmd/currentturn && \
-        go build -v -o ./.output/gamerepo ./cmd/gamerepo && \
+        go build -v -o ./.output/gamerepo ./gamerepo/cmd/gamerepo && \
         go build -v -o ./.output/web ./web/cmd/web && \
         go build -v -o ./.output/grid ./grid/cmd/grid && \
         go build -v -o ./.output/checker ./checker/cmd/checker && \
@@ -33,7 +33,7 @@ protobuild:
     SAVE IMAGE
 
 protos:
-    BUILD ./pkg/game/rpcrepository/+protos
+    BUILD ./gamerepo/pkg/game/rpcrepository/+protos
     BUILD ./grid/pkg/grid/rpcgrid/+protos
     BUILD ./currentturn/pkg/turn/rpcturn/+protos
     BUILD ./checker/pkg/win/rpcchecker/+protos

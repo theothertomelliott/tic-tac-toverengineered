@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository";
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository";
 
 message NewResponse {
     string ID = 1;

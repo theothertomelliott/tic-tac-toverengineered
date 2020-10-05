@@ -6,9 +6,9 @@ import (
 	"net"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/gamerepo"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/inmemoryrepository"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/internal/gamerepo"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/inmemoryrepository"
+	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

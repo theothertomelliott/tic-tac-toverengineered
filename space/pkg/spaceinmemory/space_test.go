@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
 )
 

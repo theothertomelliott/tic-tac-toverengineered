@@ -3,8 +3,8 @@ package space
 import (
 	"context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
 )

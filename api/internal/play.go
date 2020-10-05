@@ -3,9 +3,9 @@ package api
 import (
 	"net/http"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/param"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 
 func (s *Server) playHandler(w http.ResponseWriter, req *http.Request) {

@@ -3,8 +3,8 @@ package grid
 import (
 	"context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 
 // Grid provides functions to interact with a grid

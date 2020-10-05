@@ -35,8 +35,8 @@ protobuild:
 protos:
     BUILD ./pkg/game/rpcrepository/+protos
     BUILD ./grid/pkg/grid/rpcgrid/+protos
-    BUILD ./pkg/turn/rpcturn/+protos
-    BUILD ./pkg/win/rpcchecker/+protos
+    BUILD ./currentturn/pkg/turn/rpcturn/+protos
+    BUILD ./checker/pkg/win/rpcchecker/+protos
     BUILD ./space/pkg/rpcspace/+protos
 
 images:

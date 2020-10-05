@@ -1,8 +1,8 @@
-FROM ../../../+protobuild
+FROM ../../../../+protobuild
 
 protos:
     COPY current.proto controller.proto .
-    COPY ../../../grid/pkg/grid/rpcgrid/+protos/grid.proto .
+    COPY ../../../../grid/pkg/grid/rpcgrid/+protos/grid.proto .
     RUN protoc --go_out=plugins=grpc:. \
     --go_opt=paths=source_relative \
     current.proto 

@@ -1,5 +1,5 @@
 
-FROM ../../../+protobuild
+FROM ../../../../+protobuild
 
 protos:
     COPY checker.proto .

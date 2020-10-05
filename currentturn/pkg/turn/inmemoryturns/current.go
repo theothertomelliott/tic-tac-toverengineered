@@ -3,9 +3,9 @@ package inmemoryturns
 import (
 	"context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
 )
 
 // NewCurrentTurn creates an in-memory instance of turn.Current

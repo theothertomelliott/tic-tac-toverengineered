@@ -6,10 +6,10 @@ import (
 	"os"
 
 	api "github.com/theothertomelliott/tic-tac-toverengineered/api/internal"
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game/rpcrepository/repoclient"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
-	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 )
 
 func getCurrentTurnServerTarget() string {

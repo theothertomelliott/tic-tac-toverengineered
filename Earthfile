@@ -10,11 +10,11 @@ deps:
 
 binaries:
     FROM +deps
-    COPY --dir cmd common internal pkg api web space grid checker .
+    COPY --dir cmd common internal pkg api web space grid checker currentturn .
 
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o ./.output/api ./api/cmd/api && \    
-        go build -v -o ./.output/currentturn ./cmd/currentturn && \
+        go build -v -o ./.output/currentturn ./currentturn/cmd/currentturn && \
         go build -v -o ./.output/gamerepo ./cmd/gamerepo && \
         go build -v -o ./.output/web ./web/cmd/web && \
         go build -v -o ./.output/grid ./grid/cmd/grid && \

@@ -6,9 +6,9 @@ import (
 	"net"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
-	"github.com/theothertomelliott/tic-tac-toverengineered/internal/currentturn"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/internal/currentturn"
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/inmemoryturns"
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

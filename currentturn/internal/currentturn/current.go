@@ -3,9 +3,9 @@ package currentturn
 import (
 	"context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn"
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
 )
 
 func NewServer(current turn.Current) rpcturn.CurrentServer {

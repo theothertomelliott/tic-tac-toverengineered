@@ -6,10 +6,10 @@ import (
 	"testing"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/gridchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
 )

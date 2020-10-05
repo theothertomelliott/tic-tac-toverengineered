@@ -1,15 +1,12 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net"
-	"net/http"
 	"os"
-	"path/filepath"
 
-	"github.com/fullstorydev/grpcui/standalone"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/turncontroller"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
@@ -68,44 +65,17 @@ func main() {
 	reflection.Register(grpcServer)
 
 	var done = make(chan struct{})
-
 	go func() {
 		err := grpcServer.Serve(lis)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
-
 	go func() {
-		err := startGrpcUI(port, grpcuiPort)
+		err := rpcui.Start(port, grpcuiPort)
 		if err != nil {
 			log.Printf("Failed to start gRPCUI: %v", err)
 		}
 	}()
-
 	<-done
-}
-
-func startGrpcUI(port, grpcuiPort int) error {
-	// Create a connection to local gRPC
-	serverAddr := fmt.Sprintf("127.0.0.1:%d", port)
-	cc, err := grpc.Dial(serverAddr, grpc.WithInsecure())
-	if err != nil {
-		return fmt.Errorf("failed to connect to localhost: %w", err)
-	}
-
-	// Create the grpcui handler
-	target := fmt.Sprintf("%s:%d", filepath.Base(os.Args[0]), port)
-	h, err := standalone.HandlerViaReflection(context.Background(), cc, target)
-	if err != nil {
-		return fmt.Errorf("failed to create handler for local server %q: %w", target, err)
-	}
-
-	// Add to an http server
-	serveMux := http.NewServeMux()
-	serveMux.Handle("/", h)
-	log.Printf("grpcui listening on port :%v", grpcuiPort)
-	http.ListenAndServe(fmt.Sprintf(":%v", grpcuiPort), serveMux)
-
-	return nil
 }

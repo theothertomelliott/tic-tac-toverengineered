@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/theothertomelliott/tic-tac-toeverengineered/space/pkg/rpcspace";
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace";
 
 message MarkRequest {
     string game_id = 1;

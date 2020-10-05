@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/theothertomelliott/tic-tac-toeverengineered/pkg/turn/rpcturn";
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn";
 
 message PlayerRequest {
     string game_id = 1; 

@@ -4,6 +4,7 @@ import (
 	context "context"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
+	rpcgrid "github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	grpc "google.golang.org/grpc"
@@ -48,14 +49,14 @@ func (c *Controller) NextPlayer(ctx context.Context, id game.ID) (player.Mark, e
 	return player.Mark(resp.Mark), nil
 }
 
-func PositionToProtoPosition(pos grid.Position) *Position {
-	return &Position{
+func PositionToProtoPosition(pos grid.Position) *rpcgrid.Position {
+	return &rpcgrid.Position{
 		X: int32(pos.X),
 		Y: int32(pos.Y),
 	}
 }
 
-func ProtoPositionToPosition(pos *Position) grid.Position {
+func ProtoPositionToPosition(pos *rpcgrid.Position) grid.Position {
 	return grid.Position{
 		X: int(pos.X),
 		Y: int(pos.Y),

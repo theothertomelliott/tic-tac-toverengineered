@@ -2,11 +2,13 @@ FROM ../../../+protobuild
 
 protos:
     COPY current.proto controller.proto .
+    COPY ../../../grid/pkg/grid/rpcgrid/+protos/grid.proto .
     RUN protoc --go_out=plugins=grpc:. \
     --go_opt=paths=source_relative \
     current.proto 
     SAVE ARTIFACT current.pb.go current.pb.go AS LOCAL current.pb.go
+
     RUN protoc --go_out=plugins=grpc:. \
     --go_opt=paths=source_relative \
-    controller.proto 
+    controller.proto
     SAVE ARTIFACT controller.pb.go controller.pb.go AS LOCAL controller.pb.go

@@ -7,3 +7,4 @@ protos:
     --go_opt=paths=source_relative \
     grid.proto 
     SAVE ARTIFACT grid.pb.go grid.pb.go AS LOCAL grid.pb.go
+    SAVE ARTIFACT grid.proto grid.proto

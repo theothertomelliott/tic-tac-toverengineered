@@ -10,7 +10,7 @@ deps:
 
 binaries:
     FROM +deps
-    COPY --dir cmd internal pkg api web space grid  .
+    COPY --dir cmd common internal pkg api web space grid  .
 
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o ./.output/api ./api/cmd/api && \    

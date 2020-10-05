@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 
 	"github.com/fullstorydev/grpcui/standalone"
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	checkerserver "github.com/theothertomelliott/tic-tac-toverengineered/internal/checker"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
 	"google.golang.org/grpc"

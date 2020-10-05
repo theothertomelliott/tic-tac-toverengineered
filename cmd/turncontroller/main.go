@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 
 	"github.com/fullstorydev/grpcui/standalone"
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/turncontroller"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
@@ -63,22 +63,42 @@ func main() {
 	controllerBackend := inmemoryturns.New(ct, g, checker)
 	rpcturn.RegisterControllerServer(grpcServer, turncontroller.NewServer(controllerBackend))
 	log.Printf("gRPC listening on port :%v", port)
-	go grpcServer.Serve(lis)
 
 	// we need the reflection service, to power the UI
 	reflection.Register(grpcServer)
 
+	var done = make(chan struct{})
+
+	go func() {
+		err := grpcServer.Serve(lis)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	go func() {
+		err := startGrpcUI(port, grpcuiPort)
+		if err != nil {
+			log.Printf("Failed to start gRPCUI: %v", err)
+		}
+	}()
+
+	<-done
+}
+
+func startGrpcUI(port, grpcuiPort int) error {
 	// Create a connection to local gRPC
-	cc, err := grpc.Dial(fmt.Sprintf("127.0.0.1:%d", port), grpc.WithInsecure())
+	serverAddr := fmt.Sprintf("127.0.0.1:%d", port)
+	cc, err := grpc.Dial(serverAddr, grpc.WithInsecure())
 	if err != nil {
-		log.Fatalf("failed to create client to local server: %v", err)
+		return fmt.Errorf("failed to connect to localhost: %w", err)
 	}
 
 	// Create the grpcui handler
 	target := fmt.Sprintf("%s:%d", filepath.Base(os.Args[0]), port)
 	h, err := standalone.HandlerViaReflection(context.Background(), cc, target)
 	if err != nil {
-		log.Fatalf("failed to create client to local server: %v", err)
+		return fmt.Errorf("failed to create handler for local server %q: %w", target, err)
 	}
 
 	// Add to an http server
@@ -86,4 +106,6 @@ func main() {
 	serveMux.Handle("/", h)
 	log.Printf("grpcui listening on port :%v", grpcuiPort)
 	http.ListenAndServe(fmt.Sprintf(":%v", grpcuiPort), serveMux)
+
+	return nil
 }

@@ -10,14 +10,14 @@ deps:
 
 binaries:
     FROM +deps
-    COPY --dir cmd internal pkg api web space  .
+    COPY --dir cmd internal pkg api web space grid  .
 
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build -v -o ./.output/api ./api/cmd/api && \    
         go build -v -o ./.output/currentturn ./cmd/currentturn && \
         go build -v -o ./.output/gamerepo ./cmd/gamerepo && \
         go build -v -o ./.output/web ./web/cmd/web && \
-        go build -v -o ./.output/grid ./cmd/grid && \
+        go build -v -o ./.output/grid ./grid/cmd/grid && \
         go build -v -o ./.output/checker ./cmd/checker && \
         go build -v -o ./.output/turncontroller ./cmd/turncontroller && \
         go build -v -o ./.output/space ./space/cmd/space
@@ -34,7 +34,7 @@ protobuild:
 
 protos:
     BUILD ./pkg/game/rpcrepository/+protos
-    BUILD ./pkg/grid/rpcgrid/+protos
+    BUILD ./grid/pkg/grid/rpcgrid/+protos
     BUILD ./pkg/turn/rpcturn/+protos
     BUILD ./pkg/win/rpcchecker/+protos
     BUILD ./space/pkg/rpcspace/+protos

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"

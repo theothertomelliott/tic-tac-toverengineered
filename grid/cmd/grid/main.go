@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 
 	"github.com/fullstorydev/grpcui/standalone"
-	gridserver "github.com/theothertomelliott/tic-tac-toverengineered/internal/grid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid/rpcgrid"
+	gridserver "github.com/theothertomelliott/tic-tac-toverengineered/grid/internal/grid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
 	"google.golang.org/grpc"

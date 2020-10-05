@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/theothertomelliott/tic-tac-toeverengineered/pkg/grid/rpcgrid";
+option go_package = "github.com/theothertomelliott/tic-tac-toeverengineered/grid/pkg/grid/rpcgrid";
 
 message Position {
     int32 x = 1;

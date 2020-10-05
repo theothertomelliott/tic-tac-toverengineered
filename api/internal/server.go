@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win"
 )

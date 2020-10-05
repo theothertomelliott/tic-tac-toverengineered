@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/grid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/player"
 )
 

@@ -6,12 +6,12 @@ import (
 	"net"
 	"os"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/internal/turncontroller"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn/rpcturn"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

@@ -6,11 +6,11 @@ import (
 	"net"
 	"os"
 
+	checkerserver "github.com/theothertomelliott/tic-tac-toverengineered/checker/internal/checker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/gridchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
-	checkerserver "github.com/theothertomelliott/tic-tac-toverengineered/internal/checker"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/gridchecker"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

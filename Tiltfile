@@ -57,7 +57,7 @@ server2("web", "8080:8080")
 server("gamerepo", ["8082:8080", "8083:8081"])
 server("currentturn", ["8084:8080", "8085:8081"])
 server2("grid",["8086:8080", "8087:8081"])
-server("checker",["8088:8080", "8089:8081"])
+server2("checker",["8088:8080", "8089:8081"])
 server("turncontroller",["8090:8080", "8091:8081"])
 
 # Add spaces without port forwards

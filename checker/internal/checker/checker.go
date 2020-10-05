@@ -3,9 +3,9 @@ package checker
 import (
 	"context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win/rpcchecker"
 )
 
 func NewServer(checker win.Checker) rpcchecker.CheckerServer {

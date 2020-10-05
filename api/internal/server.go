@@ -9,7 +9,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/turn"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/win"
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
 )
 
 func New(

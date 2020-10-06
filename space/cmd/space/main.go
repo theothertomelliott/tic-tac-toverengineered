@@ -1,36 +1,36 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net"
 	"os"
+	"strconv"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/internal"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
-	"google.golang.org/grpc"
 )
 
-func getPort() string {
+func getPort() (int, error) {
 	if serverTarget := os.Getenv("PORT"); serverTarget != "" {
-		return serverTarget
+		return strconv.Atoi(serverTarget)
 	}
-	return "8080"
+	return 8080, nil
 }
 
 func main() {
-	port := getPort()
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
+	port, err := getPort()
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		log.Fatalf("could not get port number:  %v", err)
 	}
-	grpcServer := grpc.NewServer()
+
 	spaceBackend := spaceinmemory.New()
-	rpcspace.RegisterSpaceServer(grpcServer, space.NewServer(spaceBackend))
+
+	rpcServer := rpcserver.New(port)
+	rpcspace.RegisterSpaceServer(rpcServer.GRPC(), space.NewServer(spaceBackend))
+
 	log.Printf("gRPC listening on port :%v", port)
-	err = grpcServer.Serve(lis)
-	if err != nil {
+	if err := rpcServer.Serve(); err != nil {
 		log.Fatal(err)
 	}
 }

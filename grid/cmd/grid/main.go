@@ -3,26 +3,19 @@ package main
 import (
 	"fmt"
 	"log"
-	"net"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	gridserver "github.com/theothertomelliott/tic-tac-toverengineered/grid/internal/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/pkg"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func main() {
 	port := 8080
 	grpcuiPort := 8081
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	grpcServer := grpc.NewServer()
 
 	var spaces [][]space.Space
 	for i := 0; i < 3; i++ {
@@ -38,15 +31,13 @@ func main() {
 	}
 	gridBackend, _ := grid.New(spaces)
 
-	rpcgrid.RegisterGridServer(grpcServer, gridserver.NewServer(gridBackend))
+	rpcServer := rpcserver.New(port)
+	rpcgrid.RegisterGridServer(rpcServer.GRPC(), gridserver.NewServer(gridBackend))
 
-	// we need the reflection service, to power the UI
-	reflection.Register(grpcServer)
 	log.Printf("gRPC listening on port :%v", port)
-
 	var done = make(chan struct{})
 	go func() {
-		err := grpcServer.Serve(lis)
+		err := rpcServer.Serve()
 		if err != nil {
 			log.Fatal(err)
 		}

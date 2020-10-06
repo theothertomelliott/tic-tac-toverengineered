@@ -1,19 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net"
 	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/turncontroller/internal/turncontroller"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func getCurrentTurnServerTarget() string {
@@ -40,11 +37,7 @@ func getCheckerServerTarget() string {
 func main() {
 	port := 8080
 	grpcuiPort := 8081
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
-	grpcServer := grpc.NewServer()
+
 	g, err := rpcgrid.ConnectGrid(getGridServerTarget())
 	if err != nil {
 		log.Fatalf("could not connect to grid server: %v", err)
@@ -58,19 +51,19 @@ func main() {
 		log.Fatalf("could not connect to current turn server: %v", err)
 	}
 	controllerBackend := inmemoryturns.New(ct, g, checker)
-	rpcturn.RegisterControllerServer(grpcServer, turncontroller.NewServer(controllerBackend))
+
+	rpcServer := rpcserver.New(port)
+	rpcturn.RegisterControllerServer(rpcServer.GRPC(), turncontroller.NewServer(controllerBackend))
+
 	log.Printf("gRPC listening on port :%v", port)
-
-	// we need the reflection service, to power the UI
-	reflection.Register(grpcServer)
-
 	var done = make(chan struct{})
 	go func() {
-		err := grpcServer.Serve(lis)
+		err := rpcServer.Serve()
 		if err != nil {
 			log.Fatal(err)
 		}
 	}()
+
 	go func() {
 		err := rpcui.Start(port, grpcuiPort)
 		if err != nil {

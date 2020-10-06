@@ -3,7 +3,7 @@ package api
 import (
 	"net/http"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/param"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/param"
 )
 
 func (s *Server) newGameHandler(w http.ResponseWriter, req *http.Request) {

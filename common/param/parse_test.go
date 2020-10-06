@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/theothertomelliott/tic-tac-toverengineered/pkg/param"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/param"
 )
 
 func TestParseString(t *testing.T) {

@@ -66,8 +66,8 @@ docker:
     WORKDIR /root
     ARG BINARY
     COPY ./.output/$BINARY ./app
-    COPY ./build/start.sh .
-    COPY ./build/restart.sh .
+    COPY ./common/docker/entrypoint/start.sh .
+    COPY ./common/docker/entrypoint/restart.sh .
     ENTRYPOINT ["./start.sh", "/root/app"]
     ARG VERSION=dev
     ARG IMAGE_REF=api-image:$VERSION

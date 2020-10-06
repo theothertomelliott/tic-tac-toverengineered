@@ -9,6 +9,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
+// NewServer creates a turn controller gRPC server from a provided turn controller
 func NewServer(c turn.Controller) rpcturn.ControllerServer {
 	return &controllerServer{
 		controller: c,

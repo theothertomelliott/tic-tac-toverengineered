@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	gridserver "github.com/theothertomelliott/tic-tac-toverengineered/grid/internal/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"

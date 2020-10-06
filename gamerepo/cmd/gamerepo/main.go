@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/internal/gamerepo"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/inmemoryrepository"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository"

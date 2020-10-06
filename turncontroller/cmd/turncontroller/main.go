@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"

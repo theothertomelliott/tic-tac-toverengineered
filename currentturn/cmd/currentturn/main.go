@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpcui"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/internal/currentturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/inmemoryturns"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"

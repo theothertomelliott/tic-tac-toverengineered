@@ -1,6 +1,13 @@
 update_settings(max_parallel_updates=11)
 
 local_resource(
+    'play',
+    cmd='go run ./bot/cmd/onegame http://localhost:8081',
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+)
+
+local_resource(
     'protos', 
     'earth +protos', 
     deps=[

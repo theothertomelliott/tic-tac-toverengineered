@@ -11,9 +11,12 @@ deps:
 binarybuild:
     FROM +deps
     ARG BINARY
+    ARG VERSION=dev
     COPY --dir common api web space grid checker currentturn gamerepo turncontroller .
     RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -o ./.output/$BINARY ./$BINARY/cmd/$BINARY
+        go build \
+        -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=$VERSION" \
+        -o ./.output/$BINARY ./$BINARY/cmd/$BINARY
     SAVE ARTIFACT ./.output/$BINARY AS LOCAL ./.output/$BINARY
 
 protobuild:

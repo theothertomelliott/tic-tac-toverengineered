@@ -7,6 +7,7 @@ import (
 
 	api "github.com/theothertomelliott/tic-tac-toverengineered/api/internal"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
@@ -48,6 +49,8 @@ func getTurnControllerServerTarget() string {
 }
 
 func main() {
+	version.Println()
+
 	log.Println("Starting api server")
 	mux := http.NewServeMux()
 	g, err := rpcgrid.ConnectGrid(getGridServerTarget())

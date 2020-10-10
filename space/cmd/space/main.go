@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/internal"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/rpcspace"
 	"github.com/theothertomelliott/tic-tac-toverengineered/space/pkg/spaceinmemory"
@@ -19,6 +20,8 @@ func getPort() (int, error) {
 }
 
 func main() {
+	version.Println()
+
 	port, err := getPort()
 	if err != nil {
 		log.Fatalf("could not get port number:  %v", err)

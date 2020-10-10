@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/api/pkg/apiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	web "github.com/theothertomelliott/tic-tac-toverengineered/web/internal"
 )
 
@@ -17,6 +18,8 @@ func getAPIBaseURL() string {
 }
 
 func main() {
+	version.Println()
+
 	log.Println("Starting web")
 	server := web.New(apiclient.New(getAPIBaseURL()))
 

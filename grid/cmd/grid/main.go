@@ -6,6 +6,7 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	gridserver "github.com/theothertomelliott/tic-tac-toverengineered/grid/internal/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid/rpcgrid"
@@ -14,6 +15,8 @@ import (
 )
 
 func main() {
+	version.Println()
+
 	port := 8080
 	grpcuiPort := 8081
 

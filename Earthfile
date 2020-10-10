@@ -8,21 +8,13 @@ deps:
     SAVE ARTIFACT go.sum AS LOCAL go.sum
     SAVE IMAGE
 
-binaries:
+binarybuild:
     FROM +deps
+    ARG BINARY
     COPY --dir common api web space grid checker currentturn gamerepo turncontroller .
-
     RUN --mount=type=cache,target=/root/.cache/go-build \
-        go build -v -o ./.output/api ./api/cmd/api && \    
-        go build -v -o ./.output/currentturn ./currentturn/cmd/currentturn && \
-        go build -v -o ./.output/gamerepo ./gamerepo/cmd/gamerepo && \
-        go build -v -o ./.output/web ./web/cmd/web && \
-        go build -v -o ./.output/grid ./grid/cmd/grid && \
-        go build -v -o ./.output/checker ./checker/cmd/checker && \
-        go build -v -o ./.output/turncontroller ./turncontroller/cmd/turncontroller && \
-        go build -v -o ./.output/space ./space/cmd/space
-    
-    SAVE ARTIFACT ./.output/* AS LOCAL ./.output/
+        go build -o ./.output/$BINARY ./$BINARY/cmd/$BINARY
+    SAVE ARTIFACT ./.output/$BINARY AS LOCAL ./.output/$BINARY
 
 protobuild:
     FROM +deps

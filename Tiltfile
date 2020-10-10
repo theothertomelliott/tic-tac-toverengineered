@@ -1,4 +1,4 @@
-update_settings(max_parallel_updates=11)
+update_settings(max_parallel_updates=1)
 
 local_resource(
     'play',
@@ -25,15 +25,12 @@ local_resource(
     auto_init = False,
 )
 
-local_resource(
-    'binary-build', 
-    'earth +binaries', 
-    deps=[
-        'cmd', 'internal', 'pkg', 'web',  'api', 'space'
-    ]
-)
-
 def server(name, port_forwards):
+    local_resource(
+        name+"-build",
+        'GOOS=linux GOARCH=amd64 go build -o ./.output/' + name + " ./" + name + "/cmd/" + name,
+        deps = [name, "common"],
+    )
     custom_build(
         name+'-image',
         'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/build+docker',
@@ -44,7 +41,7 @@ def server(name, port_forwards):
         ]
     )
     k8s_yaml('./' + name + '/deploy/deploy.yaml')
-    k8s_resource(name, port_forwards=port_forwards, resource_deps=['binary-build'])
+    k8s_resource(name, port_forwards=port_forwards, resource_deps=[name+'-build'])
     
 server("api", "8081:8080")
 server("web", "8080:8080")

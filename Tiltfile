@@ -50,6 +50,7 @@ server("currentturn", ["8084:8080", "8085:8081"])
 server("grid",["8086:8080", "8087:8081"])
 server("checker",["8088:8080", "8089:8081"])
 server("turncontroller",["8090:8080", "8091:8081"])
+server("bot", [])
 
 # Add spaces without port forwards
 custom_build(

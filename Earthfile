@@ -12,7 +12,7 @@ binarybuild:
     FROM +deps
     ARG BINARY
     ARG VERSION=dev
-    COPY --dir common api web space grid checker currentturn gamerepo turncontroller .
+    COPY --dir common bot api web space grid checker currentturn gamerepo turncontroller .
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build \
         -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=$VERSION" \
@@ -33,16 +33,6 @@ protos:
     BUILD ./currentturn/pkg/turn/rpcturn/+protos
     BUILD ./checker/pkg/win/rpcchecker/+protos
     BUILD ./space/pkg/rpcspace/+protos
-
-images:
-    BUILD ./web/build+docker
-    BUILD ./build/grid+docker
-    BUILD ./api/build+docker
-    BUILD ./build/currentturn+docker
-    BUILD ./build/gamerepo+docker
-    BUILD ./build/checker+docker
-    BUILD ./build/turncontroller+docker
-    BUILD ./space/build+docker
 
 testdeps:
     FROM golang:1.15

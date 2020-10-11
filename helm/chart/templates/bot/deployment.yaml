@@ -1,23 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: bot
   labels:
-    app: web
+    app: bot
 spec:
   selector:
     matchLabels:
-      app: web
+      app: bot
   template:
     metadata:
       labels:
-        app: web
+        app: bot
     spec:
       containers:
-      - name: web
-        image: web-image
+      - name: bot
+        image: bot-image:{{ .Values.image.version }}
         env:
           - name: API_BASE_URL
             value: "http://api"
-        ports:
-        - containerPort: 8080

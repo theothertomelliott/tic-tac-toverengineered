@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: turncontroller
-        image: turncontroller-image
+        image: turncontroller-image:{{ .Values.image.version }}
         env:
           - name: GRID_SERVER_TARGET
             value: "grid:80"

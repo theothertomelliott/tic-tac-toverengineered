@@ -29,23 +29,6 @@ local("cd helm/chart && helm dependency update")
 # Load the base Helm chart for all resources
 k8s_yaml(helm('helm/chart'))
 
-def serverHelm(name, port_forwards):
-    local_resource(
-        name+"-build",
-        'GOOS=linux GOARCH=amd64 go build -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=tilt" -o ./.output/' + name + ' ./' + name + '/cmd/' + name,
-        deps = [name, "common"],
-    )
-    custom_build(
-        name+'-image',
-        'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/build+docker',
-        ['./.output/'+name],
-        live_update = [
-            sync('./.output/'+name, '/root/app'),
-            run('./restart.sh'),
-        ]
-    )
-    k8s_resource(name, port_forwards=port_forwards, resource_deps=[name+'-build'])
-
 def server(name, port_forwards):
     local_resource(
         name+"-build",
@@ -61,10 +44,9 @@ def server(name, port_forwards):
             run('./restart.sh'),
         ]
     )
-    k8s_yaml('./' + name + '/deploy/deploy.yaml')
     k8s_resource(name, port_forwards=port_forwards, resource_deps=[name+'-build'])
-    
-serverHelm("api", "8081:8080")
+
+server("api", "8081:8080")
 server("web", "8080:8080")
 server("gamerepo", ["8082:8080", "8083:8081"])
 server("currentturn", ["8084:8080", "8085:8081"])
@@ -72,15 +54,4 @@ server("grid",["8086:8080", "8087:8081"])
 server("checker",["8088:8080", "8089:8081"])
 server("turncontroller",["8090:8080", "8091:8081"])
 server("bot", [])
-
-# Add spaces without port forwards
-custom_build(
-    'space-image',
-    'earth --build-arg IMAGE_REF=$EXPECTED_REF ./space/build+docker',
-    ['./.output/space'],
-    live_update = [
-        sync('./.output/space', '/root/app'),
-        run('./restart.sh'),
-    ]
-)
-k8s_yaml('space/deploy/deploy.yaml')
+server("space", [])

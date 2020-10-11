@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: grid
-        image: grid-image
+        image: grid-image:{{ .Values.image.version }}
         ports:
         - containerPort: 8080
         - containerPort: 8081

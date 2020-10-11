@@ -29,7 +29,7 @@ local("cd helm/chart && helm dependency update")
 # Load the base Helm chart for all resources
 k8s_yaml(helm('helm/chart'))
 
-def server(name, port_forwards):
+def server(name, port_forwards=[]):
     local_resource(
         name+"-build",
         'GOOS=linux GOARCH=amd64 go build -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=tilt" -o ./.output/' + name + ' ./' + name + '/cmd/' + name,
@@ -53,5 +53,5 @@ server("currentturn", ["8084:8080", "8085:8081"])
 server("grid",["8086:8080", "8087:8081"])
 server("checker",["8088:8080", "8089:8081"])
 server("turncontroller",["8090:8080", "8091:8081"])
-server("bot", [])
-server("space", [])
+server("bot")
+server("space")

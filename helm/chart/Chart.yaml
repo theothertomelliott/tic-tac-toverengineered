@@ -1,0 +1,6 @@
+apiVersion: v2
+name: tic-tac-toe
+description: Base Helm chart for Tic Tac Toe
+type: application
+version: 0.1.0
+appVersion: 0.1.0

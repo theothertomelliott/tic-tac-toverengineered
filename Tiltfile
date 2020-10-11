@@ -25,9 +25,13 @@ local_resource(
     auto_init = False,
 )
 
-local("cd helm/chart && helm dependency update")
+secrets = read_yaml("secrets.yaml")
+
 # Load the base Helm chart for all resources
-k8s_yaml(helm('helm/chart'))
+k8s_yaml(helm(
+    'helm/chart',
+    set=["honeycomb.api_key=" + secrets["honeycomb"]["api_key"], "honeycomb.dataset=tictactoe2"],
+))
 
 def server(name, port_forwards=[]):
     local_resource(

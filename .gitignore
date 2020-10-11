@@ -7,6 +7,9 @@
 .output
 .tmp-earth-*
 
+# Secrets file for Tilt
+secrets.yaml
+
 # Test binary, built with `go test -c`
 *.test
 

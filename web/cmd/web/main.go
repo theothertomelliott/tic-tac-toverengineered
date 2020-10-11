@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/api/pkg/apiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	web "github.com/theothertomelliott/tic-tac-toverengineered/web/internal"
 )
@@ -26,6 +27,9 @@ func main() {
 	mux := http.NewServeMux()
 	server.CreateRoutes(mux)
 
+	closeMonitoring := monitoring.Init("web")
+	defer closeMonitoring()
+
 	log.Println("Listening on port :8080")
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":8080", monitoring.WrapHTTP(mux))
 }

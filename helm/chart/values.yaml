@@ -1,2 +1,6 @@
 image:
   version: latest
+
+#honeycomb:
+#   api_key:
+#   dataset:

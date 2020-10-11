@@ -7,6 +7,7 @@ import (
 
 	api "github.com/theothertomelliott/tic-tac-toverengineered/api/internal"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn/rpcturn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository/repoclient"
@@ -73,6 +74,9 @@ func main() {
 	server := api.New(r, controller, g, checker)
 	server.CreateRoutes(mux)
 
+	closeMonitoring := monitoring.Init("api")
+	defer closeMonitoring()
+
 	log.Println("Listening on port :8080")
-	http.ListenAndServe(":8080", mux)
+	http.ListenAndServe(":8080", monitoring.WrapHTTP(mux))
 }

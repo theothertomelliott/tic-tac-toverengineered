@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
 
@@ -21,7 +23,10 @@ type Client struct {
 }
 
 func (c *Client) Get(ctx context.Context, g game.ID, endpoint string) (*http.Response, error) {
-	client := &http.Client{}
+	client := &http.Client{
+		Transport: monitoring.WrapHTTPTransport(http.DefaultTransport),
+		Timeout:   time.Second * 5,
+	}
 	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/%v/%v", c.baseURL, g, endpoint), nil)
 	if err != nil {
 		return nil, err
@@ -30,7 +35,10 @@ func (c *Client) Get(ctx context.Context, g game.ID, endpoint string) (*http.Res
 }
 
 func (c *Client) RawApiGet(ctx context.Context, endpoint string, out interface{}) error {
-	client := &http.Client{}
+	client := &http.Client{
+		Transport: monitoring.WrapHTTPTransport(http.DefaultTransport),
+		Timeout:   time.Second * 5,
+	}
 	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%v/%v", c.baseURL, endpoint), nil)
 	if err != nil {
 		return err

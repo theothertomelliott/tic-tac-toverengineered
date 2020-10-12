@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: checker
-        image: checker-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/checker-image:{{ .Values.image.version }}
         env:
           - name: GRID_SERVER_TARGET
             value: "grid:80"

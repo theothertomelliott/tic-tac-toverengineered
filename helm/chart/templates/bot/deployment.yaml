@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: bot
-        image: bot-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/bot-image:{{ .Values.image.version }}
         env:
           - name: API_BASE_URL
             value: "http://api"

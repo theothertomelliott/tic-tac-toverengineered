@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: currentturn
-        image: currentturn-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/currentturn-image:{{ .Values.image.version }}
         ports:
         - containerPort: 8080
         - containerPort: 8081

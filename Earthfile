@@ -55,6 +55,19 @@ docker:
     COPY ./common/docker/entrypoint/restart.sh .
     ENTRYPOINT ["./start.sh", "/root/app"]
     ARG VERSION=dev
-    ARG IMAGE_REF=api-image:$VERSION
+    ARG IMAGE_REF
     RUN echo "Building image with tag $IMAGE_REF"
-    SAVE IMAGE $IMAGE_REF
+    SAVE IMAGE --push $IMAGE_REF
+
+images:
+    ARG REGISTRY=docker.io/tictactoverengineered
+    ARG VERSION=dev
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./api/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./bot/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./checker/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./currentturn/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./gamerepo/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./grid/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./space/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./turncontroller/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./web/build/+docker

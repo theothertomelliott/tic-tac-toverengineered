@@ -2,7 +2,6 @@ package monitoring
 
 import (
 	"context"
-	"log"
 	"strings"
 
 	beeline "github.com/honeycombio/beeline-go"
@@ -26,22 +25,23 @@ const TraceHeader string = "x-trace-headers"
 
 func UnaryClientInterceptor() grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply interface{}, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-		// Anything linked to this variable will transmit request headers.
-		sp := trace.GetSpanFromContext(ctx)
+		ctx, sp := beeline.StartSpan(ctx, method)
+		defer sp.Send()
 		if sp != nil {
 			pc := sp.SerializeHeaders()
 			md := metadata.New(map[string]string{TraceHeader: pc})
 			ctx = metadata.NewOutgoingContext(ctx, md)
 		}
 
-		return invoker(ctx, method, req, reply, cc, opts...)
+		err := invoker(ctx, method, req, reply, cc, opts...)
+		beeline.AddField(ctx, "grpc_code", status.Code(err).String())
+		return err
 	}
 }
 
 // UnaryServerInterceptor starts a beeline span for each grpc call.
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-		log.Printf("Intercepting request: %v", info.FullMethod)
 		if _, exists := blacklistedMethods[info.FullMethod]; exists {
 			return handler(ctx, req)
 		}
@@ -51,48 +51,22 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 			return nil, status.Errorf(codes.DataLoss, "failed to get metadata")
 		}
 
-		var (
-			tr *trace.Trace
-			sp *trace.Span
-		)
-
-		sp = trace.GetSpanFromContext(ctx)
-		if sp == nil {
-
-			xrid := md[TraceHeader]
-			if len(xrid) == 0 {
-				ctx, sp = beeline.StartSpan(ctx, info.FullMethod)
-				tr = sp.GetTrace()
-			} else {
-				if strings.Trim(xrid[0], " ") == "" {
-					return nil, status.Errorf(codes.InvalidArgument, "empty 'x-request-id' header")
-				}
-				ctx, tr = trace.NewTraceFromSerializedHeaders(ctx, xrid[0])
-				sp = tr.GetRootSpan()
-				// ctx, sp = sp.CreateChild(ctx)
-				// ctx, sp = beeline.StartSpan(ctx, info.FullMethod)
+		xrid := md[TraceHeader]
+		serializedHeaders := ""
+		if len(xrid) != 0 {
+			if strings.Trim(xrid[0], " ") == "" {
+				return nil, status.Errorf(codes.InvalidArgument, "empty 'x-request-id' header")
 			}
-		} else {
-			tr = sp.GetTrace()
+			serializedHeaders = xrid[0]
 		}
-		sp.AddField("name", info.FullMethod)
-		log.Println(tr)
+		var tr *trace.Trace
+		ctx, tr = trace.NewTrace(ctx, serializedHeaders)
 		defer tr.Send()
 
 		resp, err := handler(ctx, req)
 
-		addRPCTrace(ctx, err)
+		beeline.AddField(ctx, "grpc_code", status.Code(err).String())
 
 		return resp, err
 	}
-}
-
-func addRPCTrace(ctx context.Context, err error) {
-	beeline.AddFieldToTrace(ctx, "grpc_code", status.Code(err).String())
-	// if requestID := middleware.RequestID(ctx); requestID != "" {
-	// 	beeline.AddFieldToTrace(ctx, "request_id", requestID)
-	// }
-	// if caller := middleware.Caller(ctx); caller != "" {
-	// 	beeline.AddField(ctx, "caller", caller)
-	// }
 }

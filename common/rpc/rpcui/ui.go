@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/fullstorydev/grpcui/standalone"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"google.golang.org/grpc"
 )
 
@@ -19,7 +20,11 @@ import (
 func Start(port, grpcuiPort int) error {
 	// Create a connection to local gRPC
 	serverAddr := fmt.Sprintf("127.0.0.1:%d", port)
-	cc, err := grpc.Dial(serverAddr, grpc.WithInsecure())
+	cc, err := grpc.Dial(
+		serverAddr,
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+	)
 	if err != nil {
 		return fmt.Errorf("failed to connect to localhost: %w", err)
 	}

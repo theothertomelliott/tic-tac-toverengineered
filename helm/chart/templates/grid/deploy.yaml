@@ -16,6 +16,14 @@ spec:
       containers:
       - name: grid
         image: docker.io/tictactoverengineered/grid-image:{{ .Values.image.version }}
+        env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
         ports:
         - containerPort: 8080
         - containerPort: 8081

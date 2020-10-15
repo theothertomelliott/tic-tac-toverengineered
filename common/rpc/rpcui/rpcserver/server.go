@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -11,8 +12,10 @@ import (
 // New creates an RPC server that will listen on the specified port
 func New(port int) *Server {
 	return &Server{
-		grpcServer: grpc.NewServer(),
-		port:       port,
+		grpcServer: grpc.NewServer(
+			grpc.UnaryInterceptor(monitoring.UnaryServerInterceptor()),
+		),
+		port: port,
 	}
 }
 

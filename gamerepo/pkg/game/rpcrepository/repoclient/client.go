@@ -3,6 +3,7 @@ package repoclient
 import (
 	"context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository"
 	"google.golang.org/grpc"
@@ -13,7 +14,11 @@ import (
 func Connect(target string) (*Client, error) {
 	var err error
 	c := &Client{}
-	c.conn, err = grpc.Dial(target, grpc.WithInsecure())
+	c.conn, err = grpc.Dial(
+		target,
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+	)
 	if err != nil {
 		return nil, err
 	}

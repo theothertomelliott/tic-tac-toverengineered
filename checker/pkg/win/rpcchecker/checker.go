@@ -3,6 +3,7 @@ package rpcchecker
 import (
 	context "context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	grpc "google.golang.org/grpc"
@@ -11,7 +12,11 @@ import (
 func ConnectChecker(target string) (*Checker, error) {
 	var err error
 	c := &Checker{}
-	c.conn, err = grpc.Dial(target, grpc.WithInsecure())
+	c.conn, err = grpc.Dial(
+		target,
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+	)
 	if err != nil {
 		return nil, err
 	}

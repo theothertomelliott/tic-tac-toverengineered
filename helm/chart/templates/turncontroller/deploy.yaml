@@ -17,6 +17,13 @@ spec:
       - name: turncontroller
         image: docker.io/tictactoverengineered/turncontroller-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: GRID_SERVER_TARGET
             value: "grid:80"
           - name: CURRENT_TURN_SERVER_TARGET

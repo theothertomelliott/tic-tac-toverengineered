@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -36,6 +37,9 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcgrid.RegisterGridServer(rpcServer.GRPC(), gridserver.NewServer(gridBackend))
+
+	closeMonitoring := monitoring.Init("grid")
+	defer closeMonitoring()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

@@ -1,4 +1,5 @@
 update_settings(max_parallel_updates=1)
+#allow_k8s_contexts('do-nyc1-prod-do-c')
 
 local_resource(
     'play',
@@ -30,7 +31,7 @@ secrets = read_yaml("secrets.yaml")
 # Load the base Helm chart for all resources
 k8s_yaml(helm(
     'helm/chart',
-    set=["honeycomb.api_key=" + secrets["honeycomb"]["api_key"], "honeycomb.dataset=tictactoe2"],
+    set=["honeycomb.api_key=" + secrets["honeycomb"]["api_key"], "honeycomb.dataset=tictactoe-dev"],
 ))
 
 def server(name, port_forwards=[]):

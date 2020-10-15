@@ -3,6 +3,7 @@ package rpcturn
 import (
 	context "context"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
@@ -13,7 +14,11 @@ import (
 func ConnectController(target string) (*Controller, error) {
 	var err error
 	c := &Controller{}
-	c.conn, err = grpc.Dial(target, grpc.WithInsecure())
+	c.conn, err = grpc.Dial(
+		target,
+		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+	)
 	if err != nil {
 		return nil, err
 	}

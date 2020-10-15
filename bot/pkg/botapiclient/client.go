@@ -17,7 +17,7 @@ import (
 func New(baseURL string, bot bot.Bot) *Client {
 	return &Client{
 		bot: bot,
-		api: apiclient.New(baseURL),
+		api: apiclient.New(baseURL, http.DefaultClient),
 	}
 }
 

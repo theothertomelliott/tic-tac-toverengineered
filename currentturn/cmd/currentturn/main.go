@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -21,6 +22,9 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcturn.RegisterCurrentServer(rpcServer.GRPC(), currentturn.NewServer(currentBackend))
+
+	closeMonitoring := monitoring.Init("currentturn")
+	defer closeMonitoring()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

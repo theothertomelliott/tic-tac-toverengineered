@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/api/pkg/apiclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
@@ -22,7 +23,11 @@ func main() {
 	version.Println()
 
 	log.Println("Starting web")
-	server := web.New(apiclient.New(getAPIBaseURL()))
+	client := &http.Client{
+		Transport: monitoring.WrapHTTPTransport(http.DefaultTransport),
+		Timeout:   time.Second * 5,
+	}
+	server := web.New(apiclient.New(getAPIBaseURL(), client))
 
 	mux := http.NewServeMux()
 	server.CreateRoutes(mux)

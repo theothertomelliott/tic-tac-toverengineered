@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/space/internal"
@@ -31,6 +33,9 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcspace.RegisterSpaceServer(rpcServer.GRPC(), space.NewServer(spaceBackend))
+
+	closeMonitoring := monitoring.Init(fmt.Sprintf("space-%v", port))
+	defer closeMonitoring()
 
 	log.Printf("gRPC listening on port :%v", port)
 	if err := rpcServer.Serve(); err != nil {

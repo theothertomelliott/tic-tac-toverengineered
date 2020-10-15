@@ -17,6 +17,13 @@ spec:
       - name: space-0-0
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8081"
         ports:
@@ -24,6 +31,13 @@ spec:
       - name: space-0-1
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8082"
         ports:
@@ -31,6 +45,13 @@ spec:
       - name: space-0-2
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8083"
         ports:
@@ -38,6 +59,13 @@ spec:
       - name: space-1-0
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8084"
         ports:
@@ -45,6 +73,13 @@ spec:
       - name: space-1-1
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8085"
         ports:
@@ -52,6 +87,13 @@ spec:
       - name: space-1-2
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8086"
         ports:
@@ -59,6 +101,13 @@ spec:
       - name: space-2-0
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8087"
         ports:
@@ -66,6 +115,13 @@ spec:
       - name: space-2-1
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8088"
         ports:
@@ -73,6 +129,13 @@ spec:
       - name: space-2-2
         image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
         env:
+          - name: HONEYCOMB_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: honeycomb-secret
+                key: api_key
+          - name: HONEYCOMB_DATASET
+            value: {{ .Values.honeycomb.dataset }}
           - name: PORT
             value: "8089"
         ports:

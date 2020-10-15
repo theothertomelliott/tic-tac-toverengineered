@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -57,6 +58,9 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcturn.RegisterControllerServer(rpcServer.GRPC(), turncontroller.NewServer(controllerBackend))
+
+	closeMonitoring := monitoring.Init("turncontroller")
+	defer closeMonitoring()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

@@ -60,6 +60,29 @@ func (g *Grid) Mark(ctx context.Context, id game.ID, pos grid.Position) (*player
 	return &m, nil
 }
 
+func (g *Grid) State(ctx context.Context, id game.ID) ([][]*player.Mark, error) {
+	gameState, err := g.client.State(ctx, &StateRequest{
+		GameId: string(id),
+	})
+	if err != nil {
+		return nil, err
+	}
+	var out [][]*player.Mark
+	for _, rowState := range gameState.RowState {
+		var row []*player.Mark
+		for _, m := range rowState.Mark {
+			var mark *player.Mark
+			if m.HasMark {
+				markVal := player.Mark(m.Mark)
+				mark = &markVal
+			}
+			row = append(row, mark)
+		}
+		out = append(out, row)
+	}
+	return out, nil
+}
+
 func (g *Grid) SetMark(ctx context.Context, id game.ID, pos grid.Position, m player.Mark) error {
 	_, err := g.client.SetMark(ctx, &SetMarkRequest{
 		GameId:   string(id),

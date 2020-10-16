@@ -36,6 +36,27 @@ func (g *gridServer) Mark(ctx context.Context, req *rpcgrid.MarkRequest) (*rpcgr
 	}, nil
 }
 
+func (g *gridServer) State(ctx context.Context, req *rpcgrid.StateRequest) (*rpcgrid.StateResponse, error) {
+	state, err := g.grid.State(ctx, game.ID(req.GameId))
+	if err != nil {
+		return nil, err
+	}
+	resp := &rpcgrid.StateResponse{}
+	for _, row := range state {
+		rs := &rpcgrid.RowState{}
+		for _, m := range row {
+			mr := &rpcgrid.MarkResponse{}
+			if m != nil {
+				mr.HasMark = true
+				mr.Mark = string(*m)
+			}
+			rs.Mark = append(rs.Mark, mr)
+		}
+		resp.RowState = append(resp.RowState, rs)
+	}
+	return resp, nil
+}
+
 func (g *gridServer) SetMark(ctx context.Context, req *rpcgrid.SetMarkRequest) (*rpcgrid.SetMarkResponse, error) {
 	return &rpcgrid.SetMarkResponse{},
 		g.grid.SetMark(

@@ -44,6 +44,22 @@ type gridImpl struct {
 	spaces [][]space.Space
 }
 
+func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark, error) {
+	var out [][]*player.Mark
+	for i, r := range g.spaces {
+		var row []*player.Mark
+		for j, s := range r {
+			mark, err := s.Mark(ctx, gameID)
+			if err != nil {
+				return nil, fmt.Errorf("could not get mark at (%d,%d): %w", i, j, err)
+			}
+			row = append(row, mark)
+		}
+		out = append(out, row)
+	}
+	return out, nil
+}
+
 func (g *gridImpl) Mark(ctx context.Context, game game.ID, p Position) (*player.Mark, error) {
 	m, err := g.spaces[p.X][p.Y].Mark(ctx, game)
 	if err != nil {

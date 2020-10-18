@@ -49,8 +49,8 @@ func (c *controller) TakeTurn(ctx context.Context, g game.ID, m player.Mark, p g
 	if err != nil {
 		return fmt.Errorf("could not check win status: %w", err)
 	}
-	if w != nil {
-		return fmt.Errorf("game was already won by %v", w)
+	if w.Finished() {
+		return fmt.Errorf("game is complete")
 	}
 
 	// Make the mark

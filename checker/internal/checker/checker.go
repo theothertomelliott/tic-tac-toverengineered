@@ -19,16 +19,17 @@ type checkerServer struct {
 }
 
 func (c *checkerServer) Winner(ctx context.Context, req *rpcchecker.WinnerRequest) (*rpcchecker.WinnerResponse, error) {
-	mark, err := c.checker.Winner(ctx, game.ID(req.GameId))
+	result, err := c.checker.Winner(ctx, game.ID(req.GameId))
 	if err != nil {
 		return nil, err
 	}
-	if mark == nil {
+	if result.Winner == nil {
 		return &rpcchecker.WinnerResponse{
 			HasWinner: false,
+			IsDraw:    result.IsDraw,
 		}, nil
 	}
-	m := *mark
+	m := *result.Winner
 	return &rpcchecker.WinnerResponse{
 		Mark:      string(m),
 		HasWinner: true,

@@ -8,6 +8,7 @@ message WinnerRequest{
 message WinnerResponse{
     string mark = 1;
     bool has_winner = 2;
+    bool is_draw = 3;
 }
 
 service Checker {

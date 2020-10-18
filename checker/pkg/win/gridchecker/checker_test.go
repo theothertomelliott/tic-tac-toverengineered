@@ -4,6 +4,7 @@ import (
 	"context"
 	"testing"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/gridchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
@@ -24,14 +25,15 @@ func TestChecker(t *testing.T) {
 		return spaceinmemory.NewWithMark(testID, &m)
 	}
 	var tests = []struct {
-		name     string
-		grid     grid.Grid
-		expected *player.Mark
+		name           string
+		grid           grid.Grid
+		expected       win.Result
+		expectFinished bool
 	}{
 		{
 			name:     "empty grid",
 			grid:     grid.NewInMemory(),
-			expected: nil,
+			expected: win.Result{},
 		},
 		{
 			name: "x wins",
@@ -43,7 +45,9 @@ func TestChecker(t *testing.T) {
 				})
 				return g
 			}(),
-			expected: player.MarkToPointer(player.X),
+			expected: win.Result{
+				Winner: player.MarkToPointer(player.X),
+			},
 		},
 		{
 			name: "diagonal o",
@@ -55,7 +59,23 @@ func TestChecker(t *testing.T) {
 				})
 				return g
 			}(),
-			expected: player.MarkToPointer(player.O),
+			expected: win.Result{
+				Winner: player.MarkToPointer(player.O),
+			},
+		},
+		{
+			name: "draw",
+			grid: func() grid.Grid {
+				g, _ := grid.New([][]space.Space{
+					{o(), x(), o()},
+					{x(), x(), o()},
+					{o(), o(), x()},
+				})
+				return g
+			}(),
+			expected: win.Result{
+				IsDraw: true,
+			},
 		},
 	}
 	for _, test := range tests {
@@ -65,7 +85,7 @@ func TestChecker(t *testing.T) {
 			if err != nil {
 				t.Error(err)
 			}
-			if got.String() != test.expected.String() {
+			if !test.expected.Equal(got) {
 				t.Errorf("expected %v, got %v", test.expected, got)
 			}
 		})

@@ -20,11 +20,11 @@ type checker struct {
 	grid grid.Grid
 }
 
-func (c *checker) Winner(ctx context.Context, game game.ID) (*player.Mark, error) {
+func (c *checker) Winner(ctx context.Context, game game.ID) (win.Result, error) {
 	rows := c.grid.Rows(ctx)
 	state, err := c.grid.State(ctx, game)
 	if err != nil {
-		return nil, err
+		return win.Result{}, err
 	}
 	for _, row := range rows {
 		var markCounts = make(map[player.Mark]int)
@@ -37,9 +37,24 @@ func (c *checker) Winner(ctx context.Context, game game.ID) (*player.Mark, error
 		}
 		for mark, count := range markCounts {
 			if count == 3 {
-				return &mark, nil
+				return win.Result{
+					Winner: &mark,
+				}, nil
 			}
 		}
 	}
-	return nil, nil
+
+	// If no winner, check for any blank spaces.
+	// Any blank spaces indicate that the game is not complete.
+	for _, row := range state {
+		for _, cell := range row {
+			if cell == nil {
+				return win.Result{}, nil
+			}
+		}
+	}
+	// No blank spaces indicates a draw
+	return win.Result{
+		IsDraw: true,
+	}, nil
 }

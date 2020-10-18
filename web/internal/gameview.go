@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
@@ -20,7 +21,7 @@ func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 	data := struct {
 		Game       game.ID
 		NextPlayer player.Mark
-		Winner     *player.Mark
+		Winner     win.Result
 		Grid       [][]*player.Mark
 	}{
 		Game: gameID,
@@ -51,7 +52,7 @@ const gameviewTmpl = `
 	<title>Tic Tac Toe</title>
 	<script language="javascript">
 		function play(p,x,y){
-			{{if not .Winner}}
+			{{if not .Winner.Finished }}
 			location.href = "/{{.Game}}/play?player=" + p + "&pos={\"X\":" + x + ",\"Y\":" + y + "}";
 			{{end}}
 		}
@@ -60,8 +61,12 @@ const gameviewTmpl = `
 <body>
 	<h1>Tic Tac Toe</h1>
 	<p><a href="/">Home</a></p>
-	{{if .Winner}}
-		<p>Winner: {{.Winner}}</p>
+	{{if .Winner.Finished }}
+		{{if .Winner.IsDraw}}
+			<p>Draw!</p>
+		{{else}}
+			<p>Winner: {{.Winner.Winner}}</p>
+		{{end}}
 	{{else}}
 		<p>Next Player: {{.NextPlayer}}</p>
 	{{end}}

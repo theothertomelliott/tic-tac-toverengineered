@@ -2,6 +2,7 @@ package rpcgrid
 
 import (
 	context "context"
+	"log"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
@@ -95,6 +96,7 @@ func (g *Grid) SetMark(ctx context.Context, id game.ID, pos grid.Position, m pla
 func (g *Grid) Rows(ctx context.Context) []grid.Row {
 	resp, err := g.client.Rows(ctx, &RowsRequest{})
 	if err != nil {
+		log.Println("Error getting rows:", err)
 		panic(err)
 	}
 	var out []grid.Row

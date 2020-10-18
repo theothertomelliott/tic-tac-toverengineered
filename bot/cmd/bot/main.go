@@ -25,7 +25,7 @@ func main() {
 		}
 		log.Printf("Winner: %v", winner)
 		// Pause to slow down the rate of events
-		time.Sleep(5 * time.Minute)
+		time.Sleep(3 * time.Minute)
 	}
 
 }

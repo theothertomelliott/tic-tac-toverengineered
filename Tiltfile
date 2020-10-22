@@ -1,6 +1,13 @@
 update_settings(max_parallel_updates=1)
 
 local_resource(
+    'tests',
+    cmd='go test ./...',
+    deps=['.'],
+    ignore=['.output']
+)
+
+local_resource(
     'play',
     cmd='go run ./bot/cmd/onegame http://localhost:8081',
     trigger_mode = TRIGGER_MODE_MANUAL,

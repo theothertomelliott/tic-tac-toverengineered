@@ -34,6 +34,9 @@ local_resource(
 
 secrets = read_yaml("secrets.yaml")
 
+k8s_yaml('mongodb/mongo.yaml')
+k8s_resource("mongodb-standalone", port_forwards="27017:27017")
+
 # Load the base Helm chart for all resources
 k8s_yaml(helm(
     'helm/chart',

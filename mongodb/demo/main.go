@@ -19,11 +19,8 @@ func main() {
 
 	client, err := mongo.Connect(
 		ctx,
-		options.Client().ApplyURI("mongodb://localhost:27017"),
-		options.Client().SetAuth(options.Credential{
-			Username: "admin",
-			Password: "password",
-		}))
+		options.Client().ApplyURI("mongodb://admin:password@localhost:27017"),
+	)
 	if err != nil {
 		panic(err)
 	}

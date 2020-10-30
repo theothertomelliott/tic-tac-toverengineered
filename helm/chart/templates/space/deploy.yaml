@@ -31,7 +31,7 @@ spec:
           - name: YPOS
             value: "0"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8081
       - name: space-0-1
@@ -51,7 +51,7 @@ spec:
           - name: YPOS
             value: "1"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8082
       - name: space-0-2
@@ -71,7 +71,7 @@ spec:
           - name: YPOS
             value: "2"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8083
       - name: space-1-0
@@ -91,7 +91,7 @@ spec:
           - name: YPOS
             value: "0"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8084
       - name: space-1-1
@@ -111,7 +111,7 @@ spec:
           - name: YPOS
             value: "1"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8085
       - name: space-1-2
@@ -131,7 +131,7 @@ spec:
           - name: YPOS
             value: "2"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8086
       - name: space-2-0
@@ -151,7 +151,7 @@ spec:
           - name: YPOS
             value: "0"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8087
       - name: space-2-1
@@ -171,7 +171,7 @@ spec:
           - name: YPOS
             value: "1"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8088
       - name: space-2-2
@@ -191,7 +191,7 @@ spec:
           - name: YPOS
             value: "2"
           - name: MONGO_CONN
-            value: "mongodb://admin:password@database:27017"
+            value: {{ .Values.mongodb.connection }}
         ports:
         - containerPort: 8089
 ---

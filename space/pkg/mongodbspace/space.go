@@ -2,8 +2,6 @@ package mongodbspace
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
@@ -26,7 +24,7 @@ func New(
 	defer cancel()
 
 	// Add unique index on Game and Position
-	name, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
+	_, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys: bson.D{
 			{Key: "game", Value: 1},
 			{Key: "position", Value: 1},
@@ -36,7 +34,6 @@ func New(
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Created index: ", name)
 
 	return &Space{
 		collection: collection,
@@ -79,7 +76,7 @@ func (s *Space) SetMark(ctx context.Context, gameID game.ID, m player.Mark) erro
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	res, err := s.collection.UpdateOne(ctx,
+	_, err := s.collection.UpdateOne(ctx,
 		bson.M{
 			"position": s.pos,
 			"game":     gameID,
@@ -94,7 +91,6 @@ func (s *Space) SetMark(ctx context.Context, gameID game.ID, m player.Mark) erro
 	if err != nil {
 		return err
 	}
-	log.Printf("Result %+v", res)
 	return nil
 }
 

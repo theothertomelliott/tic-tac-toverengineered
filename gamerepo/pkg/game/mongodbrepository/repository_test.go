@@ -7,16 +7,12 @@ import (
 	"os"
 	"sort"
 	"testing"
-	"time"
 
 	"github.com/google/uuid"
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/mongodbtest"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/mongodbrepository"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 var client *mongo.Client
@@ -29,53 +25,16 @@ func TestMain(m *testing.M) {
 		os.Exit(0)
 	}
 
-	ctx := context.Background()
-	req := testcontainers.ContainerRequest{
-		Image:        "mongo:4.0.8",
-		ExposedPorts: []string{"27017/tcp"},
-		WaitingFor:   wait.ForLog("waiting for connections"),
-		Env: map[string]string{
-			"MONGO_INITDB_ROOT_USERNAME": "admin",
-			"MONGO_INITDB_ROOT_PASSWORD": "admin",
-		},
-	}
-	mongoServer, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
-	if err != nil {
-		panic(err)
-	}
-	defer mongoServer.Terminate(ctx)
-	ip, err := mongoServer.Host(ctx)
-	if err != nil {
-		panic(err)
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	port, err := mongoServer.MappedPort(ctx, "27017/tcp")
-	if err != nil {
-		panic(err)
-	}
-
-	client, err = mongo.Connect(
-		ctx,
-		options.Client().ApplyURI(fmt.Sprintf("mongodb://admin:admin@%v:%d", ip, port.Int())),
+	var (
+		cleanup func() error
+		err     error
 	)
+
+	client, cleanup, err = mongodbtest.DockerClient()
 	if err != nil {
 		panic(err)
 	}
-
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
-
-	if err := client.Ping(ctx, readpref.Primary()); err != nil {
-		panic(err)
-	}
+	defer cleanup()
 
 	// call flag.Parse() here if TestMain uses flags
 	os.Exit(m.Run())

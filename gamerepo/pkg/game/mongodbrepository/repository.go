@@ -2,7 +2,6 @@ package mongodbrepository
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,7 +18,7 @@ func New(ctx context.Context, collection *mongo.Collection) (game.Repository, er
 	defer cancel()
 
 	// Add unique index on Game and Position
-	name, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
+	_, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys: bson.D{
 			{Key: "game", Value: 1},
 		},
@@ -28,7 +27,6 @@ func New(ctx context.Context, collection *mongo.Collection) (game.Repository, er
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Created index: ", name)
 
 	return &repository{
 		collection: collection,

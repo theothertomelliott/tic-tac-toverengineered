@@ -2,9 +2,16 @@ update_settings(max_parallel_updates=1)
 
 local_resource(
     'tests',
-    cmd='go test ./...',
+    cmd='go test --short ./...',
     deps=['.'],
     ignore=['.output']
+)
+
+local_resource(
+    'tests (long)',
+    cmd='go test ./...',
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
 )
 
 local_resource(

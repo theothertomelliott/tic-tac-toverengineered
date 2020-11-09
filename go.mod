@@ -10,6 +10,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/honeycombio/beeline-go v0.8.0
 	github.com/stretchr/testify v1.6.1
+	github.com/testcontainers/testcontainers-go v0.9.0
 	go.mongodb.org/mongo-driver v1.4.2
 	google.golang.org/grpc v1.29.0
 	google.golang.org/protobuf v1.25.0

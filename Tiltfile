@@ -41,9 +41,6 @@ local_resource(
 
 secrets = read_yaml("secrets.yaml")
 
-k8s_yaml('mongodb/mongo.yaml')
-k8s_resource("mongodb-standalone", port_forwards="27017:27017")
-
 # Load the base Helm chart for all resources
 k8s_yaml(helm(
     'helm/chart',
@@ -51,6 +48,7 @@ k8s_yaml(helm(
     set=[
         "honeycomb.api_key=" + secrets["honeycomb"]["api_key"], 
         "honeycomb.dataset=tictactoe-dev",
+        "mongodb.statefulset=true",
         "mongodb.connection=mongodb://admin:password@database:27017",
         ],
 ))
@@ -81,3 +79,5 @@ server("checker",["8088:8080", "8089:8081"])
 server("turncontroller",["8090:8080", "8091:8081"])
 server("bot")
 server("space")
+
+k8s_resource("mongodb-standalone", port_forwards="27017:27017")

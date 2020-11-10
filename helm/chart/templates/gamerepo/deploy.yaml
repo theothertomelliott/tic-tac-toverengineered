@@ -25,7 +25,7 @@ spec:
           - name: HONEYCOMB_DATASET
             value: {{ .Values.honeycomb.dataset }}
           - name: MONGO_CONN
-            value: {{ .Values.mongodb.connection }}
+            value: {{ template "templates.mongodb.connection" . }}
         ports:
         - containerPort: 8080
         - containerPort: 8081

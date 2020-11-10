@@ -2,5 +2,9 @@ image:
   version: latest
 
 #honeycomb:
-#   api_key:
-#   dataset:
+# api_key:
+# dataset:
+
+#mongodb:
+# statefulset: false
+# connection: mongodb://admin:password@database:27017

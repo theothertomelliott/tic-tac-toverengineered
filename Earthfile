@@ -44,7 +44,7 @@ testdeps:
 test:
     FROM +testdeps
     COPY . .
-    RUN go test ./...
+    RUN go test -short ./...
 
 docker:
     FROM alpine
@@ -71,3 +71,15 @@ images:
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./space/build/+docker
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./turncontroller/build/+docker
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./web/build/+docker
+
+allbinaries:
+    BUILD +protos
+    BUILD --build-arg BINARY=api +binarybuild
+    BUILD --build-arg BINARY=bot +binarybuild
+    BUILD --build-arg BINARY=checker +binarybuild
+    BUILD --build-arg BINARY=currentturn +binarybuild
+    BUILD --build-arg BINARY=gamerepo +binarybuild
+    BUILD --build-arg BINARY=grid +binarybuild
+    BUILD --build-arg BINARY=space +binarybuild
+    BUILD --build-arg BINARY=turncontroller +binarybuild
+    BUILD --build-arg BINARY=web +binarybuild

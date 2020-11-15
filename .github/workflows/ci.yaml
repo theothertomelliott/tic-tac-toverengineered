@@ -34,4 +34,4 @@ jobs:
     - name: Earth version
       run: earth --version
     - name: Run build
-      run: earth --push +build
+      run: earth +test

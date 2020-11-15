@@ -38,4 +38,4 @@ jobs:
     - name: Build binaries
       run: earth +allbinaries
     - name: Build Images
-      run: earth +images
+      run: earth -push +images

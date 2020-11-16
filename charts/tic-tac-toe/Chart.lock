@@ -1,6 +1,0 @@
-dependencies:
-- name: api
-  repository: file://../../api/chart
-  version: 0.1.0
-digest: sha256:12e6d93a147aa861bb9711a887d2107681dc66ba9fe3fb0e70ffc28b66bf470e
-generated: "2020-10-10T18:44:53.014679-04:00"

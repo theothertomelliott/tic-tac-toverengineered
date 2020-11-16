@@ -4,9 +4,8 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+      tags:
+        - v* # Run only on version tags
 
 jobs:
   build:
@@ -27,6 +26,8 @@ jobs:
           branch="${GITHUB_REF##*/}"
         fi
         git checkout -b "$branch" || true
+    - uses: olegtarasov/get-tag@v2 # Get the current version tag
+      id: tagName
     - name: Docker Login
       run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
     - name: Download latest earth
@@ -38,4 +39,4 @@ jobs:
     - name: Build binaries
       run: earth +allbinaries
     - name: Build Images
-      run: earth -push +images
+      run: earth -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images

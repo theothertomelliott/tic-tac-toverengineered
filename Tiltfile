@@ -43,7 +43,7 @@ secrets = read_yaml("secrets.yaml")
 
 # Load the base Helm chart for all resources
 k8s_yaml(helm(
-    'helm/chart',
+    'charts/tic-tac-toe',
     namespace='tictactoe',
     set=[
         "honeycomb.api_key=" + secrets["honeycomb"]["api_key"], 

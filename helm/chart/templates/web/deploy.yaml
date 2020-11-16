@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: docker.io/tictactoverengineered/web-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/web:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

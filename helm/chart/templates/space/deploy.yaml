@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: space-0-0
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -35,7 +35,7 @@ spec:
         ports:
         - containerPort: 8081
       - name: space-0-1
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -55,7 +55,7 @@ spec:
         ports:
         - containerPort: 8082
       - name: space-0-2
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -75,7 +75,7 @@ spec:
         ports:
         - containerPort: 8083
       - name: space-1-0
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -95,7 +95,7 @@ spec:
         ports:
         - containerPort: 8084
       - name: space-1-1
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -115,7 +115,7 @@ spec:
         ports:
         - containerPort: 8085
       - name: space-1-2
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -135,7 +135,7 @@ spec:
         ports:
         - containerPort: 8086
       - name: space-2-0
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -155,7 +155,7 @@ spec:
         ports:
         - containerPort: 8087
       - name: space-2-1
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:
@@ -175,7 +175,7 @@ spec:
         ports:
         - containerPort: 8088
       - name: space-2-2
-        image: docker.io/tictactoverengineered/space-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/space:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

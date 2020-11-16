@@ -59,7 +59,7 @@ def server(name, port_forwards=[]):
         deps = [name, "common"],
     )
     custom_build(
-        "docker.io/tictactoverengineered/"+name+'-image',
+        "docker.io/tictactoverengineered/"+name,
         'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/build+docker',
         ['./.output/'+name],
         live_update = [

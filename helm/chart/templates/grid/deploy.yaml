@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: grid
-        image: docker.io/tictactoverengineered/grid-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/grid:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

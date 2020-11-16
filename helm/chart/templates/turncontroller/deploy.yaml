@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: turncontroller
-        image: docker.io/tictactoverengineered/turncontroller-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/turncontroller:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

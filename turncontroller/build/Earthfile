@@ -4,5 +4,5 @@ WORKDIR /root
 docker:
     ARG VERSION=dev
     ARG REGISTRY
-    ARG IMAGE_REF=$REGISTRY/turncontroller-image:$VERSION
+    ARG IMAGE_REF=$REGISTRY/turncontroller:$VERSION
     BUILD --build-arg BINARY=turncontroller --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

@@ -4,5 +4,5 @@ WORKDIR /root
 docker:
     ARG VERSION=dev
     ARG REGISTRY
-    ARG IMAGE_REF=$REGISTRY/gamerepo-image:$VERSION
+    ARG IMAGE_REF=$REGISTRY/gamerepo:$VERSION
     BUILD --build-arg BINARY=gamerepo --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

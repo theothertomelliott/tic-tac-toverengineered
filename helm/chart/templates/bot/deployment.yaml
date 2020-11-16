@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: bot
-        image: docker.io/tictactoverengineered/bot-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/bot:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

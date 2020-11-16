@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: currentturn
-        image: docker.io/tictactoverengineered/currentturn-image:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/currentturn:{{ .Values.image.version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

@@ -4,5 +4,5 @@ WORKDIR /root
 docker:
     ARG VERSION=dev
     ARG REGISTRY
-    ARG IMAGE_REF=$REGISTRY/space-image:$VERSION
+    ARG IMAGE_REF=$REGISTRY/space:$VERSION
     BUILD --build-arg BINARY=space --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

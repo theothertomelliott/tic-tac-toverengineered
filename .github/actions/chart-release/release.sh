@@ -2,19 +2,21 @@
 
 # Adapted  from https://github.com/helm/chart-releaser-action/blob/master/cr.sh
 
-install_chart_releaser
+main() {
+    install_chart_releaser
 
-crversion=1.1.1
-owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
-repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
+    crversion=1.1.1
+    owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
+    repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 
-sed -i 's/0.0.0/$VERSION/g' charts/tic-tac-toe/Chart.yaml
+    sed -i 's/0.0.0/$VERSION/g' charts/tic-tac-toe/Chart.yaml
 
-cr package charts/tic-tac-toe
-cr upload --owner $owner --git-repo $repo --token $GH_TOKEN
-cr index -i index.yaml --owner $owner --git-repo $repo --charts-repo https://$owner.github.io/$repo
+    cr package charts/tic-tac-toe
+    cr upload --owner $owner --git-repo $repo --token $GH_TOKEN
+    cr index -i index.yaml --owner $owner --git-repo $repo --charts-repo https://$owner.github.io/$repo
 
-cat index.yaml
+    cat index.yaml
+}
 
 install_chart_releaser() {
     if [[ ! -d "$RUNNER_TOOL_CACHE" ]]; then
@@ -38,3 +40,5 @@ install_chart_releaser() {
         export PATH="$cache_dir:$PATH"
     fi
 }
+
+main

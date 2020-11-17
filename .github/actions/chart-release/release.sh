@@ -5,7 +5,7 @@
 main() {
     install_chart_releaser
 
-    crversion=1.1.1
+    crversion=v1.1.1
     owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
     repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 

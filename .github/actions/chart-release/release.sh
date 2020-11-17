@@ -2,10 +2,11 @@
 
 # Adapted  from https://github.com/helm/chart-releaser-action/blob/master/cr.sh
 
+crversion=v1.1.1
+
 main() {
     install_chart_releaser
 
-    crversion=v1.1.1
     owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
     repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 

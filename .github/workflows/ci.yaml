@@ -51,7 +51,7 @@ jobs:
       with:
         version: v3.4.0
     - name: Release Helm Chart
-      uses: ./.github/actions/chart-releaser
+      uses: ./.github/actions/chart-release
       with:
         version: ${{ steps.tagName.outputs.tag }}
       env:

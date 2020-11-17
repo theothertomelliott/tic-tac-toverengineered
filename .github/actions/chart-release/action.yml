@@ -1,0 +1,17 @@
+name: 'chart-releaser'
+description: 'Releases helm charts'
+author: 'Tom Elliott <tom.w.elliott@gmail.com>'
+branding:
+  icon: 'terminal'
+  color: 'purple'
+inputs:
+  version:
+    description: "Version of the chart to be released"
+    required: true
+runs:
+  using: composite
+  steps:
+    - run: |
+        VERSION=${{ inputs.version }}
+        "$GITHUB_ACTION_PATH/release.sh"
+      shell: bash

@@ -44,6 +44,8 @@ jobs:
       with:
         version: v3.4.0
     - name: Release Helm Chart
-      uses: helm/chart-releaser-action@v1.1.0
+      uses: ./.github/actions/chart-releaser
+      with:
+        version: ${{ steps.tagName.outputs.tag }}
       env:
-        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

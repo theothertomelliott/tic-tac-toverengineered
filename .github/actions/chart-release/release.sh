@@ -3,6 +3,7 @@
 # Adapted  from https://github.com/helm/chart-releaser-action/blob/master/cr.sh
 
 crversion=v1.1.1
+VERSION=$1
 
 main() {
     install_chart_releaser

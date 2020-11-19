@@ -11,7 +11,8 @@ main() {
     owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
     repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 
-    sed -i 's/0.0.0/$VERSION/g' charts/tic-tac-toe/Chart.yaml
+    sed -i "s/0.0.0/$VERSION/g" charts/tic-tac-toe/Chart.yaml
+    cat charts/tic-tac-toe/Chart.yaml
 
     cr package charts/tic-tac-toe
     cr upload --owner $owner --git-repo $repo --token $GH_TOKEN

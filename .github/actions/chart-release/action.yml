@@ -12,5 +12,5 @@ runs:
   using: composite
   steps:
     - run: |
-        "$GITHUB_ACTION_PATH/release.sh ${{ inputs.version }}"
+        "$GITHUB_ACTION_PATH/release.sh" "${{ inputs.version }}"
       shell: bash

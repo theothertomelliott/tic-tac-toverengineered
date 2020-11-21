@@ -8,6 +8,9 @@ VERSION=$1
 main() {
     install_chart_releaser
 
+    # Fetch remotes so we have access to gh-pages
+    git fetch --all
+
     owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
     repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 

@@ -14,15 +14,15 @@ jobs:
       FORCE_COLOR: 1
     steps:
     - uses: actions/checkout@v2
-    # - name: Put back the git branch into git (Earthly uses it for tagging)
-    #   run: |
-    #     branch=""
-    #     if [ -n "$GITHUB_HEAD_REF" ]; then
-    #       branch="$GITHUB_HEAD_REF"
-    #     else
-    #       branch="${GITHUB_REF##*/}"
-    #     fi
-    #     git checkout -b "$branch" || true
+    - name: Put back the git branch into git (Earthly uses it for tagging)
+      run: |
+        branch=""
+        if [ -n "$GITHUB_HEAD_REF" ]; then
+          branch="$GITHUB_HEAD_REF"
+        else
+          branch="${GITHUB_REF##*/}"
+        fi
+        git checkout -b "$branch" || true
     - name: Set output
       id: tagName
       run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
@@ -36,12 +36,12 @@ jobs:
       run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
     - name: Download latest earth
       run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.3.13/earth-linux-amd64 -O /usr/local/bin/earth && chmod +x /usr/local/bin/earth'"
-    # - name: Run tests
-    #   run: earth +test
-    # - name: Build binaries
-    #   run: earth +allbinaries
-    # - name: Build Images
-    #   run: earth -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
+    - name: Run tests
+      run: earth +test
+    - name: Build binaries
+      run: earth +allbinaries
+    - name: Build Images
+      run: earth -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
     - name: Configure Git
       run: |
         git config user.name "$GITHUB_ACTOR"
@@ -50,12 +50,6 @@ jobs:
       uses: azure/setup-helm@v1
       with:
         version: v3.4.0
-    - name: Show git remotes
-      run: git remote -v
-    - name: Fetch from git
-      run: git fetch --all
-    - name: Show git branch
-      run: git branch
     - name: Release Helm Chart
       uses: ./.github/actions/chart-release
       with:

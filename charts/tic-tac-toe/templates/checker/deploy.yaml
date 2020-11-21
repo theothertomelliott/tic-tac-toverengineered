@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: checker
-        image: docker.io/tictactoverengineered/checker:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/checker:{{ $.Chart.Version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

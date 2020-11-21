@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: gamerepo
-        image: docker.io/tictactoverengineered/gamerepo:{{ .Values.image.version }}
+        image: docker.io/tictactoverengineered/gamerepo:{{ $.Chart.Version }}
         env:
           - name: HONEYCOMB_API_KEY
             valueFrom:

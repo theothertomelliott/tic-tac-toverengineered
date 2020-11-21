@@ -2,7 +2,12 @@
 
 # Adapted  from https://github.com/helm/chart-releaser-action/blob/master/cr.sh
 
+# Error out if any command fails
+set -e
+
+# Chart Releaser version
 crversion=v1.1.1
+# Chart version
 VERSION=$1
 
 main() {
@@ -14,6 +19,7 @@ main() {
     owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
     repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 
+    # Apply the chart version to the chart
     sed -i "s/0.0.0/$VERSION/g" charts/tic-tac-toe/Chart.yaml
     cat charts/tic-tac-toe/Chart.yaml
 

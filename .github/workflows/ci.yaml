@@ -52,6 +52,10 @@ jobs:
         version: v3.4.0
     - name: Show git remotes
       run: git remote -v
+    - name: Fetch from git
+      run: git fetch --all
+    - name: Show git branch
+      run: git branch
     - name: Release Helm Chart
       uses: ./.github/actions/chart-release
       with:

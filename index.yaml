@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   tic-tac-toe:
   - apiVersion: v2
+    created: "2020-11-21T04:40:05.798659725Z"
+    description: Base Helm chart for Tic Tac Toe
+    digest: 5d0e169c082862d557d1a8b4f42f4b2661104b203c8564bc006eb3158e0780be
+    name: tic-tac-toe
+    type: application
+    urls:
+    - https://github.com/theothertomelliott/tic-tac-toverengineered/releases/download/v0.1.24/tic-tac-toe-v0.1.24.tgz
+    version: v0.1.24
+  - apiVersion: v2
     created: "2020-11-21T04:05:49.806061216Z"
     description: Base Helm chart for Tic Tac Toe
     digest: 2bfcec2d67ce2a25e5188abb55b1676d93e6184c80a1592d9b635c55376c1951

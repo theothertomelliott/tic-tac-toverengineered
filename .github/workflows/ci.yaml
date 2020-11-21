@@ -50,6 +50,8 @@ jobs:
       uses: azure/setup-helm@v1
       with:
         version: v3.4.0
+    - name: Show git remotes
+      run: git remote -v
     - name: Release Helm Chart
       uses: ./.github/actions/chart-release
       with:

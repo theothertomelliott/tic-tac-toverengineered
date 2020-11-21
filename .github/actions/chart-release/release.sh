@@ -16,7 +16,7 @@ main() {
 
     cr package charts/tic-tac-toe
     cr upload --owner $owner --git-repo $repo --token $GH_TOKEN
-    cr index -i index.yaml --owner $owner --git-repo $repo --charts-repo https://$owner.github.io/$repo
+    cr index --push --release-name-template "{{ .Version }}" -i index.yaml --owner $owner --git-repo $repo --charts-repo https://$owner.github.io/$repo
 
     cat index.yaml
 }

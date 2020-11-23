@@ -17,13 +17,9 @@ spec:
       - name: grid
         image: docker.io/tictactoverengineered/grid:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
+          - name: placeholder
+            value: TEST
         ports:
         - containerPort: 8080
         - containerPort: 8081

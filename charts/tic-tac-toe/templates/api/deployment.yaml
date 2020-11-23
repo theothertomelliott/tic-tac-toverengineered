@@ -17,13 +17,7 @@ spec:
       - name: api
         image: docker.io/tictactoverengineered/api:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: REPO_SERVER_TARGET
             value: "gamerepo:80"
           - name: GRID_SERVER_TARGET

@@ -17,12 +17,6 @@ spec:
       - name: bot
         image: docker.io/tictactoverengineered/bot:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: API_BASE_URL
             value: "http://api"

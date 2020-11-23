@@ -17,13 +17,7 @@ spec:
       - name: space-0-0
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8081"
           - name: XPOS
@@ -37,13 +31,7 @@ spec:
       - name: space-0-1
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8082"
           - name: XPOS
@@ -57,13 +45,7 @@ spec:
       - name: space-0-2
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8083"
           - name: XPOS
@@ -77,13 +59,7 @@ spec:
       - name: space-1-0
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8084"
           - name: XPOS
@@ -97,13 +73,7 @@ spec:
       - name: space-1-1
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8085"
           - name: XPOS
@@ -117,13 +87,7 @@ spec:
       - name: space-1-2
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8086"
           - name: XPOS
@@ -137,13 +101,7 @@ spec:
       - name: space-2-0
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8087"
           - name: XPOS
@@ -157,13 +115,7 @@ spec:
       - name: space-2-1
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8088"
           - name: XPOS
@@ -177,13 +129,7 @@ spec:
       - name: space-2-2
         image: docker.io/tictactoverengineered/space:{{ $.Chart.Version }}
         env:
-          - name: HONEYCOMB_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: honeycomb-secret
-                key: api_key
-          - name: HONEYCOMB_DATASET
-            value: {{ .Values.honeycomb.dataset }}
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: PORT
             value: "8089"
           - name: XPOS

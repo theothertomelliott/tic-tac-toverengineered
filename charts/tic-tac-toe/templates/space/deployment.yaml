@@ -33,19 +33,3 @@ spec:
         - containerPort: 80{{ $i }}{{ $j }}
       {{- end }}
     {{- end }}
-{{- range $i := tuple 0 1 2 -}}
-  {{- range $j := tuple 0 1 2 }}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: space-{{ $i }}-{{ $j }}
-spec:
-  selector:
-    app: space
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80{{ $i }}{{ $j }}
-  {{- end }}
-{{- end }}

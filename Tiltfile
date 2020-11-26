@@ -1,6 +1,11 @@
 update_settings(max_parallel_updates=1)
 
 local_resource(
+    'nginx',
+    cmd='kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml'
+)
+
+local_resource(
     'tests',
     cmd='go test --short ./...',
     deps=['.'],

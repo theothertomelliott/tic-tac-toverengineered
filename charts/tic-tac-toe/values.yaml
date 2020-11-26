@@ -5,3 +5,11 @@
 mongodb:
     statefulset: true
 # connection: mongodb://admin:password@database:27017
+
+ingress:
+    api:
+        host: localhost
+        path: /api/
+    web:
+        host: localhost
+        path: /

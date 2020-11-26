@@ -5,4 +5,4 @@ docker:
     ARG VERSION=dev
     ARG REGISTRY
     ARG IMAGE_REF=$REGISTRY/turncontroller:$VERSION
-    BUILD --build-arg BINARY=turncontroller --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker
+    BUILD --build-arg SERVICE=turncontroller --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

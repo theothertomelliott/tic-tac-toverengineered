@@ -8,16 +8,16 @@ deps:
     SAVE ARTIFACT go.sum AS LOCAL go.sum
     SAVE IMAGE
 
-binarybuild:
+SERVICEbuild:
     FROM +deps
-    ARG BINARY
+    ARG SERVICE
     ARG VERSION=dev
     COPY --dir common bot api web space grid checker currentturn gamerepo turncontroller .
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build \
         -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=$VERSION" \
-        -o ./.output/$BINARY ./$BINARY/cmd/$BINARY
-    SAVE ARTIFACT ./.output/$BINARY AS LOCAL ./.output/$BINARY
+        -o ./.output/$SERVICE/app ./$SERVICE/cmd/$SERVICE
+    SAVE ARTIFACT ./.output/$SERVICE/app AS LOCAL ./.output/$SERVICE/app
 
 protobuild:
     FROM +deps
@@ -49,8 +49,8 @@ test:
 docker:
     FROM alpine
     WORKDIR /root
-    ARG BINARY
-    COPY ./.output/$BINARY ./app
+    ARG SERVICE
+    COPY ./.output/$SERVICE ./
     COPY ./common/docker/entrypoint/start.sh .
     COPY ./common/docker/entrypoint/restart.sh .
     ENTRYPOINT ["./start.sh", "/root/app"]
@@ -74,12 +74,12 @@ images:
 
 allbinaries:
     BUILD +protos
-    BUILD --build-arg BINARY=api +binarybuild
-    BUILD --build-arg BINARY=bot +binarybuild
-    BUILD --build-arg BINARY=checker +binarybuild
-    BUILD --build-arg BINARY=currentturn +binarybuild
-    BUILD --build-arg BINARY=gamerepo +binarybuild
-    BUILD --build-arg BINARY=grid +binarybuild
-    BUILD --build-arg BINARY=space +binarybuild
-    BUILD --build-arg BINARY=turncontroller +binarybuild
-    BUILD --build-arg BINARY=web +binarybuild
+    BUILD --build-arg SERVICE=api +SERVICEbuild
+    BUILD --build-arg SERVICE=bot +SERVICEbuild
+    BUILD --build-arg SERVICE=checker +SERVICEbuild
+    BUILD --build-arg SERVICE=currentturn +SERVICEbuild
+    BUILD --build-arg SERVICE=gamerepo +SERVICEbuild
+    BUILD --build-arg SERVICE=grid +SERVICEbuild
+    BUILD --build-arg SERVICE=space +SERVICEbuild
+    BUILD --build-arg SERVICE=turncontroller +SERVICEbuild
+    BUILD --build-arg SERVICE=web +SERVICEbuild

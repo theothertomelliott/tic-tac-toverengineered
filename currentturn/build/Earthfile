@@ -5,4 +5,4 @@ docker:
     ARG VERSION=dev
     ARG REGISTRY
     ARG IMAGE_REF=$REGISTRY/currentturn:$VERSION
-    BUILD --build-arg BINARY=currentturn --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker
+    BUILD --build-arg SERVICE=currentturn --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

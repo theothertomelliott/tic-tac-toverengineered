@@ -5,4 +5,4 @@ docker:
     ARG VERSION=dev
     ARG REGISTRY
     ARG IMAGE_REF=$REGISTRY/checker:$VERSION
-    BUILD --build-arg BINARY=checker --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker
+    BUILD --build-arg SERVICE=checker --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../../+docker

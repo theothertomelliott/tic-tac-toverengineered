@@ -1,0 +1,12 @@
+FROM alpine
+WORKDIR /root
+
+build:
+    ARG VERSION=dev
+    BUILD --build-arg SERVICE=grid ../+gobuild
+
+docker:
+    ARG VERSION=dev
+    ARG REGISTRY
+    ARG IMAGE_REF=$REGISTRY/grid:$VERSION
+    BUILD --build-arg SERVICE=grid --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../+docker

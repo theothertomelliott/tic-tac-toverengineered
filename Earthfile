@@ -16,8 +16,8 @@ gobuild:
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build \
         -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=$VERSION" \
-        -o ./.output/$SERVICE/app ./$SERVICE/cmd/$SERVICE
-    SAVE ARTIFACT ./.output/$SERVICE/app AS LOCAL ./.output/$SERVICE/app
+        -o ./$SERVICE/.output/app ./$SERVICE/cmd/$SERVICE
+    SAVE ARTIFACT ./$SERVICE/.output/app AS LOCAL ./$SERVICE/.output/app
 
 protobuild:
     FROM +deps
@@ -50,7 +50,7 @@ docker:
     FROM alpine
     WORKDIR /root
     ARG SERVICE
-    COPY ./.output/$SERVICE ./
+    COPY ./$SERVICE/.output ./
     COPY ./common/docker/entrypoint/start.sh .
     COPY ./common/docker/entrypoint/restart.sh .
     ENTRYPOINT ["./start.sh", "/root/app"]
@@ -62,25 +62,25 @@ docker:
 images:
     ARG REGISTRY=docker.io/tictactoverengineered
     ARG VERSION=dev
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./api/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./bot/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./checker/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./currentturn/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./gamerepo/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./grid/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./space/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./turncontroller/build/+docker
-    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./web/build/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./api/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./bot/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./checker/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./currentturn/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./gamerepo/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./grid/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./space/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./turncontroller/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./web/+docker
 
 buildall:
     ARG VERSION=dev
     BUILD +protos
-    BUILD --build-arg VERSION=$VERSION ./api/build/+build
-    BUILD --build-arg VERSION=$VERSION ./bot/build/+build
-    BUILD --build-arg VERSION=$VERSION ./checker/build/+build
-    BUILD --build-arg VERSION=$VERSION ./currentturn/build/+build
-    BUILD --build-arg VERSION=$VERSION ./gamerepo/build/+build
-    BUILD --build-arg VERSION=$VERSION ./grid/build/+build
-    BUILD --build-arg VERSION=$VERSION ./space/build/+build
-    BUILD --build-arg VERSION=$VERSION ./turncontroller/build/+build
-    BUILD --build-arg VERSION=$VERSION ./web/build/+build
+    BUILD --build-arg VERSION=$VERSION ./api/+build
+    BUILD --build-arg VERSION=$VERSION ./bot/+build
+    BUILD --build-arg VERSION=$VERSION ./checker/+build
+    BUILD --build-arg VERSION=$VERSION ./currentturn/+build
+    BUILD --build-arg VERSION=$VERSION ./gamerepo/+build
+    BUILD --build-arg VERSION=$VERSION ./grid/+build
+    BUILD --build-arg VERSION=$VERSION ./space/+build
+    BUILD --build-arg VERSION=$VERSION ./turncontroller/+build
+    BUILD --build-arg VERSION=$VERSION ./web/+build

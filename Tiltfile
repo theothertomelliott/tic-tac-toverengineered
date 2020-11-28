@@ -60,16 +60,16 @@ k8s_yaml(helm(
 def server(name, port_forwards=[]):
     local_resource(
         name+"-build",
-        'earth ./' + name + '/build/+build',
-        #'GOOS=linux GOARCH=amd64 go build -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=tilt" -o ./.output/' + name + '/app ./' + name + '/cmd/' + name,
+        'earth ./' + name + '/+build',
         deps = [name, "common"],
+        ignore = [name + '/.output']
     )
     custom_build(
         "docker.io/tictactoverengineered/"+name,
-        'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/build+docker',
-        ['./.output/'+name],
+        'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
+        ['./' + name + '/.output'],
         live_update = [
-            sync('./.output/'+name, '/root/app'),
+            sync('./' + name + '/.output/app', '/root/app'),
             run('./restart.sh'),
         ]
     )

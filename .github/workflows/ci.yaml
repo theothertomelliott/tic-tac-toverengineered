@@ -38,8 +38,8 @@ jobs:
       run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.3.13/earth-linux-amd64 -O /usr/local/bin/earth && chmod +x /usr/local/bin/earth'"
     - name: Run tests
       run: earth +test
-    - name: Build binaries
-      run: earth +allbinaries
+    - name: Build
+      run: earth VERSION=${{ steps.tagName.outputs.tag }} +buildall
     - name: Build Images
       run: earth -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
     - name: Configure Git

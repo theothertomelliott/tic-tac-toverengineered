@@ -60,7 +60,8 @@ k8s_yaml(helm(
 def server(name, port_forwards=[]):
     local_resource(
         name+"-build",
-        'GOOS=linux GOARCH=amd64 go build -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=tilt" -o ./.output/' + name + '/app ./' + name + '/cmd/' + name,
+        'earth ./' + name + '/build/+build',
+        #'GOOS=linux GOARCH=amd64 go build -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=tilt" -o ./.output/' + name + '/app ./' + name + '/cmd/' + name,
         deps = [name, "common"],
     )
     custom_build(

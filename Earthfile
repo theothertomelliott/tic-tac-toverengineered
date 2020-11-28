@@ -8,7 +8,7 @@ deps:
     SAVE ARTIFACT go.sum AS LOCAL go.sum
     SAVE IMAGE
 
-SERVICEbuild:
+gobuild:
     FROM +deps
     ARG SERVICE
     ARG VERSION=dev
@@ -72,14 +72,15 @@ images:
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./turncontroller/build/+docker
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./web/build/+docker
 
-allbinaries:
+buildall:
+    ARG VERSION=dev
     BUILD +protos
-    BUILD --build-arg SERVICE=api +SERVICEbuild
-    BUILD --build-arg SERVICE=bot +SERVICEbuild
-    BUILD --build-arg SERVICE=checker +SERVICEbuild
-    BUILD --build-arg SERVICE=currentturn +SERVICEbuild
-    BUILD --build-arg SERVICE=gamerepo +SERVICEbuild
-    BUILD --build-arg SERVICE=grid +SERVICEbuild
-    BUILD --build-arg SERVICE=space +SERVICEbuild
-    BUILD --build-arg SERVICE=turncontroller +SERVICEbuild
-    BUILD --build-arg SERVICE=web +SERVICEbuild
+    BUILD --build-arg VERSION=$VERSION ./api/build/+build
+    BUILD --build-arg VERSION=$VERSION ./bot/build/+build
+    BUILD --build-arg VERSION=$VERSION ./checker/build/+build
+    BUILD --build-arg VERSION=$VERSION ./currentturn/build/+build
+    BUILD --build-arg VERSION=$VERSION ./gamerepo/build/+build
+    BUILD --build-arg VERSION=$VERSION ./grid/build/+build
+    BUILD --build-arg VERSION=$VERSION ./space/build/+build
+    BUILD --build-arg VERSION=$VERSION ./turncontroller/build/+build
+    BUILD --build-arg VERSION=$VERSION ./web/build/+build

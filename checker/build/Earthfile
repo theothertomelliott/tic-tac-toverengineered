@@ -1,6 +1,10 @@
 FROM alpine
 WORKDIR /root
 
+build:
+    ARG VERSION=dev
+    BUILD --build-arg VERSION=$VERSION --build-arg SERVICE=checker ../../+gobuild
+
 docker:
     ARG VERSION=dev
     ARG REGISTRY

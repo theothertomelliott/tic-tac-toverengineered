@@ -39,7 +39,7 @@ jobs:
     - name: Run tests
       run: earth +test
     - name: Build binaries and supporting files
-      run: earth VERSION=${{ steps.tagName.outputs.tag }} +buildall
+      run: earth --build-arg VERSION=${{ steps.tagName.outputs.tag }} +buildall
     - name: Build and push Docker images
       run: earth -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
     - name: Configure Git

@@ -16,6 +16,7 @@ monitoring, tracing and observability tooling.
 * [Kubernetes](https://kubernetes.io/)
 * [Helm](https://helm.sh/)
 * [Tilt](https://tilt.dev/)
+* [TailwindCSS](https://tailwindcss.com/)
 
 ## Building and Running Locally
 
@@ -33,11 +34,18 @@ Protobufs for gRPC will not automatically be rebuilt, but a resource (`protos`) 
 
 ## Deployment
 
-Long term, the Helm chart will be published for direct deployment via Helm, but for now, Tilt
-can be used to deploy direct to a cluster.
+A Helm chart has been provided for direct deployment. To deploy from the command line:
 
-Set your Kubernetes context to your desired cluster and run `tilt up`, you will need to set
-[`allow_k8s_context`](https://tilt.dev/) in the Tiltfile to permit this.
+```
+helm repo add tic-tac-toverengineered \
+    https://theothertomelliott.github.io/tic-tac-toverengineered/
+    
+helm repo update
+
+helm install \
+    --create-namespace --namespace tictactoe \
+    tic-tac-toverengineered/tic-tac-toe --generate-name
+```
 
 ## Secrets
 

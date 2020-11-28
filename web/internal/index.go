@@ -55,21 +55,26 @@ func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 const indexTmpl = `
 <html>
 <head>
-<title>Tic Tac Toe</title>
+	<title>Tic Tac Toe</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link href="/public/css/tailwind.css" rel="stylesheet">
 </head>
 <body>
-	<h1>Tic Tac Toe</h1>
-	<p><a href="/new">New Game</a></p>
-	<p>
-		<a href="/?max={{.Max}}&offset={{.PrevOffset}}">&lt; Prev</a>
-		&nbsp;
-		<a href="/?max={{.Max}}&offset={{.NextOffset}}">Next &gt;</a>
-	</p>
-	<ul>
-	{{ range .Games}}
-		<li><a href="/{{ . }}">{{ . }}</a></li>
-	{{ end }}
-	</ul>
+	<div class="container mx-auto">
+		<h1>Tic Tac Toe</h1>
+		<p><a href="/new">New Game</a></p>
+		<p>
+			<a href="/?max={{.Max}}&offset={{.PrevOffset}}">&lt; Prev</a>
+			&nbsp;
+			<a href="/?max={{.Max}}&offset={{.NextOffset}}">Next &gt;</a>
+		</p>
+		<ul>
+		{{ range .Games}}
+			<li><a href="/{{ . }}">{{ . }}</a></li>
+		{{ end }}
+		</ul>
+	</div>
 </body>
 </html>
 `

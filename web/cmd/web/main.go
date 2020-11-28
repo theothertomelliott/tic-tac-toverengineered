@@ -36,5 +36,9 @@ func main() {
 	defer closeMonitoring()
 
 	log.Println("Listening on port :8080")
+
+	fs := http.FileServer(http.Dir("./public"))
+	mux.Handle("/public/", http.StripPrefix("/public/", fs))
+
 	http.ListenAndServe(":8080", monitoring.WrapHTTP(mux))
 }

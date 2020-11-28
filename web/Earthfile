@@ -1,9 +1,19 @@
 FROM alpine
 WORKDIR /root
 
+css:
+    ## Based on https://tailwindcss.com/docs/installation#using-tailwind-without-post-css
+    FROM node:14.14.0
+    RUN npm install tailwindcss postcss autoprefixer
+    RUN npx tailwindcss-cli@latest build -o ./css/tailwind.css
+    # TODO: Add NODE_ENV=production to below and configure correctly to build for prod
+    RUN npx tailwindcss-cli@latest build ./css/tailwind.css -o ./public/css/tailwind.css
+    SAVE ARTIFACT ./public/css AS LOCAL ./.output/public/css
+
 build:
     ARG VERSION=dev
     BUILD --build-arg VERSION=$VERSION --build-arg SERVICE=web ../+gobuild
+    BUILD +css
 
 docker:
     ARG VERSION=dev

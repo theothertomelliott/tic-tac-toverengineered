@@ -62,14 +62,21 @@ def server(name, port_forwards=[]):
         name+"-build",
         'earth ./' + name + '/+build',
         deps = [name, "common"],
-        ignore = [name + '/.output']
+        ignore = [
+            name + '/.output',
+            name + '/views',
+        ]
     )
     custom_build(
         "docker.io/tictactoverengineered/"+name,
         'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
-        ['./' + name + '/.output'],
+        [
+            './' + name + '/.output',
+            './' + name + '/views'    
+        ],
         live_update = [
             sync('./' + name + '/.output/app', '/root/app'),
+            sync('./' + name + '/views', '/root/views'),
             run('./restart.sh'),
         ]
     )

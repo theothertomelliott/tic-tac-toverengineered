@@ -3,11 +3,22 @@ package web
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/http/param"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 )
+
+var indexTmpl string
+
+func init() {
+	content, err := ioutil.ReadFile("views/index.html")
+	if err != nil {
+		panic(err)
+	}
+	indexTmpl = string(content)
+}
 
 func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 	var max, offset int32
@@ -51,30 +62,3 @@ func (s *Server) index(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 }
-
-const indexTmpl = `
-<html>
-<head>
-	<title>Tic Tac Toe</title>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link href="/public/css/tailwind.css" rel="stylesheet">
-</head>
-<body>
-	<div class="container mx-auto">
-		<h1>Tic Tac Toe</h1>
-		<p><a href="/new">New Game</a></p>
-		<p>
-			<a href="/?max={{.Max}}&offset={{.PrevOffset}}">&lt; Prev</a>
-			&nbsp;
-			<a href="/?max={{.Max}}&offset={{.NextOffset}}">Next &gt;</a>
-		</p>
-		<ul>
-		{{ range .Games}}
-			<li><a href="/{{ . }}">{{ . }}</a></li>
-		{{ end }}
-		</ul>
-	</div>
-</body>
-</html>
-`

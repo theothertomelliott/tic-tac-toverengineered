@@ -1,7 +1,7 @@
 package web
 
 import (
-	"net/http"
+	"fmt"
 
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/api/pkg/apiclient"
@@ -17,11 +17,10 @@ type Server struct {
 	client *apiclient.Client
 }
 
-func (s *Server) CreateRoutes(m *http.ServeMux) {
-	r := mux.NewRouter()
+func (s *Server) AddRoutes(r *mux.Router) {
+	fmt.Println("Adding routes")
 	r.HandleFunc("/", s.index)
 	r.HandleFunc("/new", s.newGame)
 	r.HandleFunc("/{game}", s.gameview)
 	r.HandleFunc("/{game}/play", s.play)
-	m.Handle("/", r)
 }

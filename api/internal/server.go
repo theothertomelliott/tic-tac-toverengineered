@@ -33,16 +33,13 @@ type Server struct {
 	checker win.Checker
 }
 
-func (s *Server) CreateRoutes(m *http.ServeMux) {
-	r := mux.NewRouter()
+func (s *Server) AddRoutes(r *mux.Router) {
 	r.HandleFunc("/", s.listGamesHandler)
 	r.HandleFunc("/{game}/grid", s.gridHandler)
 	r.HandleFunc("/{game}/player/current", s.currentPlayerHandler)
 	r.HandleFunc("/{game}/winner", s.winnerHandler)
 	r.HandleFunc("/{game}/play", s.playHandler)
 	r.HandleFunc("/new", s.newGameHandler)
-	m.Handle("/", r)
-
 }
 
 func jsonResponse(w http.ResponseWriter, value interface{}) {

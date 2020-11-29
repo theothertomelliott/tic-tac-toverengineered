@@ -1,10 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
 	api "github.com/theothertomelliott/tic-tac-toverengineered/api/internal"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
@@ -53,7 +55,6 @@ func main() {
 	version.Println()
 
 	log.Println("Starting api server")
-	mux := http.NewServeMux()
 	g, err := rpcgrid.ConnectGrid(getGridServerTarget())
 	if err != nil {
 		log.Fatalf("could not connect to grid server: %v", err)
@@ -71,12 +72,30 @@ func main() {
 		log.Fatalf("could not connect to repo server: %v", err)
 	}
 
+	m := mux.NewRouter()
 	server := api.New(r, controller, g, checker)
-	server.CreateRoutes(mux)
+
+	prefix := os.Getenv("ROUTE_PREFIX")
+	if prefix != "" && prefix != "/" {
+		routes := m.PathPrefix(prefix).Subrouter()
+		server.AddRoutes(routes)
+	} else {
+		server.AddRoutes(m)
+	}
 
 	closeMonitoring := monitoring.Init("api")
 	defer closeMonitoring()
 
 	log.Println("Listening on port :8080")
-	http.ListenAndServe(":8080", monitoring.WrapHTTP(mux))
+	http.ListenAndServe(":8080", monitoring.WrapHTTP(m))
+}
+
+type wrappedHandler struct {
+	h http.Handler
+}
+
+func (p *wrappedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "Serving")
+	fmt.Fprintln(w, r.URL.Path)
+	p.h.ServeHTTP(w, r)
 }

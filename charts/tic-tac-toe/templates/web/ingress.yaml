@@ -5,10 +5,10 @@ metadata:
   name: web
 spec:
   rules:
-  - host: {{ .Values.ingress.web.host }}
+  - host: {{ .Values.hostname }}
     http:
       paths:
-      - path: {{ .Values.ingress.web.path }}
+      - path: {{ .Values.routes.web }}
         pathType: Prefix
         backend:
           serviceName: web

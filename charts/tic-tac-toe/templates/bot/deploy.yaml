@@ -19,4 +19,4 @@ spec:
         env:
           {{- include "templates.honeycomb.env" . | nindent 10 }}
           - name: API_BASE_URL
-            value: "http://api"
+            value: "http://api{{ .Values.routes.api }}"

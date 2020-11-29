@@ -28,5 +28,7 @@ spec:
             value: "checker:80"
           - name: TURN_CONTROLLER_SERVER_TARGET
             value: "turncontroller:80"
+          - name: ROUTE_PREFIX
+            value: {{ .Values.routes.api }}
         ports:
         - containerPort: 8080

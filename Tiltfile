@@ -1,9 +1,7 @@
 update_settings(max_parallel_updates=1)
 
-local_resource(
-    'nginx',
-    cmd='kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml'
-)
+k8s_yaml(local('curl https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml'))
+k8s_resource("ingress-nginx-controller", port_forwards="8888:80")
 
 local_resource(
     'tests',

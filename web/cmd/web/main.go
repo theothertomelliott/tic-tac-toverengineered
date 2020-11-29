@@ -40,23 +40,14 @@ func main() {
 
 	prefix := os.Getenv("ROUTE_PREFIX")
 	if prefix != "" && prefix != "/" {
-		fmt.Println("adding routes with prefix: ", prefix)
 		routes := m.PathPrefix(prefix).Subrouter()
 		server.AddRoutes(routes)
 	} else {
-		fmt.Println("No prefix")
 		server.AddRoutes(m)
 	}
 
 	closeMonitoring := monitoring.Init("web")
 	defer closeMonitoring()
-
-	m.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
-		tpl, err1 := route.GetPathTemplate()
-		hdlr := route.GetHandler()
-		fmt.Println(tpl, err1, hdlr)
-		return nil
-	})
 
 	http.ListenAndServe(":8080", monitoring.WrapHTTP(m))
 }

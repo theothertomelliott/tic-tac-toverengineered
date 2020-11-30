@@ -74,13 +74,14 @@ images:
 
 buildall:
     ARG VERSION=dev
+    ARG ENVIRONMENT=development
     BUILD +protos
-    BUILD --build-arg VERSION=$VERSION ./api/+build
-    BUILD --build-arg VERSION=$VERSION ./bot/+build
-    BUILD --build-arg VERSION=$VERSION ./checker/+build
-    BUILD --build-arg VERSION=$VERSION ./currentturn/+build
-    BUILD --build-arg VERSION=$VERSION ./gamerepo/+build
-    BUILD --build-arg VERSION=$VERSION ./grid/+build
-    BUILD --build-arg VERSION=$VERSION ./space/+build
-    BUILD --build-arg VERSION=$VERSION ./turncontroller/+build
-    BUILD --build-arg VERSION=$VERSION ./web/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./api/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./bot/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./checker/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./currentturn/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./gamerepo/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./grid/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./space/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./turncontroller/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./web/+build

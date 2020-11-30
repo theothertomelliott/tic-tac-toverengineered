@@ -3,15 +3,17 @@ WORKDIR /root
 
 css:
     FROM node:14.14.0
-    COPY --dir css .
-    # TODO: Add NODE_ENV=production to below and configure correctly to build for prod
-    RUN npx tailwindcss-cli@0.1.2 build ./css/styles.css -o ./public/css/tailwind.css
+    COPY --dir css views .
+    COPY tailwind.config.js .
+    ARG ENVIRONMENT=development
+    RUN NODE_ENV=$ENVIRONMENT npx tailwindcss-cli@0.1.2 build ./css/styles.css -o ./public/css/tailwind.css
     SAVE ARTIFACT ./public/css AS LOCAL ./.output/public/css
 
 build:
     ARG VERSION=dev
+    ARG ENVIRONMENT=development
     BUILD --build-arg VERSION=$VERSION --build-arg SERVICE=web ../+gobuild
-    BUILD +css
+    BUILD --build-arg ENVIRONMENT=$ENVIRONMENT +css
     COPY --dir views .
     SAVE ARTIFACT ./views AS LOCAL ./.output/views
 

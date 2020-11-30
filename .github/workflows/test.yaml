@@ -27,6 +27,6 @@ jobs:
     - name: Run tests
       run: earth +test
     - name: Build binaries and supporting files
-      run: earth +buildall
+      run: earth --build-arg ENVIRONMENT=production +buildall
     - name: Build Docker images
       run: earth +images

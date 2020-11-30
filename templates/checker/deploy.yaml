@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checker
+  labels:
+    app: checker
+spec:
+  selector:
+    matchLabels:
+      app: checker
+  template:
+    metadata:
+      labels:
+        app: checker
+    spec:
+      containers:
+      - name: checker
+        image: docker.io/tictactoverengineered/checker:{{ $.Chart.Version }}
+        env:
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
+          - name: GRID_SERVER_TARGET
+            value: "grid:80"
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: checker
+spec:
+  selector:
+    app: checker
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

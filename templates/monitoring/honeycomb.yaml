@@ -1,0 +1,9 @@
+{{ if hasKey .Values "honeycomb" -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: honeycomb-secret
+type: Opaque
+data:
+  api_key: {{ .Values.honeycomb.api_key | b64enc }}
+{{end}}

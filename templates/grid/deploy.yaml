@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grid
+  labels:
+    app: grid
+spec:
+  selector:
+    matchLabels:
+      app: grid
+  template:
+    metadata:
+      labels:
+        app: grid
+    spec:
+      containers:
+      - name: grid
+        image: docker.io/tictactoverengineered/grid:{{ $.Chart.Version }}
+        env:
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
+          - name: placeholder
+            value: TEST
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grid
+spec:
+  selector:
+    app: grid
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

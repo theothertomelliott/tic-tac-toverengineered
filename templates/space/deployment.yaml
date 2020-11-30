@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: space
+  labels:
+    app: space
+spec:
+  selector:
+    matchLabels:
+      app: space
+  template:
+    metadata:
+      labels:
+        app: space
+    spec:
+      containers:
+    {{- $root := . -}}
+    {{- range $i := tuple 0 1 2 -}}
+      {{- range $j := tuple 0 1 2 }}
+      - name: space-{{ $i }}-{{ $j }}
+        image: docker.io/tictactoverengineered/space:{{ $root.Chart.Version }}
+        env:
+          {{- include "templates.honeycomb.env" $root | nindent 10 }}
+          - name: PORT
+            value: "80{{ $i }}{{ $j }}"
+          - name: XPOS
+            value: "{{ $i }}"
+          - name: YPOS
+            value: "{{ $j }}"
+          - name: MONGO_CONN
+            value: {{ template "templates.mongodb.connection" $root }}
+        ports:
+        - containerPort: 80{{ $i }}{{ $j }}
+      {{- end }}
+    {{- end }}

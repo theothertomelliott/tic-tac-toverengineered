@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: turncontroller
+  labels:
+    app: turncontroller
+spec:
+  selector:
+    matchLabels:
+      app: turncontroller
+  template:
+    metadata:
+      labels:
+        app: turncontroller
+    spec:
+      containers:
+      - name: turncontroller
+        image: docker.io/tictactoverengineered/turncontroller:{{ $.Chart.Version }}
+        env:
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
+          - name: GRID_SERVER_TARGET
+            value: "grid:80"
+          - name: CURRENT_TURN_SERVER_TARGET
+            value: "currentturn:80"
+          - name: CHECKER_SERVER_TARGET
+            value: "checker:80"
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: turncontroller
+spec:
+  selector:
+    app: turncontroller
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

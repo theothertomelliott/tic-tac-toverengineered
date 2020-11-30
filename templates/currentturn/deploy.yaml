@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: currentturn
+  labels:
+    app: currentturn
+spec:
+  selector:
+    matchLabels:
+      app: currentturn
+  template:
+    metadata:
+      labels:
+        app: currentturn
+    spec:
+      containers:
+      - name: currentturn
+        image: docker.io/tictactoverengineered/currentturn:{{ $.Chart.Version }}
+        env:
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
+          - name: placeholder
+            value: TEST
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: currentturn
+spec:
+  selector:
+    app: currentturn
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: docker.io/tictactoverengineered/web:{{ $.Chart.Version }}
+        env:
+          {{- include "templates.honeycomb.env" . | nindent 10 }}
+          - name: API_BASE_URL
+            value: "http://api{{ .Values.routes.api }}"
+          - name: ROUTE_PREFIX
+            value: {{ .Values.routes.web }}
+        ports:
+        - containerPort: 8080

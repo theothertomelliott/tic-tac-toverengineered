@@ -67,12 +67,12 @@ jobs:
         path: build/argocd
     - name: Update deployment content
       run: | 
-          cd build/deployment
+          cd build/argocd
           rm -rf *
           cp -a ../../charts/tic-tac-toe/. .
     - name: Commit
       run: |
-          cd build/deployment
+          cd build/argocd
           git add -A
           git commit -m "${{ steps.tagName.outputs.tag }}"
     - name: Push changes

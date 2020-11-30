@@ -50,9 +50,34 @@ jobs:
       uses: azure/setup-helm@v1
       with:
         version: v3.4.0
+    - name: Set chart version
+      run: |
+        sed -i "s/0.0.0/${{ steps.tagName.outputs.tag }}/g" charts/tic-tac-toe/Chart.yaml
+        cat charts/tic-tac-toe/Chart.yaml
     - name: Release Helm Chart
       uses: ./.github/actions/chart-release
       with:
         version: ${{ steps.tagName.outputs.tag }}
       env:
         GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+    - name: 'Checkout deployments'
+      uses: actions/checkout@master
+      with:
+        ref: argocd
+        path: build/argocd
+    - name: Update deployment content
+      run: | 
+          cd build/deployment
+          rm -rf *
+          cp -a ../../charts/tic-tac-toe/. .
+    - name: Commit
+      run: |
+          cd build/deployment
+          git add -A
+          git commit -m "${{ steps.tagName.outputs.tag }}"
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        branch: argocd
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        directory: build/argocd

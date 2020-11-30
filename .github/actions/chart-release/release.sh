@@ -19,10 +19,6 @@ main() {
     owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
     repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
 
-    # Apply the chart version to the chart
-    sed -i "s/0.0.0/$VERSION/g" charts/tic-tac-toe/Chart.yaml
-    cat charts/tic-tac-toe/Chart.yaml
-
     cr package charts/tic-tac-toe
     cr upload --release-name-template "{{ .Version }}" --owner $owner --git-repo $repo --token $GH_TOKEN
     cr index --push --release-name-template "{{ .Version }}" -i index.yaml --owner $owner --git-repo $repo --charts-repo https://$owner.github.io/$repo

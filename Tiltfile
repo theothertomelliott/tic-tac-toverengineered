@@ -1,3 +1,5 @@
+load('ext://namespace', 'namespace_yaml')
+
 update_settings(max_parallel_updates=1)
 
 k8s_yaml(local('curl https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml'))
@@ -43,6 +45,8 @@ local_resource(
 )
 
 secrets = read_yaml("secrets.yaml")
+
+k8s_yaml(namespace_yaml('tictactoe'))
 
 # Load the base Helm chart for all resources
 k8s_yaml(helm(

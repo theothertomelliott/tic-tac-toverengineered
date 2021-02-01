@@ -8,6 +8,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/gridchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win/rpcchecker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -36,8 +37,8 @@ func main() {
 	rpcServer := rpcserver.New(port)
 	rpcchecker.RegisterCheckerServer(rpcServer.GRPC(), checkerserver.NewServer(checkerBackend))
 
-	closeMonitoring := monitoring.Init("checker")
-	defer closeMonitoring()
+	defaultmonitoring.Init("checker")
+	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

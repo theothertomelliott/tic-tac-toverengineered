@@ -1,32 +1,24 @@
 package monitoring
 
 import (
-	"log"
-	"os"
+	"context"
+	"net/http"
 
-	"github.com/honeycombio/beeline-go"
+	"google.golang.org/grpc"
 )
 
-// Init sets up monitoring
-func Init(serviceName string) func() error {
-	key := os.Getenv("HONEYCOMB_API_KEY")
-	if len(key) == 0 {
-		log.Println("No API key was defined for Honeycomb, telemetry will not be send. Set the HONEYCOMB_API_KEY and HONEYCOMB_DATASET env vars to enable.")
-		return func() error { return nil }
-	}
-	dataset := os.Getenv("HONEYCOMB_DATASET")
-	if len(dataset) == 0 {
-		log.Println("No dataset name was defined for Honeycomb, telemetry will not be send. Set the HONEYCOMB_API_KEY and HONEYCOMB_DATASET env vars to enable.")
-		return func() error { return nil }
-	}
-	beeline.Init(beeline.Config{
-		WriteKey:    key,
-		Dataset:     dataset,
-		ServiceName: serviceName,
-	})
-	log.Printf("Initialized Honeycomb for dataset %q", dataset)
-	return func() error {
-		beeline.Close()
-		return nil
-	}
+var Default Monitoring = &nullMonitoring{}
+
+type Monitoring interface {
+	WrapHTTP(handler http.Handler) http.Handler
+	WrapHTTPTransport(r http.RoundTripper) http.RoundTripper
+	GRPCUnaryClientInterceptor() grpc.UnaryClientInterceptor
+	GRPCUnaryServerInterceptor() grpc.UnaryServerInterceptor
+	AddField(ctx context.Context, key string, value interface{})
+	AddFieldToTrace(ctx context.Context, key string, value interface{})
+	Close() error
+}
+
+func Close() error {
+	return Default.Close()
 }

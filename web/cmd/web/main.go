@@ -10,6 +10,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/api/pkg/apiclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	web "github.com/theothertomelliott/tic-tac-toverengineered/web/internal"
 )
@@ -46,8 +47,8 @@ func main() {
 		server.AddRoutes(m)
 	}
 
-	closeMonitoring := monitoring.Init("web")
-	defer closeMonitoring()
+	defaultmonitoring.Init("web")
+	defer monitoring.Close()
 
 	http.ListenAndServe(":8080", monitoring.WrapHTTP(m))
 }

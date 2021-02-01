@@ -2,17 +2,14 @@ load('ext://namespace', 'namespace_yaml')
 
 update_settings(max_parallel_updates=1)
 
-k8s_yaml(local('curl https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.41.2/deploy/static/provider/cloud/deploy.yaml'))
-k8s_resource("ingress-nginx-controller", port_forwards="8888:80")
-
-local_resource(
+test(
     'tests',
     cmd='go test --short ./...',
     deps=['.'],
     ignore=['.output']
 )
 
-local_resource(
+test(
     'tests (long)',
     cmd='go test ./...',
     trigger_mode = TRIGGER_MODE_MANUAL,
@@ -28,17 +25,17 @@ local_resource(
 
 local_resource(
     'protos', 
-    'earth +protos', 
+    'earthly +protos', 
     deps=[
         'pkg/game/rpcrepository/repo.proto',
-        'pkg/game/rpcrepository/Earthfile',
+        'pkg/game/rpcrepository/earthfile',
         'pkg/turn/rpcturn/current.proto',
         'pkg/turn/rpcturn/controller.proto',
-        'pkg/turn/rpcturn/Earthfile',
+        'pkg/turn/rpcturn/earthfile',
         'pkg/grid/rpcgrid/grid.proto',
-        'pkg/grid/rpcgrid/Earthfile',
+        'pkg/grid/rpcgrid/earthfile',
         'pkg/space/rpcspace/space.proto',
-        'pkg/space/rpcspace/Earthfile'
+        'pkg/space/rpcspace/earthfile'
     ],
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
@@ -62,7 +59,7 @@ k8s_yaml(helm(
 def server(name, port_forwards=[]):
     local_resource(
         name+"-build",
-        'earth ./' + name + '/+build',
+        'earthly ./' + name + '/+build',
         deps = [name, "common"],
         ignore = [
             name + '/.output',
@@ -71,7 +68,7 @@ def server(name, port_forwards=[]):
     )
     custom_build(
         "docker.io/tictactoverengineered/"+name,
-        'earth --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
+        'earthly --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
         [
             './' + name + '/.output',
             './' + name + '/views'    

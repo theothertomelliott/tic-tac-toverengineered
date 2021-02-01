@@ -24,6 +24,8 @@ func getAPIBaseURL() string {
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("web")
+	defer monitoring.Close()
 
 	log.Println("Starting web")
 	client := &http.Client{
@@ -46,9 +48,6 @@ func main() {
 	} else {
 		server.AddRoutes(m)
 	}
-
-	defaultmonitoring.Init("web")
-	defer monitoring.Close()
 
 	http.ListenAndServe(":8080", monitoring.WrapHTTP(m))
 }

@@ -39,6 +39,8 @@ func getCheckerServerTarget() string {
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("turncontroller")
+	defer monitoring.Close()
 
 	port := 8080
 	grpcuiPort := 8081
@@ -59,9 +61,6 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcturn.RegisterControllerServer(rpcServer.GRPC(), turncontroller.NewServer(controllerBackend))
-
-	defaultmonitoring.Init("turncontroller")
-	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

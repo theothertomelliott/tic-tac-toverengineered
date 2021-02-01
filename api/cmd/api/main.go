@@ -54,6 +54,8 @@ func getTurnControllerServerTarget() string {
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("api")
+	defer monitoring.Close()
 
 	log.Println("Starting api server")
 	g, err := rpcgrid.ConnectGrid(getGridServerTarget())
@@ -83,9 +85,6 @@ func main() {
 	} else {
 		server.AddRoutes(m)
 	}
-
-	defaultmonitoring.Init("api")
-	defer monitoring.Close()
 
 	log.Println("Listening on port :8080")
 	http.ListenAndServe(":8080", monitoring.WrapHTTP(m))

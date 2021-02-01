@@ -18,6 +18,8 @@ import (
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("grid")
+	defer monitoring.Close()
 
 	port := 8080
 	grpcuiPort := 8081
@@ -38,9 +40,6 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcgrid.RegisterGridServer(rpcServer.GRPC(), gridserver.NewServer(gridBackend))
-
-	defaultmonitoring.Init("grid")
-	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

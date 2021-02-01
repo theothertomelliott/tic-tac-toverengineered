@@ -15,6 +15,8 @@ import (
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("currentturn")
+	defer monitoring.Close()
 
 	port := 8080
 	grpcuiPort := 8081
@@ -23,9 +25,6 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcturn.RegisterCurrentServer(rpcServer.GRPC(), currentturn.NewServer(currentBackend))
-
-	defaultmonitoring.Init("currentturn")
-	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

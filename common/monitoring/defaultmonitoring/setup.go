@@ -1,7 +1,11 @@
 package defaultmonitoring
 
-import "github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/honeycomb"
+import (
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/logmonitoring"
+)
 
 func Init(serviceName string) {
-	honeycomb.Init(serviceName)
+	//honeycomb.Init(serviceName)
+	monitoring.Default = &logmonitoring.Monitoring{}
 }

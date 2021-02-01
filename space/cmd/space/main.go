@@ -52,6 +52,9 @@ func main() {
 		log.Fatalf("loading position from env:  %v", err)
 	}
 
+	defaultmonitoring.Init(fmt.Sprintf("space-%v", port))
+	defer monitoring.Close()
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -82,9 +85,6 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcspace.RegisterSpaceServer(rpcServer.GRPC(), space.NewServer(spaceBackend))
-
-	defaultmonitoring.Init(fmt.Sprintf("space-%v", port))
-	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	if err := rpcServer.Serve(); err != nil {

@@ -21,6 +21,8 @@ import (
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("gamerepo")
+	defer monitoring.Close()
 
 	port := 8080
 	grpcuiPort := 8081
@@ -53,9 +55,6 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcrepository.RegisterRepoServer(rpcServer.GRPC(), gamerepo.NewServer(repoBackend))
-
-	defaultmonitoring.Init("gamerepo")
-	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

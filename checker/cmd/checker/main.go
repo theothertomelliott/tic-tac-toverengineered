@@ -24,6 +24,8 @@ func getGridServerTarget() string {
 
 func main() {
 	version.Println()
+	defaultmonitoring.Init("checker")
+	defer monitoring.Close()
 
 	port := 8080
 	grpcuiPort := 8081
@@ -36,9 +38,6 @@ func main() {
 
 	rpcServer := rpcserver.New(port)
 	rpcchecker.RegisterCheckerServer(rpcServer.GRPC(), checkerserver.NewServer(checkerBackend))
-
-	defaultmonitoring.Init("checker")
-	defer monitoring.Close()
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})

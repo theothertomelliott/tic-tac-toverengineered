@@ -56,16 +56,31 @@ k8s_yaml(helm(
         ],
 ))
 
+# Quick mode builds Go binaries locally for rapid turnaround
+# This takes advantage of local caching (which is limited with Earthly)
+quick_mode = True
+
 def server(name, port_forwards=[]):
-    local_resource(
-        name+"-build",
-        'earthly ./' + name + '/+build',
-        deps = [name, "common"],
-        ignore = [
-            name + '/.output',
-            name + '/views',
-        ]
-    )
+    if quick_mode:
+        local_resource(
+            name+"-build",
+            'VERSION=dev ./' + name + '/build.sh',
+            deps = [name, "common"],
+            ignore = [
+                name + '/.output',
+                name + '/views',
+            ]
+        )
+    else:
+        local_resource(
+            name+"-build",
+            'earthly ./' + name + '/+build',
+            deps = [name, "common"],
+            ignore = [
+                name + '/.output',
+                name + '/views',
+            ]
+        )
     custom_build(
         "docker.io/tictactoverengineered/"+name,
         'earthly --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
@@ -81,13 +96,13 @@ def server(name, port_forwards=[]):
     )
     k8s_resource(name, port_forwards=port_forwards, resource_deps=[name+'-build'])
 
-server("api", "8081:8080")
-server("web", "8080:8080")
-server("gamerepo", ["8082:8080", "8083:8081"])
-server("currentturn", ["8084:8080", "8085:8081"])
-server("grid",["8086:8080", "8087:8081"])
-server("checker",["8088:8080", "8089:8081"])
-server("turncontroller",["8090:8080", "8091:8081"])
+server("api", port_forwards="8081:8080")
+server("web", port_forwards="8080:8080")
+server("gamerepo", port_forwards=["8082:8080", "8083:8081"])
+server("currentturn", port_forwards=["8084:8080", "8085:8081"])
+server("grid", port_forwards=["8086:8080", "8087:8081"])
+server("checker", port_forwards=["8088:8080", "8089:8081"])
+server("turncontroller", port_forwards=["8090:8080", "8091:8081"])
 server("bot")
 server("space")
 

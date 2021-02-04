@@ -13,7 +13,7 @@ func (s *Server) verifyID(w http.ResponseWriter, req *http.Request) (game.ID, er
 	gameID := game.ID(mux.Vars(req)["game"])
 
 	// Record the provided game id for monitoring
-	monitoring.AddField(req.Context(), "game_id", gameID)
+	monitoring.AddFieldToSpan(req.Context(), "game_id", gameID)
 
 	// Verify this game exists
 	exists, err := s.repo.Exists(req.Context(), gameID)

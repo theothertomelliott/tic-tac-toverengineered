@@ -14,7 +14,8 @@ type Monitoring interface {
 	WrapHTTPTransport(r http.RoundTripper) http.RoundTripper
 	GRPCUnaryClientInterceptor() grpc.UnaryClientInterceptor
 	GRPCUnaryServerInterceptor() grpc.UnaryServerInterceptor
-	AddField(ctx context.Context, key string, value interface{})
+	StartSpan(ctx context.Context, name string) (context.Context, Span)
+	AddFieldToSpan(ctx context.Context, key string, value interface{})
 	AddFieldToTrace(ctx context.Context, key string, value interface{})
 	Close() error
 }

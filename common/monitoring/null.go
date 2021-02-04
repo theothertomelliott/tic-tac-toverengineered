@@ -31,7 +31,7 @@ func (n *nullMonitoring) GRPCUnaryServerInterceptor() grpc.UnaryServerIntercepto
 	return nil
 }
 
-func (n *nullMonitoring) AddField(ctx context.Context, key string, value interface{}) {
+func (n *nullMonitoring) AddFieldToSpan(ctx context.Context, key string, value interface{}) {
 	log.Println("AddField: monitoring has not been initialized")
 }
 
@@ -39,6 +39,17 @@ func (n *nullMonitoring) AddFieldToTrace(ctx context.Context, key string, value 
 	log.Println("AddFieldToTrace: monitoring has not been initialized")
 }
 
+func (n *nullMonitoring) StartSpan(ctx context.Context, name string) (context.Context, Span) {
+	log.Println("StartSpan: monitoring has not been initialized")
+	return ctx, &nullSpan{}
+}
+
 func (n *nullMonitoring) Close() error {
+	return nil
+}
+
+type nullSpan struct{}
+
+func (n *nullSpan) Finish() error {
 	return nil
 }

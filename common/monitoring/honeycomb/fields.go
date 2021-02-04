@@ -6,7 +6,7 @@ import (
 	"github.com/honeycombio/beeline-go"
 )
 
-func (m *Monitoring) AddField(ctx context.Context, key string, value interface{}) {
+func (m *Monitoring) AddFieldToSpan(ctx context.Context, key string, value interface{}) {
 	beeline.AddField(ctx, key, value)
 }
 

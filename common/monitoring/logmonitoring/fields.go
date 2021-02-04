@@ -2,12 +2,15 @@ package logmonitoring
 
 import (
 	"context"
+	"log"
 )
 
-func (m *Monitoring) AddField(ctx context.Context, key string, value interface{}) {
-	// TODO
+// TODO: Propagate fields appropriate
+
+func (m *Monitoring) AddFieldToSpan(ctx context.Context, key string, value interface{}) {
+	log.Println("Adding field to span: ", key, value)
 }
 
 func (m *Monitoring) AddFieldToTrace(ctx context.Context, key string, value interface{}) {
-	// TODO
+	log.Println("Adding field to trace: ", key, value)
 }

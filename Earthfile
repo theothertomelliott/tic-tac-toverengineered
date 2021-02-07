@@ -22,8 +22,8 @@ gobuild:
 protobuild:
     FROM +deps
     RUN apk add protoc
-    RUN go get google.golang.org/grpc@v1.27.0
-    RUN go get github.com/golang/protobuf/protoc-gen-go@v1.4.2
+    RUN go get google.golang.org/grpc@v1.35.0
+    RUN go get github.com/golang/protobuf/protoc-gen-go@v1.4.3
     RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc
     SAVE IMAGE
 

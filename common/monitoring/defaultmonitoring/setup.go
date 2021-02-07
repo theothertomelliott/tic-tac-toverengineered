@@ -2,10 +2,13 @@ package defaultmonitoring
 
 import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/logmonitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/otelmonitoring"
 )
 
 func Init(serviceName string) {
-	//honeycomb.Init(serviceName)
-	monitoring.Default = &logmonitoring.Monitoring{}
+	var err error
+	monitoring.Default, err = otelmonitoring.New()
+	if err != nil {
+		panic(err)
+	}
 }

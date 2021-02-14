@@ -5,20 +5,25 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/stdout"
+	"go.opentelemetry.io/otel/exporters/otlp"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpgrpc"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
 
 var _ monitoring.Monitoring = &Monitoring{}
 
 func New() (monitoring.Monitoring, error) {
-	exporter, err := stdout.NewExporter()
+	ctx := context.Background()
+
+	ex, err := otlp.NewExporter(ctx, otlpgrpc.NewDriver(
+		otlpgrpc.WithEndpoint("otel-collector:55680"),
+		otlpgrpc.WithInsecure(),
+	))
 	if err != nil {
 		return nil, err
 	}
 
-	ctx := context.Background()
-	bsp := sdktrace.NewBatchSpanProcessor(exporter)
+	bsp := sdktrace.NewBatchSpanProcessor(ex)
 	tp := sdktrace.NewTracerProvider(sdktrace.WithSpanProcessor(bsp))
 
 	otel.SetTracerProvider(tp)

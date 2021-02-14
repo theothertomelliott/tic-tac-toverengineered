@@ -14,15 +14,14 @@ spec:
         app: checker
     spec:
       containers:
-      - name: checker
-        image: docker.io/tictactoverengineered/checker:{{ $.Chart.Version }}
-        env:
-          {{- include "templates.honeycomb.env" . | nindent 10 }}
-          - name: GRID_SERVER_TARGET
-            value: "grid:80"
-        ports:
-        - containerPort: 8080
-        - containerPort: 8081
+        - name: checker
+          image: docker.io/tictactoverengineered/checker:{{ $.Chart.Version }}
+          env:
+            - name: GRID_SERVER_TARGET
+              value: "grid:80"
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
 ---
 apiVersion: v1
 kind: Service

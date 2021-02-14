@@ -14,15 +14,14 @@ spec:
         app: gamerepo
     spec:
       containers:
-      - name: gamerepo
-        image: docker.io/tictactoverengineered/gamerepo:{{ $.Chart.Version }}
-        env:
-          {{- include "templates.honeycomb.env" . | nindent 10 }}
-          - name: MONGO_CONN
-            value: {{ template "templates.mongodb.connection" . }}
-        ports:
-        - containerPort: 8080
-        - containerPort: 8081
+        - name: gamerepo
+          image: docker.io/tictactoverengineered/gamerepo:{{ $.Chart.Version }}
+          env:
+            - name: MONGO_CONN
+              value: {{ template "templates.mongodb.connection" . }}
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
 ---
 apiVersion: v1
 kind: Service

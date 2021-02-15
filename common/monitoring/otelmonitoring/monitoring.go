@@ -32,7 +32,6 @@ func New(componentName string) (monitoring.Monitoring, error) {
 			label.String("service.name", componentName),
 			label.String("service.version", version.Version),
 			label.String("library.language", "go"),
-			label.String("library.version", "1.2.3"),
 		),
 	)
 	if err != nil {

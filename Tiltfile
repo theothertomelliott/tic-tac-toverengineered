@@ -53,6 +53,7 @@ k8s_yaml(helm(
         "honeycomb.api_key=" + secrets["honeycomb"]["api_key"], 
         "honeycomb.dataset=tictactoe-dev",
         "mongodb.statefulset=true",
+        "lightstep.access_token=" + secrets["lightstep"]["access_token"],
         ],
 ))
 

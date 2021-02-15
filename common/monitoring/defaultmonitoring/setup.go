@@ -7,7 +7,7 @@ import (
 
 func Init(serviceName string) {
 	var err error
-	monitoring.Default, err = otelmonitoring.New()
+	monitoring.Default, err = otelmonitoring.New(serviceName)
 	if err != nil {
 		panic(err)
 	}

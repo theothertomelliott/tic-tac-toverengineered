@@ -51,8 +51,8 @@ docker:
     WORKDIR /root
     ARG SERVICE
     COPY ./$SERVICE/.output ./
-    COPY ./common/docker/entrypoint/start.sh .
-    COPY ./common/docker/entrypoint/restart.sh .
+    COPY ./docker/base/entrypoint/start.sh .
+    COPY ./docker/base/entrypoint/restart.sh .
     ENTRYPOINT ["./start.sh", "/root/app"]
     ARG VERSION=dev
     ARG IMAGE_REF

@@ -72,6 +72,15 @@ def server(name, port_forwards=[]):
                 name + '/views',
             ]
         )
+        docker_build(
+            "docker.io/tictactoverengineered/"+name,
+            './' + name  + "/.output",
+            dockerfile = "docker/app/Dockerfile",
+            live_update = [
+                sync('./' + name + '/.output/app', '/root/app'),
+                run('./restart.sh'),
+            ]
+        )
     else:
         local_resource(
             name+"-build",
@@ -82,19 +91,19 @@ def server(name, port_forwards=[]):
                 name + '/views',
             ]
         )
-    custom_build(
-        "docker.io/tictactoverengineered/"+name,
-        'earthly --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
-        [
-            './' + name + '/.output',
-            './' + name + '/views'    
-        ],
-        live_update = [
-            sync('./' + name + '/.output/app', '/root/app'),
-            sync('./' + name + '/views', '/root/views'),
-            run('./restart.sh'),
-        ]
-    )
+        custom_build(
+            "docker.io/tictactoverengineered/"+name,
+            'earthly --build-arg IMAGE_REF=$EXPECTED_REF ./' + name + '/+docker',
+            [
+                './' + name + '/.output',
+                './' + name + '/views'    
+            ],
+            live_update = [
+                sync('./' + name + '/.output/app', '/root/app'),
+                sync('./' + name + '/views', '/root/views'),
+                run('./restart.sh'),
+            ]
+        )
     k8s_resource(name, port_forwards=port_forwards, resource_deps=[name+'-build'])
 
 server("api", port_forwards="8081:8080")

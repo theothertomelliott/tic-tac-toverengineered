@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: matchmaker
+  labels:
+    app: matchmaker
+spec:
+  selector:
+    matchLabels:
+      app: matchmaker
+  template:
+    metadata:
+      labels:
+        app: matchmaker
+    spec:
+      containers:
+        - name: matchmaker
+          image: docker.io/tictactoverengineered/matchmaker:{{ $.Chart.Version }}
+          env:
+            - name: REPO_SERVER_TARGET
+              value: "gamerepo:80"
+          ports:
+            - containerPort: 8080
+            - containerPort: 8081
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: matchmaker
+spec:
+  selector:
+    app: matchmaker
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

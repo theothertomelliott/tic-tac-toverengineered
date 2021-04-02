@@ -113,6 +113,7 @@ server("currentturn", port_forwards=["8084:8080", "8085:8081"])
 server("grid", port_forwards=["8086:8080", "8087:8081"])
 server("checker", port_forwards=["8088:8080", "8089:8081"])
 server("turncontroller", port_forwards=["8090:8080", "8091:8081"])
+server("matchmaker", port_forwards=["8092:8080", "8093:8081"])
 server("bot")
 server("space")
 

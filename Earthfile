@@ -33,6 +33,7 @@ protos:
     BUILD ./currentturn/pkg/turn/rpcturn/+protos
     BUILD ./checker/pkg/win/rpcchecker/+protos
     BUILD ./space/pkg/rpcspace/+protos
+    BUILD ./matchmaker/pkg/rpcmatchmaker/+protos
 
 testdeps:
     FROM golang:1.15
@@ -71,6 +72,7 @@ images:
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./space/+docker
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./turncontroller/+docker
     BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./web/+docker
+    BUILD --build-arg REGISTRY=$REGISTRY --build-arg VERSION=$VERSION ./matchmaker/+docker
 
 buildall:
     ARG VERSION=dev
@@ -85,3 +87,4 @@ buildall:
     BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./space/+build
     BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./turncontroller/+build
     BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./web/+build
+    BUILD --build-arg VERSION=$VERSION --build-arg ENVIRONMENT=$ENVIRONMENT ./matchmaker/+build

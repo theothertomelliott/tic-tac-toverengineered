@@ -1,0 +1,12 @@
+FROM alpine
+WORKDIR /root
+
+build:
+    ARG VERSION=dev
+    BUILD --build-arg SERVICE=matchmaker ../+gobuild
+
+docker:
+    ARG VERSION=devs
+    ARG REGISTRY
+    ARG IMAGE_REF=$REGISTRY/matchmaker:$VERSION
+    BUILD --build-arg SERVICE=matchmaker --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../+docker

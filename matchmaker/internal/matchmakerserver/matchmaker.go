@@ -35,14 +35,13 @@ func (m *matchMaker) Check(ctx context.Context, req *rpcmatchmaker.CheckRequest)
 		return nil, err
 	}
 	if match == nil {
-		return &rpcmatchmaker.CheckResponse{
-			HasResponse: false,
-		}, nil
+		return &rpcmatchmaker.CheckResponse{}, nil
 	}
 	return &rpcmatchmaker.CheckResponse{
-		HasResponse: true,
-		GameId:      string(match.Game),
-		Mark:        match.Mark,
-		Token:       string(match.Token),
+		Match: &rpcmatchmaker.Match{
+			GameId: string(match.Game),
+			Mark:   match.Mark,
+			Token:  string(match.Token),
+		},
 	}, nil
 }

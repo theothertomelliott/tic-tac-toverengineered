@@ -13,7 +13,10 @@ message CheckRequest {
 }
 
 message CheckResponse {
-    bool has_response = 1;
+    optional Match match = 1;
+}
+
+message Match {
     string game_id = 2;
     string mark = 3;
     string token = 4;

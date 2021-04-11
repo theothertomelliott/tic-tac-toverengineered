@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/pkg/rpcmatchmaker";
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/matchmaker";
 
 message RequestRequest {}
 

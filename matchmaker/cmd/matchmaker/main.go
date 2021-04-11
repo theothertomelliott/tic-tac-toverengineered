@@ -14,8 +14,6 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker"
-	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/internal/matchmakerserver"
-	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/pkg/rpcmatchmaker"
 )
 
 func main() {
@@ -31,10 +29,8 @@ func main() {
 		log.Fatalf("could not connect to repo server: %v", err)
 	}
 
-	m := matchmaker.New(games, newQueue(), newStore())
-
 	rpcServer := rpcserver.New(port)
-	rpcmatchmaker.RegisterMatchMakerServer(rpcServer.GRPC(), matchmakerserver.NewServer(m))
+	matchmaker.RegisterMatchMakerServer(rpcServer.GRPC(), matchmaker.New(games, newQueue(), newStore()))
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})
@@ -65,12 +61,12 @@ func getRepoServerTarget() string {
 var _ matchmaker.RequestQueue = &channelRequestQueue{}
 
 type channelRequestQueue struct {
-	requests chan matchmaker.RequestID
+	requests chan string
 }
 
 func newQueue() matchmaker.RequestQueue {
 	return &channelRequestQueue{
-		requests: make(chan matchmaker.RequestID, 1),
+		requests: make(chan string, 1),
 	}
 }
 
@@ -78,16 +74,16 @@ var _ matchmaker.MatchStore = &matchStore{}
 
 type matchStore struct {
 	mtx     sync.Mutex
-	matches map[matchmaker.RequestID]*matchmaker.Match
+	matches map[string]*matchmaker.Match
 }
 
 func newStore() matchmaker.MatchStore {
 	return &matchStore{
-		matches: make(map[matchmaker.RequestID]*matchmaker.Match),
+		matches: make(map[string]*matchmaker.Match),
 	}
 }
 
-func (m *matchStore) Set(ctx context.Context, req matchmaker.RequestID, match matchmaker.Match) error {
+func (m *matchStore) Set(ctx context.Context, req string, match matchmaker.Match) error {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
@@ -95,19 +91,19 @@ func (m *matchStore) Set(ctx context.Context, req matchmaker.RequestID, match ma
 	return nil
 }
 
-func (m *matchStore) Get(ctx context.Context, req matchmaker.RequestID) (*matchmaker.Match, error) {
+func (m *matchStore) Get(ctx context.Context, req string) (*matchmaker.Match, error) {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
 	return m.matches[req], nil
 }
 
-func (c *channelRequestQueue) Enqueue(_ context.Context, id matchmaker.RequestID) error {
+func (c *channelRequestQueue) Enqueue(_ context.Context, id string) error {
 	c.requests <- id
 	return nil
 }
 
-func (c *channelRequestQueue) Dequeue(_ context.Context) (*matchmaker.RequestID, error) {
+func (c *channelRequestQueue) Dequeue(_ context.Context) (*string, error) {
 	select {
 	case id := <-c.requests:
 		return &id, nil

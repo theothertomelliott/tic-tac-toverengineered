@@ -33,7 +33,7 @@ protos:
     BUILD ./currentturn/pkg/turn/rpcturn/+protos
     BUILD ./checker/pkg/win/rpcchecker/+protos
     BUILD ./space/pkg/rpcspace/+protos
-    BUILD ./matchmaker/pkg/rpcmatchmaker/+protos
+    BUILD ./matchmaker/+protos
 
 testdeps:
     FROM golang:1.15

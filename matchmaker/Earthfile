@@ -10,3 +10,12 @@ docker:
     ARG REGISTRY
     ARG IMAGE_REF=$REGISTRY/matchmaker:$VERSION
     BUILD --build-arg SERVICE=matchmaker --build-arg VERSION=$VERSION --build-arg IMAGE_REF=$IMAGE_REF ../+docker
+
+protos:
+    FROM ../+protobuild
+    COPY matchmaker.proto .
+    RUN protoc --go_out=plugins=grpc:. \
+    --go_opt=paths=source_relative \
+    --experimental_allow_proto3_optional \
+    matchmaker.proto
+    SAVE ARTIFACT matchmaker.pb.go matchmaker.pb.go AS LOCAL matchmaker.pb.go

@@ -9,14 +9,13 @@ monitoring, tracing and observability tooling.
 
 ## Technologies
 
-* [Go](https://golang.org/)
-* [Earthly](https://www.earthly.dev/)
-* [gRPC](https://grpc.io/)
-* [honeycomb.io](https://www.honeycomb.io/)
-* [Kubernetes](https://kubernetes.io/)
-* [Helm](https://helm.sh/)
-* [Tilt](https://tilt.dev/)
-* [TailwindCSS](https://tailwindcss.com/)
+- [Go](https://golang.org/)
+- [Earthly](https://www.earthly.dev/)
+- [gRPC](https://grpc.io/)
+- [Kubernetes](https://kubernetes.io/)
+- [Helm](https://helm.sh/)
+- [Tilt](https://tilt.dev/)
+- [TailwindCSS](https://tailwindcss.com/)
 
 ## Building and Running Locally
 
@@ -39,7 +38,7 @@ A Helm chart has been provided for direct deployment. To deploy from the command
 ```
 helm repo add tic-tac-toverengineered \
     https://theothertomelliott.github.io/tic-tac-toverengineered/
-    
+
 helm repo update
 
 helm install \
@@ -50,11 +49,11 @@ helm install \
 ## Secrets
 
 Secrets are picked up by Tilt from _secrets.yaml_ (which is gitignored). Currently, only a
-Honeycomb API key is required.
+Lightstep access token is required.
 
 Add the following content to _secrets.yaml_ to enable tracing:
 
 ```
-honeycomb:
-  api_key: <YOUR API KEY>
+lightstep:
+  access_token: <access token>
 ```

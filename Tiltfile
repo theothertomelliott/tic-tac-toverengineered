@@ -50,8 +50,6 @@ k8s_yaml(helm(
     'charts/tic-tac-toe',
     namespace='tictactoe',
     set=[
-        "honeycomb.api_key=" + secrets["honeycomb"]["api_key"], 
-        "honeycomb.dataset=tictactoe-dev",
         "mongodb.statefulset=true",
         "lightstep.access_token=" + secrets["lightstep"]["access_token"],
         ],

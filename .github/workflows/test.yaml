@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     env:
       FORCE_COLOR: 1
@@ -23,10 +23,10 @@ jobs:
         fi
         git checkout -b "$branch" || true
     - name: Download latest earth
-      run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.3.13/earth-linux-amd64 -O /usr/local/bin/earth && chmod +x /usr/local/bin/earth'"
+      run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.5.9/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
     - name: Run tests
-      run: earth +test
+      run: earthly +test
     - name: Build binaries and supporting files
-      run: earth --build-arg ENVIRONMENT=production +buildall
+      run: earthly --build-arg ENVIRONMENT=production +buildall
     - name: Build Docker images
-      run: earth +images
+      run: earthly +images

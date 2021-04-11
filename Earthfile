@@ -12,7 +12,7 @@ gobuild:
     FROM +deps
     ARG SERVICE
     ARG VERSION=dev
-    COPY --dir common bot api web space grid checker currentturn gamerepo turncontroller .
+    COPY --dir common bot api web space grid checker currentturn gamerepo turncontroller matchmaker .
     RUN --mount=type=cache,target=/root/.cache/go-build \
         go build \
         -ldflags "-X github.com/theothertomelliott/tic-tac-toverengineered/common/version.Version=$VERSION" \

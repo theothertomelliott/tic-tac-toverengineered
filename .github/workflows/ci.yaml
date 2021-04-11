@@ -6,7 +6,7 @@ on:
         - v* # Run only on version tags
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -35,13 +35,13 @@ jobs:
     - name: Docker Login
       run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
     - name: Download latest earth
-      run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.3.13/earth-linux-amd64 -O /usr/local/bin/earth && chmod +x /usr/local/bin/earth'"
+      run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.5.9/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
     - name: Run tests
-      run: earth +test
-    - name: Build binaries and supporting files
-      run: earth --build-arg ENVIRONMENT=production --build-arg VERSION=${{ steps.tagName.outputs.tag }} +buildall
+      run: earthly +test
+    - name: Build binaries and supposrting files
+      run: earthly --build-arg ENVIRONMENT=production --build-arg VERSION=${{ steps.tagName.outputs.tag }} +buildall
     - name: Build and push Docker images
-      run: earth -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
+      run: earthly -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
     - name: Configure Git
       run: |
         git config user.name "$GITHUB_ACTOR"

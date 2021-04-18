@@ -16,6 +16,7 @@ monitoring, tracing and observability tooling.
 - [Helm](https://helm.sh/)
 - [Tilt](https://tilt.dev/)
 - [TailwindCSS](https://tailwindcss.com/)
+- [OpenTelemetry](https://opentelemetry.io/)
 - [Lightstep](https://lightstep.com/)
 
 ## Building and Running Locally

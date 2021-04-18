@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/checker/pkg/win"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/currentturn/pkg/turn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/grid/pkg/grid"
@@ -33,13 +34,18 @@ type Server struct {
 	checker win.Checker
 }
 
+// wrap will wrap an http handler with all intended middleware
+func wrap(handler http.HandlerFunc, name string) http.Handler {
+	return monitoring.WrapHTTP(handler, name)
+}
+
 func (s *Server) AddRoutes(r *mux.Router) {
-	r.HandleFunc("/", s.listGamesHandler)
-	r.HandleFunc("/{game}/grid", s.gridHandler)
-	r.HandleFunc("/{game}/player/current", s.currentPlayerHandler)
-	r.HandleFunc("/{game}/winner", s.winnerHandler)
-	r.HandleFunc("/{game}/play", s.playHandler)
-	r.HandleFunc("/new", s.newGameHandler)
+	r.Handle("/", wrap(s.listGamesHandler, "index"))
+	r.Handle("/{game}/grid", wrap(s.gridHandler, "grid"))
+	r.Handle("/{game}/player/current", wrap(s.currentPlayerHandler, "currentplayer"))
+	r.Handle("/{game}/winner", wrap(s.winnerHandler, "winner"))
+	r.Handle("/{game}/play", wrap(s.playHandler, "play"))
+	r.Handle("/new", wrap(s.newGameHandler, "newgame"))
 }
 
 func jsonResponse(w http.ResponseWriter, value interface{}) {

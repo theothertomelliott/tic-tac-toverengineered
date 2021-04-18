@@ -6,7 +6,7 @@ import (
 )
 
 // WrapHTTP will add monitoring middleware to an http handler
-func (m *Monitoring) WrapHTTP(handler http.Handler) http.Handler {
+func (m *Monitoring) WrapHTTP(handler http.Handler, name string) http.Handler {
 	wrappedHandler := func(w http.ResponseWriter, r *http.Request) {
 		log.Println("http request: ", r.URL.Path)
 		handler.ServeHTTP(w, r)

@@ -7,8 +7,8 @@ import (
 )
 
 // WrapHTTP will add monitoring middleware to an http handler
-func (m *Monitoring) WrapHTTP(handler http.Handler) http.Handler {
-	return otelhttp.NewHandler(handler, "monitor")
+func (m *Monitoring) WrapHTTP(handler http.Handler, name string) http.Handler {
+	return otelhttp.NewHandler(handler, name)
 }
 
 // WrapHTTPTransport will add monitoring middleware to an HTTP Transport.

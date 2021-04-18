@@ -10,7 +10,7 @@ import (
 var Default Monitoring = &nullMonitoring{}
 
 type Monitoring interface {
-	WrapHTTP(handler http.Handler) http.Handler
+	WrapHTTP(handler http.Handler, name string) http.Handler
 	WrapHTTPTransport(r http.RoundTripper) http.RoundTripper
 	GRPCUnaryClientInterceptor() grpc.UnaryClientInterceptor
 	GRPCUnaryServerInterceptor() grpc.UnaryServerInterceptor

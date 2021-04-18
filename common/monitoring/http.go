@@ -5,8 +5,8 @@ import (
 )
 
 // WrapHTTP will add monitoring middleware to an http handler
-func WrapHTTP(handler http.Handler) http.Handler {
-	return Default.WrapHTTP(handler)
+func WrapHTTP(handler http.Handler, name string) http.Handler {
+	return Default.WrapHTTP(handler, name)
 }
 
 // WrapHTTPTransport will add monitoring middleware to an HTTP Transport.

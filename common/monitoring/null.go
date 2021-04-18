@@ -11,7 +11,12 @@ import (
 // nullMonitoring is a no-op implementation of Monitoring that is used by default
 type nullMonitoring struct{}
 
-func (n *nullMonitoring) WrapHTTP(handler http.Handler) http.Handler {
+func (n *nullMonitoring) WrapHTTP(handler http.Handler, name string) http.Handler {
+	log.Println("WrapHTTP: monitoring has not been initialized")
+	return handler
+}
+
+func (n *nullMonitoring) WrapHTTPFunc(handler http.HandlerFunc, name string) http.HandlerFunc {
 	log.Println("WrapHTTP: monitoring has not been initialized")
 	return handler
 }

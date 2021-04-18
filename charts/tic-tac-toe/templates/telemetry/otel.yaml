@@ -136,13 +136,17 @@ data:
           endpoint: ingest.lightstep.com:443
           headers:
             "lightstep-access-token": "{{ .Values.lightstep.access_token }}"
+        logging:
+          loglevel: debug
+          sampling_initial: 5
+          sampling_thereafter: 200
     service:
       extensions: [health_check, zpages]
       pipelines:
         traces:
             receivers: [jaeger, otlp]
             processors: [batch]
-            exporters: [otlp/1]
+            exporters: [otlp/1, logging]
 ---
 apiVersion: v1
 kind: Service

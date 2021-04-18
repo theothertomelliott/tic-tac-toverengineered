@@ -80,14 +80,12 @@ func main() {
 
 	prefix := os.Getenv("ROUTE_PREFIX")
 	if prefix != "" && prefix != "/" {
-		routes := m.PathPrefix(prefix).Subrouter()
-		server.AddRoutes(routes)
-	} else {
-		server.AddRoutes(m)
+		m = m.PathPrefix(prefix).Subrouter()
 	}
+	server.AddRoutes(m)
 
 	log.Println("Listening on port :8080")
-	http.ListenAndServe(":8080", monitoring.WrapHTTP(m))
+	http.ListenAndServe(":8080", m)
 }
 
 type wrappedHandler struct {

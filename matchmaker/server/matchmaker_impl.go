@@ -1,25 +1,29 @@
-package matchmaker
+package server
 
 import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker"
 )
 
 func New(
 	games game.Repository,
 	queue RequestQueue,
 	matches MatchStore,
-) MatchMakerServer {
+	tokens matchmaker.TokenCreator,
+) matchmaker.MatchMakerServer {
 	return &matchMaker{
 		matches: matches,
 		queue:   queue,
 		games:   games,
+		tokens:  tokens,
 	}
 }
 
-var _ MatchMakerServer = &matchMaker{}
+var _ matchmaker.MatchMakerServer = &matchMaker{}
 
 // RequestQueue defines a queue of match requests.
 //
@@ -37,19 +41,20 @@ type RequestQueue interface {
 // requests.
 type MatchStore interface {
 	// Set associates a request id with a match result
-	Set(context.Context, string, Match) error
+	Set(context.Context, string, matchmaker.Match) error
 	// Get retrieves a match result for a request id.
 	// If no match exists, nil is returned.
-	Get(context.Context, string) (*Match, error)
+	Get(context.Context, string) (*matchmaker.Match, error)
 }
 
 type matchMaker struct {
 	matches MatchStore
 	queue   RequestQueue
 	games   game.Repository
+	tokens  matchmaker.TokenCreator
 }
 
-func (m *matchMaker) Request(ctx context.Context, req *RequestRequest) (*RequestResponse, error) {
+func (m *matchMaker) Request(ctx context.Context, req *matchmaker.RequestRequest) (*matchmaker.RequestResponse, error) {
 	id := uuid.New().String()
 	partner, err := m.queue.Dequeue(ctx)
 	if err != nil {
@@ -61,15 +66,24 @@ func (m *matchMaker) Request(ctx context.Context, req *RequestRequest) (*Request
 			return nil, err
 		}
 
-		m.matches.Set(ctx, id, Match{
+		tokenO, err := m.tokens.Create(game, player.O)
+		if err != nil {
+			return nil, err
+		}
+		m.matches.Set(ctx, id, matchmaker.Match{
 			GameId: string(game),
 			Mark:   "O",
-			Token:  uuid.New().String(),
+			Token:  tokenO,
 		})
-		m.matches.Set(ctx, *partner, Match{
+
+		tokenX, err := m.tokens.Create(game, player.X)
+		if err != nil {
+			return nil, err
+		}
+		m.matches.Set(ctx, *partner, matchmaker.Match{
 			GameId: string(game),
 			Mark:   "X",
-			Token:  uuid.New().String(),
+			Token:  tokenX,
 		})
 	} else {
 		err := m.queue.Enqueue(ctx, id)
@@ -77,14 +91,14 @@ func (m *matchMaker) Request(ctx context.Context, req *RequestRequest) (*Request
 			return nil, err
 		}
 	}
-	return &RequestResponse{
+	return &matchmaker.RequestResponse{
 		RequestId: id,
 	}, nil
 }
 
-func (m *matchMaker) Check(ctx context.Context, req *CheckRequest) (*CheckResponse, error) {
+func (m *matchMaker) Check(ctx context.Context, req *matchmaker.CheckRequest) (*matchmaker.CheckResponse, error) {
 	match, err := m.matches.Get(ctx, req.RequestId)
-	return &CheckResponse{
+	return &matchmaker.CheckResponse{
 		Match: match,
 	}, err
 }

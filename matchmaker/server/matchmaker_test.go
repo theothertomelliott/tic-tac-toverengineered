@@ -1,4 +1,4 @@
-package matchmaker_test
+package server_test
 
 import (
 	"context"
@@ -7,18 +7,20 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/inmemoryrepository"
 	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/server"
+	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/unsignedtokens"
 )
 
 func TestSingleMatch(t *testing.T) {
 	games := inmemoryrepository.New()
-	m := matchmaker.New(games, newQueue(), newStore())
+	m := server.New(games, newQueue(), newStore(), &unsignedtokens.UnsignedTokens{})
 
 	doTestMatch(t, m)
 }
 
 func TestMultipleMatches(t *testing.T) {
 	games := inmemoryrepository.New()
-	m := matchmaker.New(games, newQueue(), newStore())
+	m := server.New(games, newQueue(), newStore(), &unsignedtokens.UnsignedTokens{})
 
 	for i := 0; i < 100; i++ {
 		doTestMatch(t, m)
@@ -76,28 +78,45 @@ func doTestMatch(t *testing.T, m matchmaker.MatchMakerServer) {
 	if match2.Match.Token == match3.Match.Token {
 		t.Errorf("player tokens must not match")
 	}
+
+	tokens := &unsignedtokens.UnsignedTokens{}
+	game2, player2, err := tokens.Validate(match2.Match.Token)
+	if err != nil {
+		t.Fatalf("token was not valid")
+	}
+
+	game3, player3, err := tokens.Validate(match3.Match.Token)
+	if err != nil {
+		t.Fatalf("token was not valid")
+	}
+	if player2 == player3 {
+		t.Fatalf("players in tokens must not match")
+	}
+	if game2 != game3 {
+		t.Fatalf("games in tokens must match")
+	}
 }
 
-var _ matchmaker.RequestQueue = &channelRequestQueue{}
+var _ server.RequestQueue = &channelRequestQueue{}
 
 type channelRequestQueue struct {
 	requests chan string
 }
 
-func newQueue() matchmaker.RequestQueue {
+func newQueue() server.RequestQueue {
 	return &channelRequestQueue{
 		requests: make(chan string, 1),
 	}
 }
 
-var _ matchmaker.MatchStore = &matchStore{}
+var _ server.MatchStore = &matchStore{}
 
 type matchStore struct {
 	mtx     sync.Mutex
 	matches map[string]*matchmaker.Match
 }
 
-func newStore() matchmaker.MatchStore {
+func newStore() server.MatchStore {
 	return &matchStore{
 		matches: make(map[string]*matchmaker.Match),
 	}

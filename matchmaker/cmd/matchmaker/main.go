@@ -14,6 +14,8 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/gamerepo/pkg/game/rpcrepository/repoclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/server"
+	"github.com/theothertomelliott/tic-tac-toverengineered/matchmaker/unsignedtokens"
 )
 
 func main() {
@@ -30,7 +32,14 @@ func main() {
 	}
 
 	rpcServer := rpcserver.New(port)
-	matchmaker.RegisterMatchMakerServer(rpcServer.GRPC(), matchmaker.New(games, newQueue(), newStore()))
+	matchmaker.RegisterMatchMakerServer(rpcServer.GRPC(),
+		server.New(
+			games,
+			newQueue(),
+			newStore(),
+			&unsignedtokens.UnsignedTokens{},
+		),
+	)
 
 	log.Printf("gRPC listening on port :%v", port)
 	var done = make(chan struct{})
@@ -58,26 +67,26 @@ func getRepoServerTarget() string {
 	return "localhost:8082"
 }
 
-var _ matchmaker.RequestQueue = &channelRequestQueue{}
+var _ server.RequestQueue = &channelRequestQueue{}
 
 type channelRequestQueue struct {
 	requests chan string
 }
 
-func newQueue() matchmaker.RequestQueue {
+func newQueue() server.RequestQueue {
 	return &channelRequestQueue{
 		requests: make(chan string, 1),
 	}
 }
 
-var _ matchmaker.MatchStore = &matchStore{}
+var _ server.MatchStore = &matchStore{}
 
 type matchStore struct {
 	mtx     sync.Mutex
 	matches map[string]*matchmaker.Match
 }
 
-func newStore() matchmaker.MatchStore {
+func newStore() server.MatchStore {
 	return &matchStore{
 		matches: make(map[string]*matchmaker.Match),
 	}

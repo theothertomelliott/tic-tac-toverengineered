@@ -13,6 +13,9 @@
 # Build directory
 .build
 
+# Protobufs
+*.pb.go
+
 # Secrets file for Tilt
 secrets.yaml
 

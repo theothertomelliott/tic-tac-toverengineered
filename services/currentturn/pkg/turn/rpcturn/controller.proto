@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn/rpcturn";
+
+message Position {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message TakeTurnRequest {
+    string game_id = 1; 
+    string mark = 2;
+    Position position = 3;
+}
+message TakeTurnResponse {}
+
+message NextPlayerRequest {
+    string game_id = 1;
+}
+message NextPlayerResponse {
+    string mark = 1;
+}
+
+service Controller {
+    rpc TakeTurn(TakeTurnRequest) returns (TakeTurnResponse) {}
+    rpc NextPlayer(NextPlayerRequest) returns (NextPlayerResponse) {}
+}

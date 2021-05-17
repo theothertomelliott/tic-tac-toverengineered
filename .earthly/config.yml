@@ -1,3 +1,0 @@
-git:
-    global:
-        url_instead_of: "https://github.com/=git@github.com:"

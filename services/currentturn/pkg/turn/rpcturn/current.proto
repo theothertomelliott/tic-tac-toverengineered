@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn/rpcturn";
+
+message PlayerRequest {
+    string game_id = 1; 
+}
+message PlayerResponse {
+    string mark = 1;
+}
+
+message NextRequest {
+    string game_id = 1;
+}
+message NextResponse {}
+
+service Current {
+    rpc Player(PlayerRequest) returns (PlayerResponse) {}
+    rpc Next(NextRequest) returns (NextResponse) {}
+}

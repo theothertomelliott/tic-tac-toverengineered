@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker";
+
+message RequestRequest {}
+
+message RequestResponse{
+    string request_id = 1;
+}
+
+message CheckRequest {
+    string request_id = 1;
+}
+
+message CheckResponse {
+    optional Match match = 1;
+}
+
+message Match {
+    string game_id = 2;
+    string mark = 3;
+    string token = 4;
+}
+
+service MatchMaker {
+    rpc Request(RequestRequest) returns (RequestResponse) {}
+    rpc Check(CheckRequest) returns (CheckResponse) {}
+}

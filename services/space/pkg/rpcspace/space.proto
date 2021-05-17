@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg/rpcspace";
+
+message MarkRequest {
+    string game_id = 1;
+}
+
+message MarkResponse {
+    string mark = 1;
+    bool has_mark = 2; 
+}
+
+message SetMarkRequest {
+    string game_id = 1;
+    string mark = 2;
+}
+
+message SetMarkResponse {}
+
+service Space {
+    rpc Mark(MarkRequest) returns (MarkResponse) {}
+    rpc SetMark(SetMarkRequest) returns (SetMarkResponse) {}
+}

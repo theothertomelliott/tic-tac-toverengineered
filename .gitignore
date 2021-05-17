@@ -7,6 +7,12 @@
 .output
 .tmp-earth-*
 
+# Binary dependencies
+.bin
+
+# Build directory
+.build
+
 # Secrets file for Tilt
 secrets.yaml
 

@@ -10,7 +10,6 @@ monitoring, tracing and observability tooling.
 ## Technologies
 
 - [Go](https://golang.org/)
-- [Earthly](https://www.earthly.dev/)
 - [gRPC](https://grpc.io/)
 - [Kubernetes](https://kubernetes.io/)
 - [Helm](https://helm.sh/)
@@ -30,8 +29,6 @@ tilt up
 This will build all containers and deploy a Helm chart to your current Kubernetes context, forwarding the web UI to port 8080 on localhost.
 
 Tilt will also automatically run unit tests on any change to the source.
-
-Protobufs for gRPC will not automatically be rebuilt, but a resource (`protos`) is provided in Tilt that can be triggered from the Web UI.
 
 ## Deployment
 

@@ -34,6 +34,9 @@ web: web_tailwind
 test: protos
 	go test ./...
 
+testshort: protos
+	go test -short ./...
+
 .PHONY: clean protos test services
 clean:
 	rm -rf .bin

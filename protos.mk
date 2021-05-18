@@ -12,7 +12,7 @@ PROTOC := PATH=$(PATH) $(PROTOC)
 
 .bin/protoc-*:
 	$(GOINSTALL) google.golang.org/protobuf/cmd/protoc-gen-go; \
-	$(GOINSTALL) google.golang.org/grpc/cmd/protoc-gen-go-grpc; \
+	$(GOINSTALL) google.golang.org/grpc/cmd/protoc-gen-go-grpc
 
 installgoproto: .bin/protoc-*
 

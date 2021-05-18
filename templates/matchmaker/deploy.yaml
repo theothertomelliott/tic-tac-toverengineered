@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: currentturn
+  name: matchmaker
   labels:
-    app: currentturn
+    app: matchmaker
 spec:
   selector:
     matchLabels:
-      app: currentturn
+      app: matchmaker
   template:
     metadata:
       labels:
-        app: currentturn
+        app: matchmaker
     spec:
       containers:
-        - name: currentturn
-          image: docker.io/tictactoverengineered/currentturn:{{ $.Chart.Version }}
+        - name: matchmaker
+          image: docker.io/tictactoverengineered/matchmaker:{{ $.Chart.Version }}
           env:
-            - name: placeholder
-              value: TEST
+            - name: REPO_SERVER_TARGET
+              value: "gamerepo:80"
           ports:
             - containerPort: 8080
             - containerPort: 8081
@@ -26,10 +26,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: currentturn
+  name: matchmaker
 spec:
   selector:
-    app: currentturn
+    app: matchmaker
   ports:
     - protocol: TCP
       port: 80

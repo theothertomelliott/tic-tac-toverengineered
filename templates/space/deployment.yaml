@@ -20,7 +20,6 @@ spec:
       - name: space-{{ $i }}-{{ $j }}
         image: docker.io/tictactoverengineered/space:{{ $root.Chart.Version }}
         env:
-          {{- include "templates.honeycomb.env" $root | nindent 10 }}
           - name: PORT
             value: "80{{ $i }}{{ $j }}"
           - name: XPOS

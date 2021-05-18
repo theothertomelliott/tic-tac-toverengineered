@@ -14,9 +14,8 @@ spec:
         app: bot
     spec:
       containers:
-      - name: bot
-        image: docker.io/tictactoverengineered/bot:{{ $.Chart.Version }}
-        env:
-          {{- include "templates.honeycomb.env" . | nindent 10 }}
-          - name: API_BASE_URL
-            value: "http://api{{ .Values.routes.api }}"
+        - name: bot
+          image: docker.io/tictactoverengineered/bot:{{ $.Chart.Version }}
+          env:
+            - name: API_BASE_URL
+              value: "http://api{{ .Values.routes.api }}"

@@ -1,7 +1,3 @@
-#honeycomb:
-# api_key:
-# dataset:
-
 mongodb:
     statefulset: true
 # connection: mongodb://admin:password@database:27017

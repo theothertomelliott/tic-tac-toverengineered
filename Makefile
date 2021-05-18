@@ -11,6 +11,8 @@ VERSION ?= dev
 # Create rules to build protos
 $(foreach proto,$(PROTOFILES),$(eval $(call protorule,$(proto))))
 
+protos: installgoproto $(PBFILES) $(GRPCPBFILES)
+
 include services.mk
 
 SERVICEDIRS = $(wildcard services/*)
@@ -21,7 +23,12 @@ $(foreach service,$(SERVICES),$(eval $(call servicerule,$(service))))
 
 services: $(SERVICES)
 
-protos: installgoproto $(PBFILES) $(GRPCPBFILES)
+include docker.mk
+
+$(foreach service,$(SERVICES),$(eval $(call dockerrule,$(service))))
+
+docker: services dockerbaseimage $(addsuffix _docker,$(SERVICES))
+docker_push: $(addsuffix _docker_push,$(SERVICES))
 
 include web.mk
 
@@ -37,7 +44,7 @@ test: protos
 testshort: protos
 	go test -short ./...
 
-.PHONY: clean protos test services
+.PHONY: clean protos test testshort services web docker docker_push
 clean:
 	rm -rf .bin
 	rm -rf .build

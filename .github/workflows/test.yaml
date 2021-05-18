@@ -25,5 +25,5 @@ jobs:
       run: make testshort
     - name: Build binaries and supporting files
       run: make services
-    # - name: Build Docker images
-    #   run: make docker
+    - name: Build Docker images
+      run: make docker

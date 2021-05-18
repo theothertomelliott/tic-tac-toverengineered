@@ -1,5 +1,3 @@
-include files.mk
-
 define servicerule
 .build/$1/app: protos
 	@echo Building service $1

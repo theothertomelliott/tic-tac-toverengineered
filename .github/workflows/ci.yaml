@@ -34,14 +34,19 @@ jobs:
         echo ${{ steps.tagName.outputs.tag }}
     - name: Docker Login
       run: docker login --username "$DOCKERHUB_USERNAME" --password "$DOCKERHUB_TOKEN"
-    - name: Download latest earth
-      run: "sudo /bin/sh -c 'wget https://github.com/earthly/earthly/releases/download/v0.5.9/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'"
-    - name: Run tests
-      run: earthly +test
-    - name: Build binaries and supposrting files
-      run: earthly --build-arg ENVIRONMENT=production --build-arg VERSION=${{ steps.tagName.outputs.tag }} +buildall
-    - name: Build and push Docker images
-      run: earthly -push --build-arg VERSION=${{ steps.tagName.outputs.tag }} +images
+    - name: Install Protoc
+      uses: arduino/setup-protoc@v1
+      with:
+        version: '3.17.0'
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.16.4' # The Go version to download (if necessary) and use.
+    - name: Tests
+      run: make testshort
+    - name: Build Docker images
+      run: make docker VERSION=${{ steps.tagName.outputs.tag }}
+    - name: Push Docker images
+      run: make docker_push VERSION=${{ steps.tagName.outputs.tag }}
     - name: Configure Git
       run: |
         git config user.name "$GITHUB_ACTOR"

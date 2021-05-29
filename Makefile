@@ -42,6 +42,9 @@ web: web_tailwind
 test: protos
 	go test ./...
 
+testcover: protos
+	go test -coverprofile=coverage.out ./...
+
 testshort: protos
 	go test -short ./...
 

@@ -59,12 +59,12 @@ func (r *rountTripImpl) RoundTrip(req *http.Request) (*http.Response, error) {
 }
 
 func TestGrpc(t *testing.T) {
-	clientInterceptor := monitoring.Default.GRPCUnaryClientInterceptor()
+	clientInterceptor := monitoring.UnaryClientInterceptor()
 	if clientInterceptor != nil {
 		t.Errorf("expected nil client interceptor, got: %v", clientInterceptor)
 	}
 
-	unaryInterceptor := monitoring.Default.GRPCUnaryServerInterceptor()
+	unaryInterceptor := monitoring.UnaryServerInterceptor()
 	if unaryInterceptor != nil {
 		t.Errorf("expected nil unary  interceptor, got: %v", unaryInterceptor)
 	}

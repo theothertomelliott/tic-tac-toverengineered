@@ -1,5 +1,6 @@
 # tic-tac-toverengineered
 
+![Release](https://github.com/theothertomelliott/tic-tac-toverengineered/actions/workflows/ci.yaml/badge.svg)
 ![Tests](https://github.com/theothertomelliott/tic-tac-toverengineered/actions/workflows/test.yaml/badge.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/81f71579c34f617680ce/maintainability)](https://codeclimate.com/github/theothertomelliott/tic-tac-toverengineered/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/81f71579c34f617680ce/test_coverage)](https://codeclimate.com/github/theothertomelliott/tic-tac-toverengineered/test_coverage)

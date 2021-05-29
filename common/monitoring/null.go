@@ -16,11 +16,6 @@ func (n *nullMonitoring) WrapHTTP(handler http.Handler, name string) http.Handle
 	return handler
 }
 
-func (n *nullMonitoring) WrapHTTPFunc(handler http.HandlerFunc, name string) http.HandlerFunc {
-	log.Println("WrapHTTP: monitoring has not been initialized")
-	return handler
-}
-
 func (n *nullMonitoring) WrapHTTPTransport(r http.RoundTripper) http.RoundTripper {
 	log.Println("WrapHTTPTransport: monitoring has not been initialized")
 	return r

@@ -35,7 +35,7 @@ jobs:
       with:
         coverageCommand: make testcover
         coverageLocations: |
-          ${{github.workspace}}/*.cov:gocov
+          ${{github.workspace}}/*.out:gocov
     - name: Build binaries and supporting files
       run: make services
     - name: Build Docker images

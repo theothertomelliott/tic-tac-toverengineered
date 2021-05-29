@@ -1,3 +1,6 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/81f71579c34f617680ce/maintainability)](https://codeclimate.com/github/theothertomelliott/tic-tac-toverengineered/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/81f71579c34f617680ce/test_coverage)](https://codeclimate.com/github/theothertomelliott/tic-tac-toverengineered/test_coverage)
+
 # tic-tac-toverengineered
 
 A simple Tic Tac Toe game build with an excessive number of microservices.

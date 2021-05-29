@@ -36,6 +36,7 @@ jobs:
         coverageCommand: make testcover
         coverageLocations: |
           ${{github.workspace}}/*.out:gocov
+        prefix: github.com/theothertomelliott/tic-tac-toverengineered
     - name: Build binaries and supporting files
       run: make services
     - name: Build Docker images

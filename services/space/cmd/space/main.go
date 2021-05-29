@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
@@ -19,13 +20,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
-
-func getPort() (int, error) {
-	if serverTarget := os.Getenv("PORT"); serverTarget != "" {
-		return strconv.Atoi(serverTarget)
-	}
-	return 8080, nil
-}
 
 func getPosition() (int, int, error) {
 	x, err := strconv.Atoi(os.Getenv("XPOS"))
@@ -42,7 +36,7 @@ func getPosition() (int, int, error) {
 func main() {
 	version.Println()
 
-	port, err := getPort()
+	port, err := env.GetInt("PORT", 8080)
 	if err != nil {
 		log.Fatalf("could not get port number:  %v", err)
 	}

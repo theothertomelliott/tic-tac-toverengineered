@@ -22,6 +22,7 @@ SERVICES = $(subst services/,,$(SERVICEDIRS))
 $(foreach service,$(SERVICES),$(eval $(call servicerule,$(service))))
 
 services: $(SERVICES)
+services_local: $(addsuffix _local,$(SERVICES))
 
 include docker.mk
 

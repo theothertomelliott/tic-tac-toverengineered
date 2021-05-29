@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
@@ -21,14 +22,15 @@ func main() {
 	defaultmonitoring.Init("grid")
 	defer monitoring.Close()
 
-	port := 8080
-	grpcuiPort := 8081
+	port := env.MustGetInt("PORT", 8080)
+	grpcuiPort := env.MustGetInt("GRPCUI_PORT", 8081)
 
 	var spaces [][]space.Space
 	for i := 0; i < 3; i++ {
 		var row []space.Space
 		for j := 0; j < 3; j++ {
-			c, err := rpcspace.ConnectSpace(fmt.Sprintf("space-%d-%d:80", i, j))
+			connStr := env.Get(fmt.Sprintf("SPACE-%d-%d", i, j), fmt.Sprintf("localhost:80%v%v", i, j))
+			c, err := rpcspace.ConnectSpace(connStr)
 			if err != nil {
 				log.Fatalf("space (%d,%d): %v", i, j, err)
 			}

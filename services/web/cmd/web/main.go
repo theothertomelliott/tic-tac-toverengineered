@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -34,7 +35,8 @@ func main() {
 	}
 	server := web.New(apiclient.New(getAPIBaseURL(), client))
 
-	log.Println("Listening on port :8080")
+	port := env.Get("PORT", "8080")
+	log.Printf("Listening on port :%v\n", port)
 
 	m := mux.NewRouter()
 
@@ -47,7 +49,7 @@ func main() {
 	}
 	server.AddRoutes(m)
 
-	http.ListenAndServe(":8080", m)
+	http.ListenAndServe(fmt.Sprintf(":%v", port), m)
 }
 
 type prefixHandler struct {

@@ -19,6 +19,24 @@ spec:
           env:
             - name: placeholder
               value: TEST
+            - name: SPACE-0-0
+              value: space-0-0:80
+            - name: SPACE-0-1
+              value: space-0-1:80
+            - name: SPACE-0-2
+              value: space-0-2:80
+            - name: SPACE-1-0
+              value: space-1-0:80
+            - name: SPACE-1-1
+              value: space-1-1:80
+            - name: SPACE-1-2
+              value: space-1-2:80
+            - name: SPACE-2-0
+              value: space-2-0:80
+            - name: SPACE-2-1
+              value: space-2-1:80
+            - name: SPACE-2-2
+              value: space-2-2:80
           ports:
             - containerPort: 8080
             - containerPort: 8081

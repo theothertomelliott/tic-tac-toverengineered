@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
@@ -24,8 +25,8 @@ func main() {
 	defaultmonitoring.Init("gamerepo")
 	defer monitoring.Close()
 
-	port := 8080
-	grpcuiPort := 8081
+	port := env.MustGetInt("PORT", 8080)
+	grpcuiPort := env.MustGetInt("GRPCUI_PORT", 8081)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

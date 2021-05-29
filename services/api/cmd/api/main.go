@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -84,8 +85,9 @@ func main() {
 	}
 	server.AddRoutes(m)
 
-	log.Println("Listening on port :8080")
-	http.ListenAndServe(":8080", m)
+	port := env.Get("PORT", "8080")
+	log.Printf("Listening on port :%v\n", port)
+	http.ListenAndServe(fmt.Sprintf(":%v", port), m)
 }
 
 type wrappedHandler struct {

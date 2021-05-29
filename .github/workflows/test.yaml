@@ -28,12 +28,13 @@ jobs:
         key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
         restore-keys: |
           ${{ runner.os }}-go-
-    - name: Run tests and publish code coverage
+    - name: Run tests
+      run: make testcover
+    - name: Publish code coverage
       uses: paambaati/codeclimate-action@v2.7.5
       env:
         CC_TEST_REPORTER_ID: b6b5d038c012195ee2235d9de3eb7258f4e0ff8e45523a39160bdb306566d61f
       with:
-        coverageCommand: make testcover
         coverageLocations: |
           ${{github.workspace}}/*.out:gocov
         prefix: github.com/theothertomelliott/tic-tac-toverengineered

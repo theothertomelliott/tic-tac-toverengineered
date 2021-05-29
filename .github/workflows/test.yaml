@@ -21,13 +21,12 @@ jobs:
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.16.4' # The Go version to download (if necessary) and use.
-    - name: Tests
-      run: make testcover
-    - name: Publish code coverage
+    - name: Run tests and publish code coverage
       uses: paambaati/codeclimate-action@v2.7.5
       env:
         CC_TEST_REPORTER_ID: b6b5d038c012195ee2235d9de3eb7258f4e0ff8e45523a39160bdb306566d61f
       with:
+        coverageCommand: make testcover
         coverageLocations: ${{github.workspace}}/*.cov:gocov
     - name: Build binaries and supporting files
       run: make services

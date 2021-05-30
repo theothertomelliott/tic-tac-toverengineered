@@ -6,6 +6,8 @@ PATH:="$(GOBIN):$(PATH)"
 # Always go install to the bin dir
 GOINSTALL := GOBIN=$(GOBIN) $(GOINSTALL)
 
+## Protos
+
 # Use gobin for protoc plugins
 PROTOC ?= protoc
 PROTOC := PATH=$(PATH) $(PROTOC)
@@ -27,3 +29,16 @@ buildproto = $(PROTOC) \
     --go_opt=paths=source_relative \
 	--go-grpc_opt=paths=source_relative \
     $1
+
+## OpenAPI
+
+# Use gobin for OpenAPI generation
+OPENAPIGEN := ./.bin/oapi-codegen
+
+.bin/oapi-codegen:
+	$(GOINSTALL) github.com/deepmap/oapi-codegen/cmd/oapi-codegen
+
+services/api/pkg/tictactoeapi/tictactoe.gen.go: $(OPENAPIGEN) services/api/pkg/tictactoeapi/tictactoe.openapi.yaml
+	$(OPENAPIGEN) -package tictactoeapi services/api/pkg/tictactoeapi/tictactoe.openapi.yaml  > services/api/pkg/tictactoeapi/tictactoe.gen.go
+
+openapi: services/api/pkg/tictactoeapi/tictactoe.gen.go

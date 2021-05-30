@@ -1,0 +1,232 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Tic Tac Toe
+  description: An API for games of Tic Tac Toe
+  termsOfService: htstp://swagger.io/terms/
+  contact:
+    name: Tom Elliott
+    email: tom.w.elliott@gmail.com
+    url: http://telliott.io
+  license:
+    name: MIT
+    url: https://github.com/theothertomelliott/tic-tac-toverengineered/blob/main/LICENSE
+paths:
+  /:
+    get:
+      description: Returns a list of game IDs
+      operationId: index
+      parameters:
+        - name: offset
+          in: query
+          description: starting offset for results
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: max
+          in: query
+          description: maximum number of results to return
+          required: false
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: games response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /match:
+    post:
+      description: Request a new /match
+      operationId: requestMatch
+      responses:
+        '202':
+          description: match response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchPending'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      description: Get status of a match request
+      operationId: matchStatus
+      parameters:
+        - name: requestID
+          in: query
+          description: ID of match request to be checked
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: match response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Match'
+        '102':
+          description: waiting for match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchPending'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /{game}/grid:
+    get:
+      description: Return the grid state for a game
+      operationId: gameGrid
+      parameters:
+        - name: game
+          in: path
+          description: ID of game
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: current grid for game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Grid'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /{game}/player/current:
+    get:
+      description: Return the current player for a game
+      operationId: currentPlayer
+      parameters:
+        - name: game
+          in: path
+          description: ID of game
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: current player response
+          content:
+            application/json:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /{game}/winner:
+    get:
+      description: Return the winner, if any for a game
+      operationId: winner
+      parameters:
+        - name: game
+          in: path
+          description: ID of game
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: game winner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Winner'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  # /{game}/play:
+  #   post:
+  #     description: Make a move in a game
+components:
+  schemas:
+    Winner:
+      allOf:
+        - type: object
+          properties:
+            winner:
+              type: string
+            draw:
+              type: boolean
+    MatchPending:
+      allOf:
+        - type: object
+          required:
+          - requestID
+          properties:
+            requestID:
+              type: string
+    Match:
+      allOf:
+        - type: object
+          required:
+          - gameID
+          - mark
+          - token
+          properties:
+            gameID:
+              type: string
+            mark:
+              type: string
+            token:
+              type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    Grid:
+      allOf:
+        - type: object
+          required:
+          - grid
+          properties:
+            grid:
+              type: array
+              items:
+                type: array
+                items:
+                  type: string
+
+
+# r.Handle("/", wrap(s.listGamesHandler, "index"))
+# r.Handle("/{game}/grid", wrap(s.gridHandler, "grid"))
+# r.Handle("/{game}/player/current", wrap(s.currentPlayerHandler, "currentplayer"))
+# r.Handle("/{game}/winner", wrap(s.winnerHandler, "winner"))
+# r.Handle("/{game}/play", wrap(s.playHandler, "play"))
+# r.Handle("/new", wrap(s.newGameHandler, "newgame"))

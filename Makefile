@@ -1,6 +1,6 @@
-all: protos
+all: generated
 
-include protos.mk
+include generated.mk
 include files.mk
 
 PROTOFILES := $(call rwildcard,./,*.proto)
@@ -17,6 +17,7 @@ include services.mk
 
 SERVICEDIRS = $(wildcard services/*)
 SERVICES = $(subst services/,,$(SERVICEDIRS))
+GEN_GO = $(rwildcard ./,*.gen.go)
 
 # Create rules to build services
 $(foreach service,$(SERVICES),$(eval $(call servicerule,$(service))))
@@ -39,17 +40,22 @@ $(eval $(call views,web))
 web: web_views
 web: web_tailwind
 
-test: protos
+.PHONY: generated
+generated: protos openapi
+
+test: generated
 	go test ./...
 
-testcover: protos
+testcover: generated
 	go test -coverprofile=coverage.out ./...
 
-testshort: protos
+testshort: generated
 	go test -short ./...
 
 .PHONY: clean protos test testshort services web docker docker_push
 clean:
 	rm -rf .bin
 	rm -rf .build
-	rm $(PBFILES) $(GRPCPBFILES)
+	rm -f $(PBFILES) $(GRPCPBFILES)
+	rm -f $(GEN_GO)
+	rm -f coverage.out

@@ -41,7 +41,7 @@ type RequestQueue interface {
 // requests.
 type MatchStore interface {
 	// Set associates a request id with a match result
-	Set(context.Context, string, matchmaker.Match) error
+	Set(context.Context, string, *matchmaker.Match) error
 	// Get retrieves a match result for a request id.
 	// If no match exists, nil is returned.
 	Get(context.Context, string) (*matchmaker.Match, error)
@@ -72,7 +72,7 @@ func (m *matchMaker) Request(ctx context.Context, req *matchmaker.RequestRequest
 		if err != nil {
 			return nil, err
 		}
-		m.matches.Set(ctx, id, matchmaker.Match{
+		m.matches.Set(ctx, id, &matchmaker.Match{
 			GameId: string(game),
 			Mark:   "O",
 			Token:  tokenO,
@@ -82,7 +82,7 @@ func (m *matchMaker) Request(ctx context.Context, req *matchmaker.RequestRequest
 		if err != nil {
 			return nil, err
 		}
-		m.matches.Set(ctx, *partner, matchmaker.Match{
+		m.matches.Set(ctx, *partner, &matchmaker.Match{
 			GameId: string(game),
 			Mark:   "X",
 			Token:  tokenX,

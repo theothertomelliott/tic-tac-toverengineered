@@ -122,11 +122,11 @@ func newStore() server.MatchStore {
 	}
 }
 
-func (m *matchStore) Set(ctx context.Context, req string, match matchmaker.Match) error {
+func (m *matchStore) Set(ctx context.Context, req string, match *matchmaker.Match) error {
 	m.mtx.Lock()
 	defer m.mtx.Unlock()
 
-	m.matches[req] = &match
+	m.matches[req] = match
 	return nil
 }
 

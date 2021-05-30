@@ -5,10 +5,12 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/server"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game/inmemoryrepository"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/inmemorymatchmaker"
 )
 
 func main() {
-	apiServer := server.New(inmemoryrepository.New(), nil, nil, nil)
+	gamerepo := inmemoryrepository.New()
+	apiServer := server.New(gamerepo, inmemorymatchmaker.New(gamerepo), nil, nil, nil)
 	e := echo.New()
 	tictactoeapi.RegisterHandlers(e, apiServer)
 	err := e.Start(":8080")

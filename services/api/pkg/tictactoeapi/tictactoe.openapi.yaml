@@ -164,9 +164,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  # /{game}/play:
-  #   post:
-  #     description: Make a move in a game
+  /{game}/play:
+    post:
+      description: Make a move in a game
+      operationId: play
+      parameters:
+        - name: game
+          in: path
+          description: ID of game
+          required: true
+          schema:
+            type: string
+        - name: playerToken
+          in: body
+          description: token of player making the move
+          required: true
+          schema:
+            type: string
+        - name: position
+          in: body
+          description: position to place player mark
+          required: true
+          schema:
+            $ref: "#/components/schemas/Position"
+      responses:
+        '200':
+          description: game response
+          content:
+            application/json:
+              schema:
+                type: string # Should output ok
+        default:  
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Winner:
@@ -210,6 +243,18 @@ components:
           format: int32
         message:
           type: string
+    Position:
+      type: object
+      required:
+        - i
+        - j
+      properties:
+        i:
+          type: integer
+          format: int32
+        j:
+          type: integer
+          format: int32
     Grid:
       allOf:
         - type: object

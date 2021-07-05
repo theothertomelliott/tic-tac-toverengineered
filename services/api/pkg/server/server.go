@@ -1,6 +1,9 @@
 package server
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/checker/pkg/win"
@@ -55,52 +58,17 @@ func (s *server) Index(ctx echo.Context, params tictactoeapi.IndexParams) error 
 	return ctx.JSON(200, games)
 }
 
-// (GET /match)
-func (s *server) MatchStatus(ctx echo.Context, params tictactoeapi.MatchStatusParams) error {
-	res, err := s.matchmaker.Check(ctx.Request().Context(), &matchmaker.CheckRequest{
-		RequestId: params.RequestID,
-	})
+func (s *server) verifyID(ctx context.Context, id string) (game.ID, error) {
+	gameID := game.ID(id)
+
+	// Verify this game exists
+	exists, err := s.repo.Exists(ctx, gameID)
 	if err != nil {
-		return err
+		return game.ID(""), err
 	}
-	if res.Match == nil {
-		ctx.JSON(102, tictactoeapi.MatchPending{
-			RequestID: params.RequestID,
-		})
-		return nil
+	if !exists {
+		return game.ID(""), fmt.Errorf("game not found: %v", gameID)
 	}
-	ctx.JSON(200, tictactoeapi.Match{
-		GameID: res.Match.GameId,
-		Mark:   res.Match.Mark,
-		Token:  res.Match.Token,
-	})
-	return nil
-}
 
-// (POST /match)
-func (s *server) RequestMatch(ctx echo.Context) error {
-	res, err := s.matchmaker.Request(ctx.Request().Context(), &matchmaker.RequestRequest{})
-	if err != nil {
-		return err
-	}
-	pending := tictactoeapi.MatchPending{
-		RequestID: res.RequestId,
-	}
-	ctx.JSON(202, pending)
-	return nil
-}
-
-// (GET /{game}/grid)
-func (s *server) GameGrid(ctx echo.Context, game string) error {
-	panic("not implemented") // TODO: Implement
-}
-
-// (GET /{game}/player/current)
-func (s *server) CurrentPlayer(ctx echo.Context, game string) error {
-	panic("not implemented") // TODO: Implement
-}
-
-// (GET /{game}/player/winner)
-func (s *server) Winner(ctx echo.Context, game string) error {
-	panic("not implemented") // TODO: Implement
+	return gameID, nil
 }

@@ -33,6 +33,13 @@ if bare:
         "mongodb",
         serve_cmd="docker run -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
     )
+    local_resource(
+        "openapi",
+        serve_cmd="go run ./services/api/cmd/openapi",
+        serve_env={
+            "PORT": "8094"
+        }
+    )
 else:
     secrets = read_yaml("secrets.yaml")
 

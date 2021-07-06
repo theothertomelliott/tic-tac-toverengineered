@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	"github.com/labstack/echo/v4"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 )
@@ -14,6 +16,7 @@ func (s *server) GameGrid(ctx echo.Context, game string) error {
 
 	out, err := s.grid.State(ctx.Request().Context(), gameID)
 	if err != nil {
+		fmt.Println("error getting grid state: ", err)
 		return err
 	}
 	var gridOut tictactoeapi.Grid

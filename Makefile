@@ -37,8 +37,9 @@ include web.mk
 $(eval $(call tailwind,web))
 $(eval $(call views,web))
 
-web: web_views
-web: web_tailwind
+webdeps: web_views web_tailwind
+web: webdeps
+web_local: webdeps
 
 .PHONY: generated
 generated: protos openapi

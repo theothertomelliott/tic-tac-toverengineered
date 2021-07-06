@@ -38,7 +38,8 @@ if bare:
         serve_cmd="go run ./services/api/cmd/openapi",
         serve_env={
             "PORT": "8094"
-        }
+        },
+        resource_deps = ["api"],
     )
 else:
     secrets = read_yaml("secrets.yaml")

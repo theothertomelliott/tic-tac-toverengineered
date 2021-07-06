@@ -1,56 +1,18 @@
 package server_test
 
 import (
+	"context"
+	"net/http"
 	"testing"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/server"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game/inmemoryrepository"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/inmemorymatchmaker"
 )
 
 func TestMatching(t *testing.T) {
-	gamerepo := inmemoryrepository.New()
-	apiServer := server.New(gamerepo, inmemorymatchmaker.New(gamerepo), nil, nil, nil)
+	env := newEnv(t)
+	client := env.Client
 
-	pending1 := &tictactoeapi.MatchPending{}
-	request(
-		t,
-		matchRequest(),
-		matchCall(t, apiServer),
-		202,
-		pending1,
-	)
-	pending2 := &tictactoeapi.MatchPending{}
-	request(
-		t,
-		matchRequest(),
-		matchCall(t, apiServer),
-		202,
-		pending2,
-	)
-
-	if pending1.RequestID == pending2.RequestID {
-		t.Errorf("Request IDs should not match")
-	}
-
-	match1 := &tictactoeapi.Match{}
-	request(
-		t,
-		matchStatus(),
-		matchStatusCall(t, apiServer, pending1.RequestID),
-		200,
-		match1,
-	)
-
-	match2 := &tictactoeapi.Match{}
-	request(
-		t,
-		matchStatus(),
-		matchStatusCall(t, apiServer, pending2.RequestID),
-		200,
-		match2,
-	)
+	match1, match2 := createGame(t, env)
 
 	if match1.GameID != match2.GameID {
 		t.Errorf("game ids must match, got %q and %q", match1.GameID, match2.GameID)
@@ -63,19 +25,48 @@ func TestMatching(t *testing.T) {
 	}
 
 	// Check number of games
-	gameList := []string{}
-	request(
-		t,
-		index(),
-		indexCall(t, apiServer),
-		200,
-		&gameList,
-	)
+	res3, err := client.IndexWithResponse(context.Background(), &tictactoeapi.IndexParams{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res3.StatusCode() != http.StatusOK {
+		t.Errorf("Expected 202, got %d", res3.StatusCode())
+	}
+	gameList := *res3.JSON200
 
 	if len(gameList) != 1 {
 		t.Errorf("Expected one game, got %v", len(gameList))
 	} else if gameList[0] != match1.GameID {
 		t.Errorf("Expected listed game ID to be %q, got %q", match1.GameID, gameList[0])
 	}
+}
 
+func createGame(t *testing.T, e *env) (*tictactoeapi.Match, *tictactoeapi.Match) {
+	client := e.Client
+
+	matchRes, err := client.RequestMatchWithResponse(context.Background())
+	checkResponse(t, matchRes, http.StatusAccepted, err)
+	pending1 := matchRes.JSON202
+
+	matchRes, err = client.RequestMatchWithResponse(context.Background())
+	checkResponse(t, matchRes, http.StatusAccepted, err)
+	pending2 := matchRes.JSON202
+
+	if pending1.RequestID == pending2.RequestID {
+		t.Errorf("Request IDs should not match")
+	}
+
+	statusRes, err := client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
+		RequestID: pending1.RequestID,
+	})
+	checkResponse(t, statusRes, http.StatusOK, err)
+	match1 := statusRes.JSON200
+
+	statusRes, err = client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
+		RequestID: pending2.RequestID,
+	})
+	checkResponse(t, statusRes, http.StatusOK, err)
+	match2 := statusRes.JSON200
+
+	return match1, match2
 }

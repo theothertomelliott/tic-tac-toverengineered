@@ -21,22 +21,25 @@ func New(
 	turn turn.Controller,
 	grid grid.Grid,
 	checker win.Checker,
+	tokenValidator matchmaker.TokenValidator,
 ) tictactoeapi.ServerInterface {
 	return &server{
-		repo:       repo,
-		matchmaker: matchmaker,
-		turn:       turn,
-		grid:       grid,
-		checker:    checker,
+		repo:           repo,
+		matchmaker:     matchmaker,
+		turn:           turn,
+		grid:           grid,
+		checker:        checker,
+		tokenValidator: tokenValidator,
 	}
 }
 
 type server struct {
-	repo       game.Repository
-	matchmaker matchmaker.MatchMakerClient
-	turn       turn.Controller
-	grid       grid.Grid
-	checker    win.Checker
+	repo           game.Repository
+	matchmaker     matchmaker.MatchMakerClient
+	turn           turn.Controller
+	grid           grid.Grid
+	checker        win.Checker
+	tokenValidator matchmaker.TokenValidator
 }
 
 // (GET /)

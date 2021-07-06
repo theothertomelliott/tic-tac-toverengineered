@@ -11,6 +11,7 @@ func (s *server) GameGrid(ctx echo.Context, game string) error {
 	if err != nil {
 		return err
 	}
+
 	out, err := s.grid.State(ctx.Request().Context(), gameID)
 	if err != nil {
 		return err
@@ -27,6 +28,5 @@ func (s *server) GameGrid(ctx echo.Context, game string) error {
 		}
 	}
 
-	ctx.JSON(200, gridOut)
-	return nil
+	return ctx.JSON(200, gridOut)
 }

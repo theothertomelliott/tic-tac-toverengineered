@@ -1,81 +1,82 @@
 package server_test
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/labstack/echo/v4"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/server"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/checker/pkg/win/gridchecker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn/inmemoryturns"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game/inmemoryrepository"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/inmemorymatchmaker"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/unsignedtokens"
 )
 
-func request(t *testing.T, req *http.Request, callback func(ctx echo.Context), expectedCode int, out interface{}) {
+type env struct {
+	Client tictactoeapi.ClientWithResponsesInterface
+	Repo   game.Repository
+	Grid   grid.Grid
+	Turns  turn.Controller
+}
+
+// newEnv creates a testing environment with a client connected to an in-memory server
+func newEnv(t *testing.T) *env {
+	gamerepo := inmemoryrepository.New()
+	memoryGrid := grid.NewInMemory()
+	current := inmemoryturns.NewCurrentTurn()
+	checker := gridchecker.New(memoryGrid)
+	turns := inmemoryturns.New(current, memoryGrid, checker)
+	apiServer := server.New(
+		gamerepo,
+		inmemorymatchmaker.New(gamerepo),
+		turns,
+		memoryGrid,
+		checker,
+		&unsignedtokens.UnsignedTokens{})
+
 	e := echo.New()
-	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
+	tictactoeapi.RegisterHandlers(e, apiServer)
 
-	callback(c)
-
-	if rec.Code != expectedCode {
-		t.Errorf("expected %v for new request, got %v", expectedCode, rec.Code)
-	}
-
-	body := rec.Body.Bytes()
-	err := json.Unmarshal(body, out)
+	client, err := tictactoeapi.NewClientWithResponses("", tictactoeapi.WithHTTPClient(&echoDoer{
+		echo: e,
+	}))
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
+	}
+	return &env{
+		Client: client,
+		Repo:   gamerepo,
+		Grid:   memoryGrid,
+		Turns:  turns,
 	}
 }
 
-func matchRequest() *http.Request {
-	return httptest.NewRequest(http.MethodPost, "/match", nil)
+type echoDoer struct {
+	echo *echo.Echo
 }
 
-func matchCall(t *testing.T, apiServer tictactoeapi.ServerInterface) func(ctx echo.Context) {
-	return func(ctx echo.Context) {
-		if err := apiServer.RequestMatch(ctx); err != nil {
-			t.Error(err)
-		}
+func (e *echoDoer) Do(req *http.Request) (*http.Response, error) {
+	var res = httptest.NewRecorder()
+	e.echo.ServeHTTP(res, req)
+	return res.Result(), nil
+}
+
+func checkResponse(t *testing.T, res resWithStatusCode, expectedCode int, err error) {
+	t.Helper()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.StatusCode() != expectedCode {
+		t.Errorf("Expected status code %v, got %v", expectedCode, res.StatusCode())
 	}
 }
 
-func matchStatus() *http.Request {
-	return httptest.NewRequest(http.MethodGet, "/match", nil)
-}
-
-func matchStatusCall(t *testing.T, apiServer tictactoeapi.ServerInterface, requestID string) func(ctx echo.Context) {
-	return func(ctx echo.Context) {
-		if err := apiServer.MatchStatus(ctx, tictactoeapi.MatchStatusParams{
-			RequestID: requestID,
-		}); err != nil {
-			t.Error(err)
-		}
-	}
-}
-
-func index() *http.Request {
-	return httptest.NewRequest(http.MethodGet, "/", nil)
-}
-
-func indexCall(t *testing.T, apiServer tictactoeapi.ServerInterface) func(ctx echo.Context) {
-	return func(ctx echo.Context) {
-		if err := apiServer.Index(ctx, tictactoeapi.IndexParams{}); err != nil {
-			t.Error(err)
-		}
-	}
-}
-
-func gridReq(gameID string) *http.Request {
-	return httptest.NewRequest(http.MethodGet, fmt.Sprintf("/%v/grid", gameID), nil)
-}
-
-func gridCall(t *testing.T, apiServer tictactoeapi.ServerInterface, gameID string) func(ctx echo.Context) {
-	return func(ctx echo.Context) {
-		if err := apiServer.GameGrid(ctx, gameID); err != nil {
-			t.Error(err)
-		}
-	}
+type resWithStatusCode interface {
+	StatusCode() int
 }

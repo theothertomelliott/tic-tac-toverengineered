@@ -175,18 +175,18 @@ paths:
           required: true
           schema:
             type: string
-        - name: playerToken
-          in: body
-          description: token of player making the move
+        - name: token
+          in: query
+          description: token of player making move
           required: true
           schema:
             type: string
         - name: position
-          in: body
-          description: position to place player mark
+          in: query
+          description: token of player making move
           required: true
           schema:
-            $ref: "#/components/schemas/Position"
+            $ref: '#/components/schemas/Position'
       responses:
         '200':
           description: game response

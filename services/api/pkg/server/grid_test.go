@@ -2,40 +2,28 @@ package server_test
 
 import (
 	"context"
+	"net/http"
 	"testing"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/server"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game/inmemoryrepository"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/inmemorymatchmaker"
 )
 
 func TestGrid(t *testing.T) {
-	gamerepo := inmemoryrepository.New()
-	memoryGrid := grid.NewInMemory()
-	apiServer := server.New(
-		gamerepo,
-		inmemorymatchmaker.New(gamerepo),
-		nil,
-		memoryGrid,
-		nil,
-	)
+	env := newEnv(t)
+	client := env.Client
+	repo := env.Repo
+	memoryGrid := env.Grid
 
-	gameID, err := gamerepo.New(context.Background())
+	gameID, err := repo.New(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	var gridOut tictactoeapi.Grid
-	request(
-		t,
-		gridReq(string(gameID)),
-		gridCall(t, apiServer, string(gameID)),
-		200,
-		&gridOut,
-	)
+	// Get grid content
+	gridRes, err := client.GameGridWithResponse(context.Background(), string(gameID))
+	checkResponse(t, gridRes, http.StatusOK, err)
+	gridOut := *gridRes.JSON200
 
 	// check gridOut is all empty strings
 	for i := 0; i < 3; i++ {
@@ -48,13 +36,13 @@ func TestGrid(t *testing.T) {
 
 	// Set a position
 	memoryGrid.SetMark(context.Background(), gameID, grid.Position{X: 0, Y: 0}, player.O)
-	request(
-		t,
-		gridReq(string(gameID)),
-		gridCall(t, apiServer, string(gameID)),
-		200,
-		&gridOut,
-	)
+
+	// Get grid content
+	gridRes, err = client.GameGridWithResponse(context.Background(), string(gameID))
+	checkResponse(t, gridRes, http.StatusOK, err)
+	gridOut = *gridRes.JSON200
+
+	// Check expected position was set
 	if gridOut.Grid[0][0] != "O" {
 		t.Errorf("Expected grid to be %q, got %q", "O", gridOut.Grid[0][0])
 	}

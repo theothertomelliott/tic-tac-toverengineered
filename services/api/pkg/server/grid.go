@@ -7,7 +7,7 @@ import (
 
 // (GET /{game}/grid)
 func (s *server) GameGrid(ctx echo.Context, game string) error {
-	gameID, err := s.verifyID(ctx.Request().Context(), game)
+	gameID, err := s.verifyID(ctx, game)
 	if err != nil {
 		return err
 	}

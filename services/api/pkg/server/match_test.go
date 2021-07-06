@@ -12,7 +12,35 @@ func TestMatching(t *testing.T) {
 	env := newEnv(t)
 	client := env.Client
 
-	match1, match2 := createGame(t, env)
+	matchRes, err := client.RequestMatchWithResponse(context.Background())
+	checkResponse(t, matchRes, http.StatusAccepted, err)
+	pending1 := matchRes.JSON202
+
+	// Check match is still pending
+	statusRes, err := client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
+		RequestID: pending1.RequestID,
+	})
+	checkResponse(t, statusRes, http.StatusProcessing, err)
+
+	matchRes, err = client.RequestMatchWithResponse(context.Background())
+	checkResponse(t, matchRes, http.StatusAccepted, err)
+	pending2 := matchRes.JSON202
+
+	if pending1.RequestID == pending2.RequestID {
+		t.Errorf("Request IDs should not match")
+	}
+
+	statusRes, err = client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
+		RequestID: pending1.RequestID,
+	})
+	checkResponse(t, statusRes, http.StatusOK, err)
+	match1 := statusRes.JSON200
+
+	statusRes, err = client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
+		RequestID: pending2.RequestID,
+	})
+	checkResponse(t, statusRes, http.StatusOK, err)
+	match2 := statusRes.JSON200
 
 	if match1.GameID != match2.GameID {
 		t.Errorf("game ids must match, got %q and %q", match1.GameID, match2.GameID)
@@ -51,10 +79,6 @@ func createGame(t *testing.T, e *env) (*tictactoeapi.Match, *tictactoeapi.Match)
 	matchRes, err = client.RequestMatchWithResponse(context.Background())
 	checkResponse(t, matchRes, http.StatusAccepted, err)
 	pending2 := matchRes.JSON202
-
-	if pending1.RequestID == pending2.RequestID {
-		t.Errorf("Request IDs should not match")
-	}
 
 	statusRes, err := client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
 		RequestID: pending1.RequestID,

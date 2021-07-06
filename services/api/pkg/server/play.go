@@ -11,9 +11,9 @@ import (
 
 // (POST /{game}/play)
 func (s *server) Play(ctx echo.Context, g string, params tictactoeapi.PlayParams) error {
-	gameID, err := s.verifyID(ctx.Request().Context(), g)
+	gameID, err := s.verifyID(ctx, g)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return err
 	}
 
 	authorizedGameID, mark, err := s.tokenValidator.Validate(params.Token)

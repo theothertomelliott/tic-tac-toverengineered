@@ -6,7 +6,7 @@ import (
 
 // (GET /{game}/player/current)
 func (s *server) CurrentPlayer(ctx echo.Context, g string) error {
-	gameID, err := s.verifyID(ctx.Request().Context(), g)
+	gameID, err := s.verifyID(ctx, g)
 	if err != nil {
 		return err
 	}

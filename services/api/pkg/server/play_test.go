@@ -44,7 +44,6 @@ func TestPlay(t *testing.T) {
 	if gridOut.Grid[0][1] != player2.Mark {
 		t.Errorf("Expected grid to be %q, got %q", player2.Mark, gridOut.Grid[0][1])
 	}
-
 }
 
 func TestPlayOutOfTurn(t *testing.T) {
@@ -64,7 +63,7 @@ func TestPlayOutOfTurn(t *testing.T) {
 	checkResponse(t, playRes, http.StatusInternalServerError, err)
 }
 
-func TestWrongGame(t *testing.T) {
+func TestPlayWrongGame(t *testing.T) {
 	env := newEnv(t)
 	client := env.Client
 
@@ -73,6 +72,22 @@ func TestWrongGame(t *testing.T) {
 
 	playRes, err := client.PlayWithResponse(context.Background(), player1a.GameID, &tictactoeapi.PlayParams{
 		Token: player1.Token,
+		Position: tictactoeapi.Position{
+			I: 0,
+			J: 0,
+		},
+	})
+	checkResponse(t, playRes, http.StatusUnauthorized, err)
+}
+
+func TestPlayInvalidToken(t *testing.T) {
+	env := newEnv(t)
+	client := env.Client
+
+	player1, _ := createGame(t, env)
+
+	playRes, err := client.PlayWithResponse(context.Background(), player1.GameID, &tictactoeapi.PlayParams{
+		Token: "invalid",
 		Position: tictactoeapi.Position{
 			I: 0,
 			J: 0,

@@ -1,8 +1,8 @@
 package server
 
 import (
-	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
@@ -61,16 +61,19 @@ func (s *server) Index(ctx echo.Context, params tictactoeapi.IndexParams) error 
 	return ctx.JSON(200, games)
 }
 
-func (s *server) verifyID(ctx context.Context, id string) (game.ID, error) {
+func (s *server) verifyID(ctx echo.Context, id string) (game.ID, error) {
 	gameID := game.ID(id)
 
 	// Verify this game exists
-	exists, err := s.repo.Exists(ctx, gameID)
+	exists, err := s.repo.Exists(ctx.Request().Context(), gameID)
 	if err != nil {
-		return game.ID(""), err
+		return game.ID(""), echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	if !exists {
-		return game.ID(""), fmt.Errorf("game not found: %v", gameID)
+		return game.ID(""), echo.NewHTTPError(
+			http.StatusNotFound,
+			fmt.Sprintf("game not found: %v", gameID),
+		)
 	}
 
 	return gameID, nil

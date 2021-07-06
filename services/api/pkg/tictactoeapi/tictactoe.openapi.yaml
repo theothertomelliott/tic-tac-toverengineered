@@ -267,11 +267,3 @@ components:
                 type: array
                 items:
                   type: string
-
-
-# r.Handle("/", wrap(s.listGamesHandler, "index"))
-# r.Handle("/{game}/grid", wrap(s.gridHandler, "grid"))
-# r.Handle("/{game}/player/current", wrap(s.currentPlayerHandler, "currentplayer"))
-# r.Handle("/{game}/winner", wrap(s.winnerHandler, "winner"))
-# r.Handle("/{game}/play", wrap(s.playHandler, "play"))
-# r.Handle("/new", wrap(s.newGameHandler, "newgame"))

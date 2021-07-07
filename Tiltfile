@@ -23,7 +23,14 @@ test(
 
 local_resource(
     'play',
-    cmd='go run ./bot/cmd/onegame http://localhost:8081',
+    cmd='go run ./services/bot/cmd/onegame http://localhost:8081',
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+)
+
+local_resource(
+    'play-openapi',
+    cmd='go run ./services/bot/cmd/onegameopenapi http://localhost:8094',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
 )

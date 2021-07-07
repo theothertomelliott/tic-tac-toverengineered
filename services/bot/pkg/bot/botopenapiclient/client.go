@@ -7,6 +7,7 @@ import (
 	"math/rand"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot"
 )
 
@@ -17,18 +18,17 @@ func New(baseURL string, bot bot.Bot) (*Client, error) {
 	}
 	return &Client{
 		bot: bot,
-		api: apiClient,
+		api: tictactoeapiclient.New(apiClient),
 	}, nil
 }
 
 type Client struct {
 	bot bot.Bot
-	api tictactoeapi.ClientWithResponsesInterface
+	api *tictactoeapiclient.Client
 }
 
 // PlayGame starts a new game and plays it to conclusion as both players.
 func (c *Client) PlayGame(ctx context.Context) (string, error) {
-
 	player1, player2, err := c.createGame(ctx)
 	if err != nil {
 		return "", fmt.Errorf("creating game: %w", err)
@@ -43,17 +43,14 @@ func (c *Client) PlayGame(ctx context.Context) (string, error) {
 	// Alernate turns until we have a winner
 	currentPlayer := player1
 	for {
-		winner, err := c.api.WinnerWithResponse(ctx, player1.GameID)
+		winner, err := c.api.Winner(ctx, currentPlayer.GameID)
 		if err != nil {
 			return "", fmt.Errorf("checking winner: %w", err)
 		}
-		if winner.JSON200 == nil {
-			return "", fmt.Errorf("Got response %v: %v", winner.StatusCode(), string(winner.Body))
+		if winner.Winner != nil {
+			return *winner.Winner, nil
 		}
-		if winner.JSON200.Winner != nil {
-			return *winner.JSON200.Winner, nil
-		}
-		if winner.JSON200.Draw != nil && *winner.JSON200.Draw {
+		if winner.Draw != nil && *winner.Draw {
 			return "Draw", nil
 		}
 
@@ -76,30 +73,16 @@ func (c *Client) PlayGame(ctx context.Context) (string, error) {
 // takeTurn loads the current grid, identifies the bot's next move and then
 // makes that move in the current game.
 func (c *Client) takeTurn(ctx context.Context, player *tictactoeapi.Match) error {
-	gridResponse, err := c.api.GameGridWithResponse(ctx, player.GameID)
+	grid, err := c.api.GameGrid(ctx, player.GameID)
 	if err != nil {
 		return err
 	}
-	if gridResponse.JSON200 == nil {
-		return fmt.Errorf("Got response %v: %v", gridResponse.StatusCode(), string(gridResponse.Body))
-	}
-	grid := gridResponse.JSON200
-	pos, err := move(player.Mark, grid.Grid)
+	pos, err := move(player.Mark, grid)
 	if err != nil {
 		return err
 	}
 
-	playRes, err := c.api.PlayWithResponse(ctx, player.GameID, &tictactoeapi.PlayParams{
-		Position: pos,
-		Token:    player.Token,
-	})
-	if err != nil {
-		return err
-	}
-	if playRes.JSON200 == nil {
-		return fmt.Errorf("Got response %v: %v", playRes.StatusCode(), string(playRes.Body))
-	}
-	return nil
+	return c.api.Play(ctx, player, pos)
 }
 
 func move(mark string, state [][]string) (tictactoeapi.Position, error) {
@@ -124,48 +107,24 @@ func move(mark string, state [][]string) (tictactoeapi.Position, error) {
 }
 
 func (c *Client) createGame(ctx context.Context) (player1 *tictactoeapi.Match, player2 *tictactoeapi.Match, err error) {
-	mp1, err := c.getMatchPending(ctx)
+	requestID1, err := c.api.RequestMatch(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
-	mp2, err := c.getMatchPending(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	player1, err = c.getMatch(ctx, mp1)
+	requestID2, err := c.api.RequestMatch(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	player2, err = c.getMatch(ctx, mp2)
+	player1, err = c.api.MatchStatus(ctx, requestID1)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	player2, err = c.api.MatchStatus(ctx, requestID2)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	return player1, player2, nil
-}
-
-func (c *Client) getMatchPending(ctx context.Context) (*tictactoeapi.MatchPending, error) {
-	matchPending, err := c.api.RequestMatchWithResponse(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if matchPending.JSON202 == nil {
-		return nil, fmt.Errorf("Got response %v: %v", matchPending.StatusCode(), string(matchPending.Body))
-	}
-	return matchPending.JSON202, nil
-}
-
-func (c *Client) getMatch(ctx context.Context, matchPending *tictactoeapi.MatchPending) (*tictactoeapi.Match, error) {
-	matchResult, err := c.api.MatchStatusWithResponse(ctx, &tictactoeapi.MatchStatusParams{
-		RequestID: matchPending.RequestID,
-	})
-	if err != nil {
-		return nil, err
-	}
-	if matchResult.JSON200 == nil {
-		return nil, fmt.Errorf("Got response %v: %v", matchResult.StatusCode(), string(matchResult.Body))
-	}
-	return matchResult.JSON200, nil
 }

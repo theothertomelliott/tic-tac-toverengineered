@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
@@ -85,6 +86,8 @@ func (c *Client) takeTurn(ctx context.Context, player *tictactoeapi.Match) error
 	return c.api.Play(ctx, player, pos)
 }
 
+var r = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 func move(mark string, state [][]string) (tictactoeapi.Position, error) {
 	var valid []tictactoeapi.Position
 	for i, row := range state {
@@ -103,7 +106,7 @@ func move(mark string, state [][]string) (tictactoeapi.Position, error) {
 	if len(valid) == 0 {
 		return tictactoeapi.Position{}, fmt.Errorf("no valid moves")
 	}
-	return valid[rand.Intn(len(valid))], nil
+	return valid[r.Intn(len(valid))], nil
 }
 
 func (c *Client) createGame(ctx context.Context) (player1 *tictactoeapi.Match, player2 *tictactoeapi.Match, err error) {

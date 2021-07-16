@@ -49,7 +49,10 @@ if bare:
         resource_deps = ["api"],
     )
 else:
-    secrets = read_yaml("secrets.yaml")
+    lightstep_access_token=""
+    if os.path.exists("secrets.yaml"):
+        secrets = read_yaml("secrets.yaml")
+        lightstep_access_token=secrets["lightstep"]["access_token"]
 
     k8s_yaml(namespace_yaml('tictactoe'))
 
@@ -59,7 +62,7 @@ else:
         namespace='tictactoe',
         set=[
             "mongodb.statefulset=true",
-            "lightstep.access_token=" + secrets["lightstep"]["access_token"],
+            "lightstep.access_token=" + lightstep_access_token,
             ],
     ))
 

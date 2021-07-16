@@ -1,5 +1,5 @@
 define dockerrule
-$1_docker: $1
+$1_docker: dockerbaseimage $1
 	@echo Building docker image for $1
 	docker build -f docker/app/Dockerfile -t "docker.io/tictactoverengineered/$1:$(VERSION)" .build/$1
 

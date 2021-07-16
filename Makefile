@@ -29,7 +29,7 @@ include docker.mk
 
 $(foreach service,$(SERVICES),$(eval $(call dockerrule,$(service))))
 
-docker: services dockerbaseimage $(addsuffix _docker,$(SERVICES))
+docker: services $(addsuffix _docker,$(SERVICES))
 docker_push: $(addsuffix _docker_push,$(SERVICES))
 
 include web.mk

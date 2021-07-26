@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
@@ -40,6 +41,10 @@ func main() {
 		log.Fatalf("could not connect to matchmaker server: %v", err)
 	}
 
+	log.Println("Setting up health check")
+	hc, done := startHealthCheck()
+	defer close(done)
+
 	apiServer := server.New(
 		r,
 		m,
@@ -50,12 +55,24 @@ func main() {
 	)
 
 	e := echo.New()
+	e.Pre(healthCheckMiddleWare(hc))
 	tictactoeapi.RegisterHandlers(e, apiServer)
 
 	port := env.Get("PORT", "8080")
 	err = e.Start(fmt.Sprintf(":%v", port))
 	if err != nil {
 		panic(err)
+	}
+}
+
+func healthCheckMiddleWare(hc *HealthChecker) echo.MiddlewareFunc {
+	return func(hf echo.HandlerFunc) echo.HandlerFunc {
+		return func(ctx echo.Context) error {
+			if !hc.Healthy() {
+				return echo.ErrServiceUnavailable
+			}
+			return hf(ctx)
+		}
 	}
 }
 
@@ -99,4 +116,20 @@ func getMatchMakerServerTarget() string {
 		return serverTarget
 	}
 	return "localhost:8092"
+}
+
+func startHealthCheck() (*HealthChecker, chan<- struct{}) {
+	hc, err := NewHealthCheck(
+		getGridServerTarget(),
+		getCheckerServerTarget(),
+		getTurnControllerServerTarget(),
+		getRepoServerTarget(),
+		getMatchMakerServerTarget(),
+	)
+	if err != nil {
+		panic(err)
+	}
+	done := make(chan struct{})
+	go hc.Run(time.Second, done)
+	return hc, done
 }

@@ -6,16 +6,23 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
 // New creates an RPC server that will listen on the specified port
+// A grpc health check server (google.golang.org/grpc/health) will also be hosted on this port
 func New(port int) *Server {
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(monitoring.UnaryServerInterceptor()),
+	)
+	// Add health check for all rpc servers
+	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
+
 	return &Server{
-		grpcServer: grpc.NewServer(
-			grpc.UnaryInterceptor(monitoring.UnaryServerInterceptor()),
-		),
-		port: port,
+		grpcServer: grpcServer,
+		port:       port,
 	}
 }
 

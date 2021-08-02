@@ -1,3 +1,7 @@
+version_settings(
+    check_updates=True,
+    constraint='>=0.22.2'
+) 
 load('ext://namespace', 'namespace_yaml')
 
 update_settings(max_parallel_updates=5)
@@ -11,7 +15,8 @@ test(
     'tests',
     cmd='go test --short ./...',
     deps=['.'],
-    ignore=['.output']
+    ignore=['.output'],
+    labels=["test"]
 )
 
 test(
@@ -19,6 +24,7 @@ test(
     cmd='go test ./...',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
+    labels=["test"]
 )
 
 local_resource(
@@ -26,6 +32,7 @@ local_resource(
     cmd='go run ./services/bot/cmd/onegame http://localhost:8081',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
+    labels=["test"]
 )
 
 local_resource(
@@ -33,6 +40,7 @@ local_resource(
     cmd='go run ./services/bot/cmd/onegameopenapi http://localhost:8094',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
+    labels=["test"]
 )
 
 if bare:
@@ -47,6 +55,7 @@ if bare:
             "PORT": "8094"
         },
         resource_deps = ["api"],
+        labels = ["api"]
     )
 else:
     lightstep_access_token=""
@@ -79,13 +88,15 @@ def server(name, port_forwards=[], port="8080", grpcui_port="8081"):
                 "GRPCUI_PORT": str(grpcui_port),
                 "MONGO_CONN": "mongodb://admin:password@localhost:27017",
             },
-            deps = ["services/" + name, "common"]
+            deps = ["services/" + name, "common"],
+            labels=[name]
         )
     else:
         local_resource(
             name+"-build",
             'make ' + name,
-            deps = ["services/" + name, "common"]
+            deps = ["services/" + name, "common"],
+            labels=[name]
         )
         docker_build(
             "docker.io/tictactoverengineered/"+name,
@@ -97,14 +108,20 @@ def server(name, port_forwards=[], port="8080", grpcui_port="8081"):
             ]
         )
 
-        k8s_resource(name, port_forwards=port_forwards, resource_deps=[name+'-build'])
+        k8s_resource(
+            name, 
+            port_forwards=port_forwards, 
+            resource_deps=[name+'-build'],
+            labels=[name]
+        )
 
 def space(name,ports=[]):
     if bare:
         local_resource(
             name + "-build",
             cmd='make ' + name + "_local",
-            deps = ["services/" + name, "common"]
+            deps = ["services/" + name, "common"],
+            labels=["space"]
         )
         for i in range(0, 3):
             for j in range(0, 3):
@@ -119,12 +136,14 @@ def space(name,ports=[]):
                     },
                     deps = ["services/" + name, "common"],
                     resource_deps=[name + "-build"],
+                    labels=["space"]
                 )
     else:
         local_resource(
             name+"-build",
             'make ' + name,
-            deps = ["services/" + name, "common"]
+            deps = ["services/" + name, "common"],
+            labels=["space"]
         )
         docker_build(
             "docker.io/tictactoverengineered/"+name,
@@ -136,7 +155,7 @@ def space(name,ports=[]):
             ]
         )
 
-        k8s_resource(name, resource_deps=[name+'-build'])
+        k8s_resource(name, resource_deps=[name+'-build'], labels=["space"])
 
 server("api", port_forwards="8081:8080",port=8081)
 server("web", port_forwards="8080:8080",port=8080)

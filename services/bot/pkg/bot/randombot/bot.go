@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
 )
 
 func New() bot.Bot {
@@ -21,23 +21,23 @@ type randombot struct {
 	random *rand.Rand
 }
 
-func (r *randombot) Move(mark player.Mark, state [][]*player.Mark) (grid.Position, error) {
-	var valid []grid.Position
+func (r *randombot) Move(mark player.Mark, state [][]string) (tictactoeapi.Position, error) {
+	var valid []tictactoeapi.Position
 	for i, row := range state {
 		for j, m := range row {
-			if m == nil {
+			if m == "" {
 				valid = append(
 					valid,
-					grid.Position{
-						X: i,
-						Y: j,
+					tictactoeapi.Position{
+						I: int32(i),
+						J: int32(j),
 					},
 				)
 			}
 		}
 	}
 	if len(valid) == 0 {
-		return grid.Position{}, fmt.Errorf("no valid moves")
+		return tictactoeapi.Position{}, fmt.Errorf("no valid moves")
 	}
 	return valid[r.random.Intn(len(valid))], nil
 }

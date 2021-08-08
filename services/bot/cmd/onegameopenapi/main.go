@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/botopenapiclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/randombot"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botopenapiclient"
 )
 
 func main() {

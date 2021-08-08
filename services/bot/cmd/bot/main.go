@@ -7,13 +7,16 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/randombot"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botapiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botopenapiclient"
 )
 
 func main() {
-	apiBaseURL := env.Get("API_BASE_URL", "http://localhost:8081")
+	apiBaseURL := env.Get("API_BASE_URL", "http://localhost:8094")
 
-	c := botapiclient.New(apiBaseURL, randombot.New())
+	c, err := botopenapiclient.New(apiBaseURL, randombot.New())
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Repeatedly create games
 	for true {

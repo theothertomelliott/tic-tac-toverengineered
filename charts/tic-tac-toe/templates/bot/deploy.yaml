@@ -18,4 +18,4 @@ spec:
           image: docker.io/tictactoverengineered/bot:{{ $.Chart.Version }}
           env:
             - name: API_BASE_URL
-              value: "http://api{{ .Values.routes.api }}"
+              value: "http://openapi:80/"

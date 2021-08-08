@@ -1,0 +1,15 @@
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: openapi
+spec:
+  rules:
+  - host: {{ .Values.hostname }}
+    http:
+      paths:
+      - path: {{ .Values.routes.api }}
+        pathType: Prefix
+        backend:
+          serviceName: openapi
+          servicePort: 80

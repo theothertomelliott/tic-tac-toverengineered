@@ -4,15 +4,15 @@ import (
 	"testing"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/randombot"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
 )
 
 func TestBotSelectsAnySpace(t *testing.T) {
-	var g = [][]*player.Mark{
-		{nil, nil, nil},
-		{nil, nil, nil},
-		{nil, nil, nil},
+	var g = [][]string{
+		{"", "", ""},
+		{"", "", ""},
+		{"", "", ""},
 	}
 
 	b := randombot.New()
@@ -21,21 +21,21 @@ func TestBotSelectsAnySpace(t *testing.T) {
 		if err != nil {
 			t.Errorf("test %d> unexpected error: %v", i, err)
 		}
-		if got.X < 0 || got.X > 2 {
+		if got.I < 0 || got.I > 2 {
 			t.Errorf("test %d> x was out of bounds", i)
 		}
-		if got.Y < 0 || got.Y > 2 {
+		if got.J < 0 || got.J > 2 {
 			t.Errorf("test %d> y was out of bounds", i)
 		}
 	}
 }
 
 func TestBotSelectsTheOneValidSpace(t *testing.T) {
-	x := player.MarkToPointer(player.X)
-	var g = [][]*player.Mark{
+	x := string(player.X)
+	var g = [][]string{
 		{x, x, x},
 		{x, x, x},
-		{x, nil, x},
+		{x, "", x},
 	}
 
 	b := randombot.New()
@@ -44,7 +44,7 @@ func TestBotSelectsTheOneValidSpace(t *testing.T) {
 		if err != nil {
 			t.Errorf("test %d> unexpected error: %v", i, err)
 		}
-		expected := grid.Position{X: 2, Y: 1}
+		expected := tictactoeapi.Position{I: 2, J: 1}
 		if got != expected {
 			t.Errorf("expected %+v, got %+v", expected, got)
 		}
@@ -52,8 +52,8 @@ func TestBotSelectsTheOneValidSpace(t *testing.T) {
 }
 
 func TestBotErrorsWhenNoMove(t *testing.T) {
-	x := player.MarkToPointer(player.X)
-	var g = [][]*player.Mark{
+	x := string(player.X)
+	var g = [][]string{
 		{x, x, x},
 		{x, x, x},
 		{x, x, x},

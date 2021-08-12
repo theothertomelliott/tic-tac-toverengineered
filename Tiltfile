@@ -149,5 +149,5 @@ server("grid", port_forwards=["8086:8080", "8087:8081"], port=8086,grpcui_port=8
 server("checker", port_forwards=["8088:8080", "8089:8081"], port=8088,grpcui_port=8089)
 server("turncontroller", port_forwards=["8090:8080", "8091:8081"], port=8090,grpcui_port=8091)
 server("matchmaker", port_forwards=["8092:8080", "8093:8081"], port=8092,grpcui_port=8093)
-server("bot")
+server("bot",port_forwards=["2112:2112"], port=2112)
 space("space")

@@ -2,6 +2,7 @@ package inmemoryturns
 
 import (
 	"context"
+	"sync"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn"
@@ -16,10 +17,14 @@ func NewCurrentTurn() turn.Current {
 }
 
 type current struct {
-	mark map[game.ID]player.Mark
+	mark    map[game.ID]player.Mark
+	markMtx sync.Mutex
 }
 
 func (c *current) Player(ctx context.Context, g game.ID) (player.Mark, error) {
+	c.markMtx.Lock()
+	defer c.markMtx.Unlock()
+
 	m, exists := c.mark[g]
 	if !exists {
 		m = player.X
@@ -33,6 +38,9 @@ func (c *current) Next(ctx context.Context, g game.ID) error {
 	if err != nil {
 		return err
 	}
+
+	c.markMtx.Lock()
+	defer c.markMtx.Unlock()
 	if prev == player.X {
 		c.mark[g] = player.O
 		return nil

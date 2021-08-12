@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w, err := c.PlayGame(context.Background())
+	w, err := c.PlayBothSides(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}

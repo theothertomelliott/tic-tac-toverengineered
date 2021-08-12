@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
@@ -27,8 +28,104 @@ type Client struct {
 	api *tictactoeapiclient.Client
 }
 
-// PlayGame starts a new game and plays it to conclusion as both players.
-func (c *Client) PlayGame(ctx context.Context) (string, error) {
+// WaitForReady blocks until the api server is ready
+func (c *Client) WaitForReady(ctx context.Context) error {
+	for true {
+		_, err := c.api.Index(ctx, nil, nil)
+		if err == nil {
+			log.Printf("api is ready")
+			return nil
+		}
+		log.Printf("waiting for ready: %v", err)
+		time.Sleep(time.Second)
+	}
+	return nil
+}
+
+const (
+	matchTimeoutDuration = time.Minute
+	turnTimeoutDuration  = time.Second * 5
+)
+
+// Play joins a game, plays it synchronously and returns whether or not this player won.
+func (c *Client) Play(ctx context.Context, name string) (bool, error) {
+	// Request a game
+	log.Printf("%v: Requesting match", name)
+	requestID, err := c.api.RequestMatch(ctx)
+	if err != nil {
+		return false, fmt.Errorf("requesting match: %v", err)
+	}
+
+	// Wait until a match has been made
+	var match *tictactoeapi.Match
+	timeout := time.After(matchTimeoutDuration)
+	for match == nil {
+		select {
+		case <-timeout:
+			return false, fmt.Errorf("timed out waiting for match")
+		default:
+		}
+		match, err = c.api.MatchStatus(ctx, requestID)
+		if err != nil {
+			return false, fmt.Errorf("checking match status: %v", err)
+		}
+		if match == nil {
+			time.Sleep(time.Millisecond)
+		}
+	}
+
+	log.Printf("%v: match = %+v", name, match)
+
+	// Play until the game has been won
+
+	var winner tictactoeapi.Winner
+	var lastMove = time.Now()
+	for {
+		if time.Since(lastMove) > turnTimeoutDuration {
+			return false, fmt.Errorf("timed out waiting for opponent")
+		}
+		time.Sleep(time.Millisecond)
+		winner, err = c.api.Winner(ctx, match.GameID)
+		if err != nil {
+			return false, fmt.Errorf("checking winner: %v", err)
+		}
+		if winner.Winner != nil {
+			return *winner.Winner == match.Mark, nil
+		}
+		if winner.Draw != nil && *winner.Draw {
+			return false, nil
+		}
+
+		currentPlayer, err := c.api.CurrentPlayer(ctx, match.GameID)
+		if err != nil {
+			return false, fmt.Errorf("getting current player: %v", err)
+		}
+		if currentPlayer != match.Mark {
+			continue
+		}
+
+		grid, err := c.api.GameGrid(ctx, match.GameID)
+		if err != nil {
+			return false, fmt.Errorf("getting game grid: %v", err)
+		}
+		pos, err := c.bot.Move(player.Mark(match.Mark), grid)
+		if err != nil {
+			return false, fmt.Errorf("identifying move: %v", err)
+		}
+
+		log.Printf("%v (%v): playing %v", name, match.Mark, pos)
+		err = c.api.Play(ctx, match, pos)
+		if err != nil {
+			return false, fmt.Errorf("making move: %v", err)
+		}
+		lastMove = time.Now()
+	}
+
+	return false, nil
+}
+
+// PlayBothSides starts a new game and plays it to conclusion as both players.
+func (c *Client) PlayBothSides(ctx context.Context) (string, error) {
 	player1, player2, err := c.createGame(ctx)
 	if err != nil {
 		return "", fmt.Errorf("creating game: %w", err)

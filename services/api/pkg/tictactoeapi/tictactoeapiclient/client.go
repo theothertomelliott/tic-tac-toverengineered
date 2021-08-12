@@ -64,11 +64,11 @@ func (c *Client) MatchStatus(ctx context.Context, requestID string) (*tictactoea
 	if res.JSONDefault != nil {
 		return nil, fmt.Errorf(res.JSONDefault.Message)
 	}
+	if res.JSON202 != nil {
+		return nil, nil
+	}
 	if res.JSON200 == nil {
 		return nil, fmt.Errorf("unexpected response %q: %v", res.Status(), string(res.Body))
-	}
-	if res.JSON102 != nil {
-		return nil, nil
 	}
 	return res.JSON200, nil
 }

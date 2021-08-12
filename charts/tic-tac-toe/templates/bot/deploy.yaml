@@ -19,3 +19,5 @@ spec:
           env:
             - name: API_BASE_URL
               value: "http://openapi:80/"
+          ports:
+            - containerPort: 2112

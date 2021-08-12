@@ -80,7 +80,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Match'
-        '102':
+        '202':
           description: waiting for match
           content:
             application/json:

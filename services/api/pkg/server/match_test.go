@@ -20,7 +20,7 @@ func TestMatching(t *testing.T) {
 	statusRes, err := client.MatchStatusWithResponse(context.Background(), &tictactoeapi.MatchStatusParams{
 		RequestID: pending1.RequestID,
 	})
-	checkResponse(t, statusRes, http.StatusProcessing, err)
+	checkResponse(t, statusRes, http.StatusAccepted, err)
 
 	matchRes, err = client.RequestMatchWithResponse(context.Background())
 	checkResponse(t, matchRes, http.StatusAccepted, err)

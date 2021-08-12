@@ -15,7 +15,7 @@ func (s *server) MatchStatus(ctx echo.Context, params tictactoeapi.MatchStatusPa
 		return err
 	}
 	if res.Match == nil {
-		ctx.JSON(102, tictactoeapi.MatchPending{
+		ctx.JSON(202, tictactoeapi.MatchPending{
 			RequestID: params.RequestID,
 		})
 		return nil

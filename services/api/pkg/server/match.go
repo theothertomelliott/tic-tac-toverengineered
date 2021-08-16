@@ -1,6 +1,8 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker"
@@ -12,7 +14,7 @@ func (s *server) MatchStatus(ctx echo.Context, params tictactoeapi.MatchStatusPa
 		RequestId: params.RequestID,
 	})
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	if res.Match == nil {
 		ctx.JSON(202, tictactoeapi.MatchPending{

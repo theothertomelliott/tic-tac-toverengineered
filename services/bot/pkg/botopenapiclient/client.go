@@ -82,12 +82,13 @@ func (c *Client) Play(ctx context.Context, name string) (bool, error) {
 	var lastMove = time.Now()
 	for {
 		if time.Since(lastMove) > turnTimeoutDuration {
-			return false, fmt.Errorf("timed out waiting for opponent")
+			return false, fmt.Errorf("timed out waiting for opponent (%v)", match.GameID)
 		}
 		time.Sleep(time.Millisecond)
+		// Check winner
 		winner, err = c.api.Winner(ctx, match.GameID)
 		if err != nil {
-			return false, fmt.Errorf("checking winner: %v", err)
+			return false, fmt.Errorf("checking winner (%v): %v", match.GameID, err)
 		}
 		if winner.Winner != nil {
 			return *winner.Winner == match.Mark, nil
@@ -96,9 +97,10 @@ func (c *Client) Play(ctx context.Context, name string) (bool, error) {
 			return false, nil
 		}
 
+		// Check current player
 		currentPlayer, err := c.api.CurrentPlayer(ctx, match.GameID)
 		if err != nil {
-			return false, fmt.Errorf("getting current player: %v", err)
+			return false, fmt.Errorf("getting current player (%v): %v", match.GameID, err)
 		}
 		if currentPlayer != match.Mark {
 			continue
@@ -106,17 +108,29 @@ func (c *Client) Play(ctx context.Context, name string) (bool, error) {
 
 		grid, err := c.api.GameGrid(ctx, match.GameID)
 		if err != nil {
-			return false, fmt.Errorf("getting game grid: %v", err)
+			return false, fmt.Errorf("getting game grid (%v): %v", match.GameID, err)
 		}
 		pos, err := c.bot.Move(player.Mark(match.Mark), grid)
 		if err != nil {
-			return false, fmt.Errorf("identifying move: %v", err)
+			return false, fmt.Errorf("identifying move (%v): %v", match.GameID, err)
 		}
 
-		log.Printf("%v (%v): playing %v", name, match.Mark, pos)
+		// Check winner again
+		winner, err = c.api.Winner(ctx, match.GameID)
+		if err != nil {
+			return false, fmt.Errorf("checking winner (%v): %v", match.GameID, err)
+		}
+		if winner.Winner != nil {
+			return *winner.Winner == match.Mark, nil
+		}
+		if winner.Draw != nil && *winner.Draw {
+			return false, nil
+		}
+
+		log.Printf("%v %v %v: playing %v", name, match.GameID, match.Mark, pos)
 		err = c.api.Play(ctx, match, pos)
 		if err != nil {
-			return false, fmt.Errorf("making move: %v", err)
+			return false, fmt.Errorf("making move (%v): %v", match.GameID, err)
 		}
 		lastMove = time.Now()
 	}

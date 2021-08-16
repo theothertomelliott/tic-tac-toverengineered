@@ -62,7 +62,7 @@ func player(name string, c *botopenapiclient.Client, results chan<- bool) {
 		time.Sleep(time.Second / 4)
 		win, err := c.Play(context.Background(), name)
 		if err != nil {
-			log.Printf("%v: %v", name, err)
+			log.Printf("Failed game - %v: %v", name, err)
 			results <- false
 			continue
 		}

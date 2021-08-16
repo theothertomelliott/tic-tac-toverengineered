@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -35,7 +37,8 @@ func (s *server) Play(ctx echo.Context, g string, params tictactoeapi.PlayParams
 		},
 	)
 	if err != nil {
-		return err
+		log.Printf("error taking turn: %T, %v", err, err)
+		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("turn could not be made: %v", err))
 	}
 
 	return ctx.JSON(200, "ok")

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
@@ -16,7 +17,7 @@ func (s *server) Winner(ctx echo.Context, g string) error {
 
 	winner, err := s.checker.Winner(ctx.Request().Context(), gameID)
 	if err != nil {
-		return err
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	result := tictactoeapi.Winner{
 		Draw: &winner.IsDraw,

@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
 )
@@ -52,6 +53,7 @@ func connectHealthClient(target string) (grpc_health_v1.HealthClient, error) {
 	conn, err := grpc.Dial(
 		target,
 		grpc.WithInsecure(),
+		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
 	)
 	if err != nil {
 		return nil, err

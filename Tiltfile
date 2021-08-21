@@ -6,10 +6,13 @@ load('ext://namespace', 'namespace_yaml')
 
 update_settings(max_parallel_updates=5)
 
-# Pass the --bare flag to run outside of Kubernetes
+# Command-line flags
 config.define_bool("bare",args=False,usage="If set, runs resources as bare processes without kubernetes")
+config.define_bool("bots",args=False,usage="If set, run a set of bots to automatically play games")
+
 args = config.parse()
 bare = "bare" in args and args["bare"]
+bots = "bots" in args and args["bots"]
 
 test(
     'tests',
@@ -158,5 +161,13 @@ server("grid", port_forwards=["8086:8080", "8087:8081"], port=8086,grpcui_port=8
 server("checker", port_forwards=["8088:8080", "8089:8081"], port=8088,grpcui_port=8089)
 server("turncontroller", port_forwards=["8090:8080", "8091:8081"], port=8090,grpcui_port=8091)
 server("matchmaker", port_forwards=["8092:8080", "8093:8081"], port=8092,grpcui_port=8093)
-server("bot",port_forwards=["2112:2112"], port=2112)
 space("space")
+
+# Bots
+if bots:
+    # Load the Bots Helm chart
+    k8s_yaml(helm(
+        'charts/tic-tac-toe-bots',
+    ))
+
+    server("bot",port_forwards=["2112:2112"], port=2112)

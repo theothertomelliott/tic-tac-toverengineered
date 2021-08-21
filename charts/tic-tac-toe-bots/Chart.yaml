@@ -1,0 +1,5 @@
+apiVersion: v2
+name: tic-tac-toe-bots
+description: A service that runs multiple bots to play Tic Tac Toe
+type: application
+version: 0.0.0

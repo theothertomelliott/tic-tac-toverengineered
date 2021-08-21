@@ -132,7 +132,7 @@ data:
       health_check: {}
       zpages: {}
     exporters:
-        otlp/1:
+        otlp/lightstep:
           endpoint: ingest.lightstep.com:443
           headers:
             "lightstep-access-token": "{{ .Values.lightstep.access_token }}"
@@ -146,7 +146,7 @@ data:
         traces:
             receivers: [jaeger, otlp]
             processors: [batch]
-            exporters: [otlp/1, logging]
+            exporters: [otlp/lightstep, logging]
 ---
 apiVersion: v1
 kind: Service

@@ -42,6 +42,7 @@ if bare:
     )
 else:
     lightstep_access_token=""
+
     if os.path.exists("secrets.yaml"):
         secrets = read_yaml("secrets.yaml")
         lightstep_access_token=secrets["lightstep"]["access_token"]
@@ -54,6 +55,14 @@ else:
         namespace='tictactoe',
         set=[
             "mongodb.statefulset=true",
+            ],
+    ))
+
+    # Load the Tilt support Helm chart
+    k8s_yaml(helm(
+        'tilt/charts/otel',
+        namespace='tictactoe',
+        set=[
             "lightstep.access_token=" + lightstep_access_token,
             ],
     ))

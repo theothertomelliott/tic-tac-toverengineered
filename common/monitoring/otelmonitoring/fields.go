@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-// TODO: Propagate fields appropriate
+// TODO: Propagate fields appropriately
 
 func (m *Monitoring) AddFieldToSpan(ctx context.Context, key string, value interface{}) {
 	log.Println("Adding field to span: ", key, value)

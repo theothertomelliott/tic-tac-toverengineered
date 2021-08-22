@@ -69,6 +69,7 @@ else:
             "lightstep.access_token=" + lightstep_access_token,
             ],
     ))
+    k8s_resource("jaeger", port_forwards="16686:16686")
 
     k8s_resource("mongodb-standalone", port_forwards="27017:27017")
 
@@ -164,10 +165,12 @@ server("matchmaker", port_forwards=["8092:8080", "8093:8081"], port=8092,grpcui_
 space("space")
 
 # Bots
-if bots:
-    # Load the Bots Helm chart
-    k8s_yaml(helm(
-        'charts/tic-tac-toe-bots',
-    ))
+if bots or config.tilt_subcommand == "down":
+    if not bare:
+        # Load the Bots Helm chart
+        k8s_yaml(helm(
+            'charts/tic-tac-toe-bots',
+            namespace='tictactoe',
+        ))
 
     server("bot",port_forwards=["2112:2112"], port=2112)

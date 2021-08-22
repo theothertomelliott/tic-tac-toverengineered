@@ -7,12 +7,12 @@ message Position {
     int32 y = 2;
 }
 
-message MarkRequest {
+message MarkAtPositionRequest {
     string game_id = 1;
     Position position = 2;
 }
 
-message MarkResponse {
+message MarkAtPositionResponse {
     string mark = 1;
     bool has_mark = 2; 
 }
@@ -25,16 +25,16 @@ message StateResponse {
     repeated RowState row_state = 1;
 }
 message RowState {
-    repeated MarkResponse mark = 1;
+    repeated MarkAtPositionResponse mark = 1;
 }
 
-message SetMarkRequest {
+message SetMarkAtPositionRequest {
     string game_id = 1;
     Position position = 2;
     string mark = 3;
 }
 
-message SetMarkResponse {}
+message SetMarkAtPositionResponse {}
 
 message Row {
     repeated Position position = 1;
@@ -46,8 +46,8 @@ message RowsResponse {
 }
 
 service Grid {
-    rpc Mark(MarkRequest) returns (MarkResponse) {}
+    rpc MarkAtPosition(MarkAtPositionRequest) returns (MarkAtPositionResponse) {}
     rpc State(StateRequest) returns (StateResponse) {}
-    rpc SetMark(SetMarkRequest) returns (SetMarkResponse) {}
+    rpc SetMarkAtPosition(SetMarkAtPositionRequest) returns (SetMarkAtPositionResponse) {}
     rpc Rows(RowsRequest) returns (RowsResponse) {}
 }

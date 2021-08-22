@@ -5,12 +5,14 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
+	"google.golang.org/grpc"
+
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/otlp"
-	"go.opentelemetry.io/otel/exporters/otlp/otlpgrpc"
-	"go.opentelemetry.io/otel/label"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
 )
 
 var _ monitoring.Monitoring = &Monitoring{}
@@ -18,10 +20,12 @@ var _ monitoring.Monitoring = &Monitoring{}
 func New(componentName string) (monitoring.Monitoring, error) {
 	ctx := context.Background()
 
-	ex, err := otlp.NewExporter(ctx, otlpgrpc.NewDriver(
-		otlpgrpc.WithEndpoint("otel-collector:55680"),
-		otlpgrpc.WithInsecure(),
-	))
+	// Set up a trace exporter
+	ex, err := otlptracegrpc.New(ctx,
+		otlptracegrpc.WithInsecure(),
+		otlptracegrpc.WithEndpoint("otel-collector:55680"),
+		otlptracegrpc.WithDialOption(grpc.WithBlock()),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -29,9 +33,10 @@ func New(componentName string) (monitoring.Monitoring, error) {
 	resources, err := resource.New(
 		ctx,
 		resource.WithAttributes(
-			label.String("service.name", componentName),
-			label.String("service.version", version.Version),
-			label.String("library.language", "go"),
+			// the service name used to display traces in backends
+			semconv.ServiceNameKey.String(componentName),
+			semconv.ServiceVersionKey.String(version.Version),
+			attribute.String("library.language", "go"),
 		),
 	)
 	if err != nil {

@@ -47,7 +47,7 @@ func ProtoPositionToPosition(pos *Position) grid.Position {
 }
 
 func (g *Grid) Mark(ctx context.Context, id game.ID, pos grid.Position) (*player.Mark, error) {
-	resp, err := g.client.Mark(ctx, &MarkRequest{
+	resp, err := g.client.MarkAtPosition(ctx, &MarkAtPositionRequest{
 		GameId:   string(id),
 		Position: PositionToProtoPosition(pos),
 	})
@@ -85,7 +85,7 @@ func (g *Grid) State(ctx context.Context, id game.ID) ([][]*player.Mark, error) 
 }
 
 func (g *Grid) SetMark(ctx context.Context, id game.ID, pos grid.Position, m player.Mark) error {
-	_, err := g.client.SetMark(ctx, &SetMarkRequest{
+	_, err := g.client.SetMarkAtPosition(ctx, &SetMarkAtPositionRequest{
 		GameId:   string(id),
 		Position: PositionToProtoPosition(pos),
 		Mark:     string(m),

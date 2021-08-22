@@ -53,14 +53,14 @@ func (c *Controller) NextPlayer(ctx context.Context, id game.ID) (player.Mark, e
 	return player.Mark(resp.Mark), nil
 }
 
-func PositionToProtoPosition(pos grid.Position) *Position {
-	return &Position{
+func PositionToProtoPosition(pos grid.Position) *TCPosition {
+	return &TCPosition{
 		X: int32(pos.X),
 		Y: int32(pos.Y),
 	}
 }
 
-func ProtoPositionToPosition(pos *Position) grid.Position {
+func ProtoPositionToPosition(pos *TCPosition) grid.Position {
 	return grid.Position{
 		X: int(pos.X),
 		Y: int(pos.Y),

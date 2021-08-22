@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn/rpcturn";
 
-message Position {
+message TCPosition {
     int32 x = 1;
     int32 y = 2;
 }
@@ -10,7 +10,7 @@ message Position {
 message TakeTurnRequest {
     string game_id = 1; 
     string mark = 2;
-    Position position = 3;
+    TCPosition position = 3;
 }
 message TakeTurnResponse {}
 

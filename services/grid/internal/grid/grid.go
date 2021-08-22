@@ -21,18 +21,18 @@ type gridServer struct {
 	grid grid.Grid
 }
 
-func (g *gridServer) Mark(ctx context.Context, req *rpcgrid.MarkRequest) (*rpcgrid.MarkResponse, error) {
+func (g *gridServer) Mark(ctx context.Context, req *rpcgrid.MarkAtPositionRequest) (*rpcgrid.MarkAtPositionResponse, error) {
 	mark, err := g.grid.Mark(ctx, game.ID(req.GameId), rpcgrid.ProtoPositionToPosition(req.Position))
 	if err != nil {
 		return nil, err
 	}
 	if mark == nil {
-		return &rpcgrid.MarkResponse{
+		return &rpcgrid.MarkAtPositionResponse{
 			HasMark: false,
 		}, nil
 	}
 	m := *mark
-	return &rpcgrid.MarkResponse{
+	return &rpcgrid.MarkAtPositionResponse{
 		Mark:    string(m),
 		HasMark: true,
 	}, nil
@@ -47,7 +47,7 @@ func (g *gridServer) State(ctx context.Context, req *rpcgrid.StateRequest) (*rpc
 	for _, row := range state {
 		rs := &rpcgrid.RowState{}
 		for _, m := range row {
-			mr := &rpcgrid.MarkResponse{}
+			mr := &rpcgrid.MarkAtPositionResponse{}
 			if m != nil {
 				mr.HasMark = true
 				mr.Mark = string(*m)
@@ -59,8 +59,8 @@ func (g *gridServer) State(ctx context.Context, req *rpcgrid.StateRequest) (*rpc
 	return resp, nil
 }
 
-func (g *gridServer) SetMark(ctx context.Context, req *rpcgrid.SetMarkRequest) (*rpcgrid.SetMarkResponse, error) {
-	return &rpcgrid.SetMarkResponse{},
+func (g *gridServer) SetMarkAtPosition(ctx context.Context, req *rpcgrid.SetMarkAtPositionRequest) (*rpcgrid.SetMarkAtPositionResponse, error) {
+	return &rpcgrid.SetMarkAtPositionResponse{},
 		g.grid.SetMark(
 			ctx,
 			game.ID(req.GameId),

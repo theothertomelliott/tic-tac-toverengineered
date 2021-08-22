@@ -52,6 +52,21 @@ func (c *Client) RequestMatch(ctx context.Context) (string, error) {
 	return res.JSON202.RequestID, nil
 }
 
+// RequestMatchPair makes a request for a new game along with the matches for both players.
+func (c *Client) RequestMatchPair(ctx context.Context) (*tictactoeapi.MatchPair, error) {
+	res, err := c.client.RequestMatchPairWithResponse(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if res.JSONDefault != nil {
+		return nil, fmt.Errorf(res.JSONDefault.Message)
+	}
+	if res.JSON200 == nil {
+		return nil, fmt.Errorf("unexpected response %q: %v", res.Status(), string(res.Body))
+	}
+	return res.JSON200, nil
+}
+
 // MatchStatus retrieves the status of a match request.
 // The Match is returned if a match has been made, otherwise nil.
 func (c *Client) MatchStatus(ctx context.Context, requestID string) (*tictactoeapi.Match, error) {

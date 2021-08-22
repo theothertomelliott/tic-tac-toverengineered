@@ -8,6 +8,31 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 )
 
+func TestMatchPair(t *testing.T) {
+	env := newEnv(t)
+	client := env.Client
+
+	matchRes, err := client.RequestMatchPairWithResponse(context.Background())
+	checkResponse(t, matchRes, http.StatusOK, err)
+
+	res := matchRes.JSON200
+	if res.X.GameID != res.O.GameID {
+		t.Errorf("expected matching game ids, got %q and %q", res.X.GameID, res.O.GameID)
+	}
+
+	if res.X.Mark != "X" {
+		t.Errorf("expected X, got %v", res.X.Mark)
+	}
+	if res.O.Mark != "O" {
+		t.Errorf("expected O, got %v", res.X.Mark)
+	}
+
+	if res.X.Token == res.O.Token {
+		t.Errorf("expected different tokens, got %q", res.X.Token)
+	}
+
+}
+
 func TestMatching(t *testing.T) {
 	env := newEnv(t)
 	client := env.Client

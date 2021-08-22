@@ -46,6 +46,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  # Match both sides for a one-player game
+  /match/pair:
+    post:
+      description: Request matches for both players in a game, to be used for one-player games.
+      operationId: requestMatchPair
+      responses:
+        '200':
+          description: A pair of matches
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchPair'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /match:
     post:
       description: Request a new /match
@@ -232,6 +250,17 @@ components:
               type: string
             token:
               type: string
+    MatchPair:
+      allOf:
+        - type: object
+          required:
+          - x
+          - o
+          properties:
+            x:
+              $ref: '#/components/schemas/Match'
+            o:
+              $ref: '#/components/schemas/Match'
     Error:
       type: object
       required:

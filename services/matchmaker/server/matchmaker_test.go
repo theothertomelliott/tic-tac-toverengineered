@@ -27,6 +27,32 @@ func TestMultipleMatches(t *testing.T) {
 	}
 }
 
+func TestMatchPair(t *testing.T) {
+	games := inmemoryrepository.New()
+	m := server.New(games, newQueue(), newStore(), &unsignedtokens.UnsignedTokens{})
+
+	res, err := m.RequestPair(context.Background(), &matchmaker.RequestPairRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if res.X.GameId != res.O.GameId {
+		t.Errorf("expected matching game ids, got %q and %q", res.X.GameId, res.O.GameId)
+	}
+
+	if res.X.Mark != "X" {
+		t.Errorf("expected X, got %v", res.X.Mark)
+	}
+	if res.O.Mark != "O" {
+		t.Errorf("expected O, got %v", res.X.Mark)
+	}
+
+	if res.X.Token == res.O.Token {
+		t.Errorf("expected different tokens, got %q", res.X.Token)
+	}
+
+}
+
 func doTestMatch(t *testing.T, m matchmaker.MatchMakerServer) {
 	// First player
 	p1Req, err := m.Request(context.Background(), &matchmaker.RequestRequest{})

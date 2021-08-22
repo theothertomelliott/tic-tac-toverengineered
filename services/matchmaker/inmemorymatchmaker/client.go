@@ -27,6 +27,10 @@ func (c *client) Request(ctx context.Context, in *matchmaker.RequestRequest, opt
 	return c.server.Request(ctx, in)
 }
 
+func (c *client) RequestPair(ctx context.Context, in *matchmaker.RequestPairRequest, opts ...grpc.CallOption) (*matchmaker.RequestPairResponse, error) {
+	return c.server.RequestPair(ctx, in)
+}
+
 func (c *client) Check(ctx context.Context, in *matchmaker.CheckRequest, opts ...grpc.CallOption) (*matchmaker.CheckResponse, error) {
 	return c.server.Check(ctx, in)
 }

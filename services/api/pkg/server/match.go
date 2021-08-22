@@ -42,3 +42,25 @@ func (s *server) RequestMatch(ctx echo.Context) error {
 	ctx.JSON(202, pending)
 	return nil
 }
+
+// (POST /match/pair)
+func (s *server) RequestMatchPair(ctx echo.Context) error {
+	res, err := s.matchmaker.RequestPair(ctx.Request().Context(), &matchmaker.RequestPairRequest{})
+	if err != nil {
+		return err
+	}
+	out := tictactoeapi.MatchPair{
+		X: tictactoeapi.Match{
+			GameID: res.X.GameId,
+			Mark:   res.X.Mark,
+			Token:  res.X.Token,
+		},
+		O: tictactoeapi.Match{
+			GameID: res.O.GameId,
+			Mark:   res.O.Mark,
+			Token:  res.O.Token,
+		},
+	}
+	ctx.JSON(200, out)
+	return nil
+}

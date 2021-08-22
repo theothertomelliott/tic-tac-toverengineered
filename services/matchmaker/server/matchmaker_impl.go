@@ -56,6 +56,37 @@ type matchMaker struct {
 	tokens  matchmaker.TokenCreator
 }
 
+func (m *matchMaker) RequestPair(ctx context.Context, req *matchmaker.RequestPairRequest) (*matchmaker.RequestPairResponse, error) {
+	game, err := m.games.New(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var out = &matchmaker.RequestPairResponse{}
+
+	tokenO, err := m.tokens.Create(game, player.O)
+	if err != nil {
+		return nil, err
+	}
+	out.O = &matchmaker.Match{
+		GameId: string(game),
+		Mark:   "O",
+		Token:  tokenO,
+	}
+
+	tokenX, err := m.tokens.Create(game, player.X)
+	if err != nil {
+		return nil, err
+	}
+	out.X = &matchmaker.Match{
+		GameId: string(game),
+		Mark:   "X",
+		Token:  tokenX,
+	}
+
+	return out, nil
+}
+
 func (m *matchMaker) Request(ctx context.Context, req *matchmaker.RequestRequest) (*matchmaker.RequestResponse, error) {
 	id := uuid.New().String()
 	partner, err := m.queue.Dequeue(ctx)

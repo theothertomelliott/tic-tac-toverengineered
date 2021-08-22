@@ -197,24 +197,10 @@ func (c *Client) takeTurn(ctx context.Context, p *tictactoeapi.Match) error {
 }
 
 func (c *Client) createGame(ctx context.Context) (player1 *tictactoeapi.Match, player2 *tictactoeapi.Match, err error) {
-	requestID1, err := c.api.RequestMatch(ctx)
-	if err != nil {
-		return nil, nil, err
-	}
-	requestID2, err := c.api.RequestMatch(ctx)
+	players, err := c.api.RequestMatchPair(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	player1, err = c.api.MatchStatus(ctx, requestID1)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	player2, err = c.api.MatchStatus(ctx, requestID2)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return player1, player2, nil
+	return &players.X, &players.O, nil
 }

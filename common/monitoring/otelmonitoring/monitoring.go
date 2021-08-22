@@ -13,6 +13,7 @@ import (
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.4.0"
+	"go.opentelemetry.io/otel/trace"
 )
 
 var _ monitoring.Monitoring = &Monitoring{}
@@ -47,6 +48,7 @@ func New(componentName string) (monitoring.Monitoring, error) {
 	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithSpanProcessor(bsp),
 		sdktrace.WithResource(resources),
+		sdktrace.WithSampler(noHealthCheckSampler{}),
 	)
 
 	otel.SetTracerProvider(tp)
@@ -64,4 +66,23 @@ type Monitoring struct {
 
 func (m *Monitoring) Close() error {
 	return m.tp.Shutdown(m.ctx)
+}
+
+type noHealthCheckSampler struct{}
+
+func (as noHealthCheckSampler) ShouldSample(p sdktrace.SamplingParameters) sdktrace.SamplingResult {
+	if p.Name == "grpc.health.v1.Health/Check" {
+		return sdktrace.SamplingResult{
+			Decision:   sdktrace.Drop,
+			Tracestate: trace.SpanContextFromContext(p.ParentContext).TraceState(),
+		}
+	}
+	return sdktrace.SamplingResult{
+		Decision:   sdktrace.RecordAndSample,
+		Tracestate: trace.SpanContextFromContext(p.ParentContext).TraceState(),
+	}
+}
+
+func (as noHealthCheckSampler) Description() string {
+	return "NoHealthCheckSampler"
 }

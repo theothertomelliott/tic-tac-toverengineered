@@ -20,6 +20,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	err = c.WaitForReady(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	w, err := c.PlayBothSides(context.Background())
 	if err != nil {
 		log.Fatal(err)

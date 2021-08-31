@@ -30,15 +30,36 @@ buildproto = $(PROTOC) \
 	--go-grpc_opt=paths=source_relative \
     $1
 
-## OpenAPI
+# OpenAPI
+
+OPENAPISRC := services/api/pkg/tictactoeapi/tictactoe.openapi.yaml
+
+## OpenAPI Go Codegen
 
 # Use gobin for OpenAPI generation
-OPENAPIGEN := ./.bin/oapi-codegen
+OPENAPIGENGO := ./.bin/oapi-codegen
 
 .bin/oapi-codegen:
 	$(GOINSTALL) github.com/deepmap/oapi-codegen/cmd/oapi-codegen
 
-services/api/pkg/tictactoeapi/tictactoe.gen.go: $(OPENAPIGEN) services/api/pkg/tictactoeapi/tictactoe.openapi.yaml
-	$(OPENAPIGEN) -package tictactoeapi services/api/pkg/tictactoeapi/tictactoe.openapi.yaml  > services/api/pkg/tictactoeapi/tictactoe.gen.go
+services/api/pkg/tictactoeapi/tictactoe.gen.go: $(OPENAPIGENGO) $(OPENAPISRC)
+	$(OPENAPIGENGO) -package tictactoeapi $(OPENAPISRC)  > services/api/pkg/tictactoeapi/tictactoe.gen.go
 
 openapi: services/api/pkg/tictactoeapi/tictactoe.gen.go
+
+## OpenAPI Generator (for JavaScript)
+
+OPENAPIGENERATOR := ./.bin/openapi-generator-cli.jar
+WGET := wget
+JAVA := java
+JSCLIENTDIR := frontend/js/tictactoe-client
+
+$(OPENAPIGENERATOR):
+	$(WGET) https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/5.2.1/openapi-generator-cli-5.2.1.jar -O $(OPENAPIGENERATOR)
+
+getopenapigen: $(OPENAPIGENERATOR)
+
+$(JSCLIENTDIR): $(OPENAPISRC)
+	$(JAVA) -jar $(OPENAPIGENERATOR) generate -g javascript -i $(OPENAPISRC) -o $(JSCLIENTDIR)
+
+openapijsclient: getopenapigen frontend/js/tictactoe-client

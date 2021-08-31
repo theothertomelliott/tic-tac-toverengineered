@@ -5,7 +5,6 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
-	"google.golang.org/grpc"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -26,7 +25,6 @@ func New(componentName string) (monitoring.Monitoring, error) {
 	ex, err := otlptracegrpc.New(ctx,
 		otlptracegrpc.WithInsecure(),
 		otlptracegrpc.WithEndpoint("otel-collector:55680"),
-		otlptracegrpc.WithDialOption(grpc.WithBlock()),
 	)
 	if err != nil {
 		return nil, err

@@ -7,16 +7,19 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/apiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 )
 
-func New(client *apiclient.Client) *Server {
+func New(client *apiclient.Client, openapiclient *tictactoeapiclient.Client) *Server {
 	return &Server{
-		client: client,
+		client:        client,
+		openapiclient: openapiclient,
 	}
 }
 
 type Server struct {
-	client *apiclient.Client
+	client        *apiclient.Client
+	openapiclient *tictactoeapiclient.Client
 }
 
 // wrap will wrap an http handler with all intended middleware

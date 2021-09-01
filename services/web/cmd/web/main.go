@@ -13,6 +13,8 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/apiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 	web "github.com/theothertomelliott/tic-tac-toverengineered/services/web/internal"
 )
 
@@ -21,6 +23,13 @@ func getAPIBaseURL() string {
 		return apiBaseURL
 	}
 	return "http://localhost:8081"
+}
+
+func getOpenAPIBaseURL() string {
+	if apiBaseURL := os.Getenv("OPENAPI_BASE_URL"); apiBaseURL != "" {
+		return apiBaseURL
+	}
+	return "http://localhost:8094"
 }
 
 func main() {
@@ -33,7 +42,19 @@ func main() {
 		Transport: monitoring.WrapHTTPTransport(http.DefaultTransport),
 		Timeout:   time.Second * 5,
 	}
-	server := web.New(apiclient.New(getAPIBaseURL(), client))
+
+	openapiClient, err := tictactoeapi.NewClientWithResponses(getOpenAPIBaseURL(), tictactoeapi.WithHTTPClient(client))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	server := web.New(
+		apiclient.New(
+			getAPIBaseURL(),
+			client,
+		),
+		tictactoeapiclient.New(openapiClient),
+	)
 
 	port := env.Get("PORT", "8080")
 	log.Printf("Listening on port :%v\n", port)
@@ -50,13 +71,4 @@ func main() {
 	server.AddRoutes(m)
 
 	http.ListenAndServe(fmt.Sprintf(":%v", port), m)
-}
-
-type prefixHandler struct {
-	prefix string
-}
-
-func (p *prefixHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, p.prefix)
-	fmt.Fprint(w, r.URL.Path)
 }

@@ -19,6 +19,8 @@ spec:
           env:
             - name: API_BASE_URL
               value: "http://api{{ .Values.routes.api }}"
+            - name: OPENAPI_BASE_URL
+              value: "http://openapi"
             - name: ROUTE_PREFIX
               value: {{ .Values.routes.web }}
           ports:

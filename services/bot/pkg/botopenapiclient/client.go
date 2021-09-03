@@ -128,7 +128,7 @@ func (c *Client) Play(ctx context.Context, name string) (bool, error) {
 		}
 
 		log.Printf("%v %v %v: playing %v", name, match.GameID, match.Mark, pos)
-		err = c.api.Play(ctx, match, pos)
+		err = c.api.Play(ctx, match.GameID, match.Token, pos)
 		if err != nil {
 			return false, fmt.Errorf("making move (%v): %v", match.GameID, err)
 		}
@@ -193,7 +193,7 @@ func (c *Client) takeTurn(ctx context.Context, p *tictactoeapi.Match) error {
 		return err
 	}
 
-	return c.api.Play(ctx, p, pos)
+	return c.api.Play(ctx, p.GameID, p.Token, pos)
 }
 
 func (c *Client) createGame(ctx context.Context) (player1 *tictactoeapi.Match, player2 *tictactoeapi.Match, err error) {

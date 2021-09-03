@@ -104,9 +104,9 @@ func (c *Client) GameGrid(ctx context.Context, gameID string) ([][]string, error
 }
 
 // Play makes a move in a game.
-func (c *Client) Play(ctx context.Context, match *tictactoeapi.Match, pos tictactoeapi.Position) error {
-	playRes, err := c.client.PlayWithResponse(ctx, match.GameID, &tictactoeapi.PlayParams{
-		Token:    match.Token,
+func (c *Client) Play(ctx context.Context, gameID string, playerToken string, pos tictactoeapi.Position) error {
+	playRes, err := c.client.PlayWithResponse(ctx, gameID, &tictactoeapi.PlayParams{
+		Token:    playerToken,
 		Position: pos,
 	})
 	if err != nil {

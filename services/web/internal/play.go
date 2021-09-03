@@ -1,11 +1,13 @@
 package web
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 )
 
@@ -22,20 +24,34 @@ func (s *Server) play(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	resp, err := s.client.Get(req.Context(), gameID, fmt.Sprintf("play?player=%v&pos=%v", playerParams[0], posParams[0]))
+	var keyPlayerToken = KeyPlayerTokenO
+	if playerParams[0] == "X" {
+		keyPlayerToken = KeyPlayerTokenX
+	}
+
+	playerTokenCookie, err := req.Cookie(keyPlayerToken)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if resp.StatusCode != http.StatusOK {
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		var msg string = string(body)
-		if err != nil {
-			msg = err.Error()
-		}
-		http.Error(w, msg, http.StatusInternalServerError)
+	playerTokenBytes, err := base64.StdEncoding.DecodeString(playerTokenCookie.Value)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	var pos tictactoeapi.Position
+	err = json.Unmarshal([]byte(posParams[0]), &pos)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = s.openapiclient.Play(req.Context(), string(gameID), string(playerTokenBytes), pos)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	http.Redirect(w, req, fmt.Sprintf("/%v", gameID), http.StatusFound)
 }

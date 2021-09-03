@@ -6,8 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/checker/pkg/win"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 )
 
@@ -31,23 +29,36 @@ func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 
 	data := struct {
 		Game       game.ID
-		NextPlayer player.Mark
-		Winner     win.Result
-		Grid       [][]*player.Mark
+		NextPlayer string
+		Finished   bool
+		Draw       bool
+		Winner     string
+		Grid       [][]string
 	}{
 		Game: gameID,
 	}
-	if err := s.client.ApiGet(req.Context(), gameID, "grid", &data.Grid); err != nil {
+
+	data.Grid, err = s.openapiclient.GameGrid(req.Context(), string(gameID))
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := s.client.ApiGet(req.Context(), gameID, "player/current", &data.NextPlayer); err != nil {
+
+	data.NextPlayer, err = s.openapiclient.CurrentPlayer(req.Context(), string(gameID))
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := s.client.ApiGet(req.Context(), gameID, "winner", &data.Winner); err != nil {
+
+	winner, err := s.openapiclient.Winner(req.Context(), string(gameID))
+	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
+	}
+	data.Draw = winner.Draw != nil && *winner.Draw
+	data.Finished = data.Draw || winner.Winner != nil
+	if winner.Winner != nil {
+		data.Winner = *winner.Winner
 	}
 
 	err = t.Execute(w, data)

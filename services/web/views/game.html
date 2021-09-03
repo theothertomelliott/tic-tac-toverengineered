@@ -16,11 +16,11 @@
                         <a class="hover:underline justify-self-start text-blue-800 block" href="/">Home</a>
 
                         <div class="block justify-self-end">
-                            {{if .Winner.Finished }}
-                                {{if .Winner.IsDraw}}
+                            {{if .Finished }}
+                                {{if .Draw}}
                                     Draw!
                                 {{else}}
-                                    Winner: {{.Winner.Winner}}
+                                    Winner: {{.Winner}}
                                 {{end}}
                             {{else}}
                                 Next Player: {{.NextPlayer}}
@@ -52,7 +52,7 @@
     </div>
     <script language="javascript">
 		function play(p,x,y){
-			{{if not .Winner.Finished }}
+			{{if not .Finished }}
 			location.href = "/{{.Game}}/play?player=" + p + "&pos={\"X\":" + x + ",\"Y\":" + y + "}";
 			{{end}}
 		}

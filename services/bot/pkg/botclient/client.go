@@ -1,4 +1,4 @@
-package botopenapiclient
+package botclient
 
 import (
 	"context"

@@ -38,19 +38,19 @@ func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 		Game: gameID,
 	}
 
-	data.Grid, err = s.openapiclient.GameGrid(req.Context(), string(gameID))
+	data.Grid, err = s.apiclient.GameGrid(req.Context(), string(gameID))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	data.NextPlayer, err = s.openapiclient.CurrentPlayer(req.Context(), string(gameID))
+	data.NextPlayer, err = s.apiclient.CurrentPlayer(req.Context(), string(gameID))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	winner, err := s.openapiclient.Winner(req.Context(), string(gameID))
+	winner, err := s.apiclient.Winner(req.Context(), string(gameID))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -11,7 +11,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/randombot"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botopenapiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botclient"
 )
 
 var (
@@ -28,7 +28,7 @@ var (
 func main() {
 	apiBaseURL := env.Get("API_BASE_URL", "http://localhost:8094")
 
-	c, err := botopenapiclient.New(apiBaseURL, randombot.New())
+	c, err := botclient.New(apiBaseURL, randombot.New())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,7 +57,7 @@ func main() {
 	http.ListenAndServe(":2112", nil)
 }
 
-func player(name string, c *botopenapiclient.Client, results chan<- bool) {
+func player(name string, c *botclient.Client, results chan<- bool) {
 	for {
 		time.Sleep(time.Second / 4)
 		win, err := c.Play(context.Background(), name)

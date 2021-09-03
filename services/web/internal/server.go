@@ -9,14 +9,14 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 )
 
-func New(openapiclient *tictactoeapiclient.Client) *Server {
+func New(apiclient *tictactoeapiclient.Client) *Server {
 	return &Server{
-		openapiclient: openapiclient,
+		apiclient: apiclient,
 	}
 }
 
 type Server struct {
-	openapiclient *tictactoeapiclient.Client
+	apiclient *tictactoeapiclient.Client
 }
 
 // wrap will wrap an http handler with all intended middleware

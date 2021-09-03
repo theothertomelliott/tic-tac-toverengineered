@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openapi
+  name: api
   labels:
-    app: openapi
+    app: api
 spec:
   selector:
     matchLabels:
-      app: openapi
+      app: api
   template:
     metadata:
       labels:
-        app: openapi
+        app: api
     spec:
       containers:
-        - name: openapi
-          image: docker.io/tictactoverengineered/openapi:{{ $.Chart.Version }}
+        - name: api
+          image: docker.io/tictactoverengineered/api:{{ $.Chart.Version }}
           env:
             - name: REPO_SERVER_TARGET
               value: "gamerepo:80"
@@ -30,6 +30,6 @@ spec:
             - name: "MATCHMAKER_SERVER_TARGET"
               value: "matchmaker:80"
             - name: ROUTE_PREFIX
-              value: {{ .Values.routes.openapi }}
+              value: {{ .Values.routes.api }}
           ports:
             - containerPort: 8080

@@ -17,11 +17,11 @@ import (
 	web "github.com/theothertomelliott/tic-tac-toverengineered/services/web/internal"
 )
 
-func getOpenAPIBaseURL() string {
-	if apiBaseURL := os.Getenv("OPENAPI_BASE_URL"); apiBaseURL != "" {
+func getAPIBaseURL() string {
+	if apiBaseURL := os.Getenv("API_BASE_URL"); apiBaseURL != "" {
 		return apiBaseURL
 	}
-	return "http://localhost:8094"
+	return "http://localhost:8080"
 }
 
 func main() {
@@ -35,13 +35,13 @@ func main() {
 		Timeout:   time.Second * 5,
 	}
 
-	openapiClient, err := tictactoeapi.NewClientWithResponses(getOpenAPIBaseURL(), tictactoeapi.WithHTTPClient(client))
+	apiClient, err := tictactoeapi.NewClientWithResponses(getAPIBaseURL(), tictactoeapi.WithHTTPClient(client))
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	server := web.New(
-		tictactoeapiclient.New(openapiClient),
+		tictactoeapiclient.New(apiClient),
 	)
 
 	port := env.Get("PORT", "8080")

@@ -47,7 +47,7 @@ func (s *Server) play(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	err = s.openapiclient.Play(req.Context(), string(gameID), string(playerTokenBytes), pos)
+	err = s.apiclient.Play(req.Context(), string(gameID), string(playerTokenBytes), pos)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -18,9 +18,7 @@ spec:
           image: docker.io/tictactoverengineered/web:{{ $.Chart.Version }}
           env:
             - name: API_BASE_URL
-              value: "http://api{{ .Values.routes.api }}"
-            - name: OPENAPI_BASE_URL
-              value: "http://openapi"
+              value: "http://api" # TODO: Add route: {{ .Values.routes.api }}
             - name: ROUTE_PREFIX
               value: {{ .Values.routes.web }}
           ports:

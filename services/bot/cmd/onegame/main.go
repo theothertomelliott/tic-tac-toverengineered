@@ -8,7 +8,7 @@ import (
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/randombot"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botopenapiclient"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/botclient"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 
 	apiURL := os.Args[1]
 	fmt.Printf("Will use server: %v\n", apiURL)
-	c, err := botopenapiclient.New(apiURL, randombot.New())
+	c, err := botclient.New(apiURL, randombot.New())
 	if err != nil {
 		log.Fatal(err)
 	}

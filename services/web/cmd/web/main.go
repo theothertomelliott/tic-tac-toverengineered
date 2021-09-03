@@ -12,18 +12,10 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/apiclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 	web "github.com/theothertomelliott/tic-tac-toverengineered/services/web/internal"
 )
-
-func getAPIBaseURL() string {
-	if apiBaseURL := os.Getenv("API_BASE_URL"); apiBaseURL != "" {
-		return apiBaseURL
-	}
-	return "http://localhost:8081"
-}
 
 func getOpenAPIBaseURL() string {
 	if apiBaseURL := os.Getenv("OPENAPI_BASE_URL"); apiBaseURL != "" {
@@ -49,10 +41,6 @@ func main() {
 	}
 
 	server := web.New(
-		apiclient.New(
-			getAPIBaseURL(),
-			client,
-		),
 		tictactoeapiclient.New(openapiClient),
 	)
 

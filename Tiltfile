@@ -153,7 +153,6 @@ def space(name,ports=[]):
 
         k8s_resource(name, resource_deps=[name+'-build'], labels=["space"])
 
-server("api", port_forwards="8081:8080",port=8081)
 server("openapi", port_forwards="8094:8080",port=8094)
 server("web", port_forwards="8080:8080",port=8080)
 server("gamerepo", port_forwards=["8082:8080", "8083:8081"], port=8082,grpcui_port=8083)

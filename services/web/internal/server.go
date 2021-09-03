@@ -6,19 +6,16 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/apiclient"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 )
 
-func New(client *apiclient.Client, openapiclient *tictactoeapiclient.Client) *Server {
+func New(openapiclient *tictactoeapiclient.Client) *Server {
 	return &Server{
-		client:        client,
 		openapiclient: openapiclient,
 	}
 }
 
 type Server struct {
-	client        *apiclient.Client
 	openapiclient *tictactoeapiclient.Client
 }
 

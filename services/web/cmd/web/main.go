@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -40,14 +41,17 @@ func main() {
 		log.Fatal(err)
 	}
 
+	tttClient := tictactoeapiclient.New(apiClient)
 	server := web.New(
-		tictactoeapiclient.New(apiClient),
+		tttClient,
 	)
 
 	port := env.Get("PORT", "8080")
 	log.Printf("Listening on port :%v\n", port)
 
 	m := mux.NewRouter()
+
+	m.Use(HealthCheckMiddleware(context.Background(), tttClient))
 
 	fs := http.FileServer(http.Dir("./public"))
 	m.PathPrefix("/public/").Handler(http.StripPrefix("/public/", fs))

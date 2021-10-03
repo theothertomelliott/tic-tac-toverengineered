@@ -7,6 +7,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	grpc "google.golang.org/grpc"
+	"google.golang.org/grpc/health/grpc_health_v1"
 )
 
 func ConnectSpace(target string) (*Space, error) {
@@ -21,12 +22,14 @@ func ConnectSpace(target string) (*Space, error) {
 		return nil, err
 	}
 	c.client = NewSpaceClient(c.conn)
+	c.health = grpc_health_v1.NewHealthClient(c.conn)
 	return c, nil
 }
 
 type Space struct {
 	conn   *grpc.ClientConn
 	client SpaceClient
+	health grpc_health_v1.HealthClient
 }
 
 func (c *Space) Close() error {
@@ -53,4 +56,8 @@ func (s *Space) SetMark(ctx context.Context, id game.ID, m player.Mark) error {
 		Mark:   string(m),
 	})
 	return err
+}
+
+func (s *Space) Health() grpc_health_v1.HealthClient {
+	return s.health
 }

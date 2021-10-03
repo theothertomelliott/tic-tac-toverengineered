@@ -12,13 +12,23 @@ import (
 )
 
 // New creates an RPC server that will listen on the specified port
-// A grpc health check server (google.golang.org/grpc/health) will also be hosted on this port
+// A default grpc health server (google.golang.org/grpc/health) will also be hosted on this port.
 func New(port int) *Server {
+	return NewWithHealthServer(port, nil)
+}
+
+// NewWithHealthServer creates an RPC server that will listen on the specified port
+// The provided grpc health server (google.golang.org/grpc/health) will also be hosted on this port.
+func NewWithHealthServer(port int, healthServer *health.Server) *Server {
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(monitoring.UnaryServerInterceptor()),
 	)
+
 	// Add health check for all rpc servers
-	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
+	if healthServer == nil {
+		healthServer = health.NewServer()
+	}
+	grpc_health_v1.RegisterHealthServer(grpcServer, healthServer)
 
 	return &Server{
 		grpcServer: grpcServer,

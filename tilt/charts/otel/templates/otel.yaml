@@ -147,7 +147,7 @@ data:
         traces:
             receivers: [jaeger, otlp]
             processors: [batch]
-            exporters: [{{ if .Values.lightstep.access_token }}otlp/lightstep{{ end }}, jaeger]
+            exporters: [{{ if .Values.lightstep.access_token }}otlp/lightstep,{{ end }} jaeger]
 ---
 apiVersion: v1
 kind: Service

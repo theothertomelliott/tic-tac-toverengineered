@@ -14,20 +14,22 @@ args = config.parse()
 bare = "bare" in args and args["bare"]
 bots = "bots" in args and args["bots"]
 
-test(
+local_resource(
     'tests',
     cmd='go test --short ./...',
     deps=['.'],
     ignore=['.output'],
-    labels=["test"]
+    labels=["test"],
+    allow_parallel=True,
 )
 
-test(
+local_resource(
     'tests (long)',
     cmd='go test ./...',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
-    labels=["test"]
+    labels=["test"],
+    allow_parallel=True,
 )
 
 local_resource(

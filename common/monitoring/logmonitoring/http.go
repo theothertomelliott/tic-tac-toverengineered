@@ -8,7 +8,7 @@ import (
 // WrapHTTP will add monitoring middleware to an http handler
 func (m *Monitoring) WrapHTTP(handler http.Handler, name string) http.Handler {
 	wrappedHandler := func(w http.ResponseWriter, r *http.Request) {
-		log.Println("http request: ", r.URL.Path)
+		log.Println("handling http request: ", r.URL)
 		handler.ServeHTTP(w, r)
 	}
 	return http.HandlerFunc(wrappedHandler)
@@ -28,6 +28,6 @@ type logRT struct {
 }
 
 func (l *logRT) RoundTrip(r *http.Request) (*http.Response, error) {
-	log.Println("http request: ", r.URL.Path)
+	log.Println("issuing http request: ", r.URL)
 	return l.rt.RoundTrip(r)
 }

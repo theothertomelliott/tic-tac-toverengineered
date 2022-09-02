@@ -73,6 +73,8 @@ else:
 
     k8s_resource("mongodb-standalone", port_forwards="27017:27017")
 
+    local_resource("base-image", "make dockerbaseimage")
+
 def server(name, port_forwards=[], port="8080", grpcui_port="8081"):
     if bare:
         local_resource(
@@ -107,7 +109,7 @@ def server(name, port_forwards=[], port="8080", grpcui_port="8081"):
         k8s_resource(
             name, 
             port_forwards=port_forwards, 
-            resource_deps=[name+'-build'],
+            resource_deps=[name+'-build', 'base-image'],
             labels=[name]
         )
 

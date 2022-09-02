@@ -22,7 +22,7 @@ func getAPIBaseURL() string {
 	if apiBaseURL := os.Getenv("API_BASE_URL"); apiBaseURL != "" {
 		return apiBaseURL
 	}
-	return "http://localhost:8080"
+	return "http://localhost:8081"
 }
 
 func main() {

@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.1"
+  },
+  "scripts": {
+    "jsclient": "openapi-generator-cli generate -i services/api/pkg/tictactoeapi/tictactoe.openapi.yaml -g javascript -o api/js/tictactoe && npm install --save api/js/tictactoe"
+  },
+  "dependencies": {
+    "tic_tac_toe": "file:api/js/tictactoe"
+  }
+}

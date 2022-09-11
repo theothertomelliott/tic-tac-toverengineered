@@ -21,6 +21,7 @@ endef
 
 define js
 .build/$1/public/js/bundle.js: services/$1/js/*
+	npm install
 	npx webpack --mode=development
 
 .PHONY: $1_js

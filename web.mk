@@ -11,9 +11,18 @@ $1_tailwind: .build/$1/public/css/tailwind.css
 endef
 
 define views
-.build/$1/views: services/$1/views/*
-	cp -R services/$1/views .build/$1/views
+.build/$1/views: services/$1/views/*.html
+	rm -Rf .build/$1/views
+	cp -Rf services/$1/views .build/$1/views
 
 .PHONY: $1_views
 $1_views: .build/$1/views
+endef
+
+define js
+.build/$1/public/js/bundle.js: services/$1/js/*.js services/$1/js/*.jsx
+	npx webpack --mode=development
+
+.PHONY: $1_js
+$1_js: .build/$1/public/js/bundle.js
 endef

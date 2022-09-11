@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/server"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
@@ -56,6 +57,7 @@ func main() {
 
 	e := echo.New()
 	e.Pre(healthCheckMiddleWare(hc))
+	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 	tictactoeapi.RegisterHandlers(e, apiServer)
 
 	port := env.Get("PORT", "8080")

@@ -36,8 +36,9 @@ include web.mk
 
 $(eval $(call tailwind,web))
 $(eval $(call views,web))
+$(eval $(call js,web))
 
-webdeps: web_views web_tailwind
+webdeps: web_views web_tailwind web_js
 web: webdeps
 web_local: webdeps
 

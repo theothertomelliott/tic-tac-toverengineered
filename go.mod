@@ -8,7 +8,7 @@ require (
 	github.com/getkin/kin-openapi v0.74.0
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/mux v1.8.0
-	github.com/labstack/echo/v4 v4.2.1
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/prometheus/client_golang v1.11.0
 	github.com/stretchr/testify v1.7.1
 	github.com/testcontainers/testcontainers-go v0.11.1

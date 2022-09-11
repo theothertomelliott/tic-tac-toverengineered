@@ -28,34 +28,12 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-3 gap-2 my-5">
-                        {{range $i, $r := .Grid}}
-                                {{range $j, $s := $r}}
-                                    <div class="block">
-                                        <button class="block w-full rounded-md text-white font-extrabold text-center hover:bg-blue-600 bg-blue-500 p-7 hover:shadow-lg focus:outline-none" type="button" onclick="javascript: play('{{$.NextPlayer}}',{{$i}},{{$j}});">
-                                            {{if not $s }}
-                                                &nbsp;&nbsp;
-                                            {{else}}
-                                                {{$s}}
-                                            {{end}}
-                                        </button>
-                                    </div>
-                                {{end}}
-                        {{else}}
-                            <p>No grid</p>
-                        {{end}}
-                    </div>
+                    <div id="grid" data-gameid="{{ .Game }}"></div>
                     
                 </div>
             </div>
         </div>
     </div>
-    <script language="javascript">
-		function play(p,x,y){
-			{{if not .Finished }}
-			location.href = "/{{.Game}}/play?player=" + p + "&pos={\"i\":" + x + ",\"j\":" + y + "}";
-			{{end}}
-		}
-	</script>
+    <script src="/public/js/bundle.js"></script>
 </body>
 </html>

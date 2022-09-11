@@ -28,37 +28,9 @@ func (s *Server) gameview(w http.ResponseWriter, req *http.Request) {
 	}
 
 	data := struct {
-		Game       game.ID
-		NextPlayer string
-		Finished   bool
-		Draw       bool
-		Winner     string
-		Grid       [][]string
+		Game game.ID
 	}{
 		Game: gameID,
-	}
-
-	data.Grid, err = s.apiclient.GameGrid(req.Context(), string(gameID))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	data.NextPlayer, err = s.apiclient.CurrentPlayer(req.Context(), string(gameID))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	winner, err := s.apiclient.Winner(req.Context(), string(gameID))
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	data.Draw = winner.Draw != nil && *winner.Draw
-	data.Finished = data.Draw || winner.Winner != nil
-	if winner.Winner != nil {
-		data.Winner = *winner.Winner
 	}
 
 	err = t.Execute(w, data)

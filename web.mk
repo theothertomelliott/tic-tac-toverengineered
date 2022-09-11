@@ -20,7 +20,7 @@ $1_views: .build/$1/views
 endef
 
 define js
-.build/$1/public/js/bundle.js: services/$1/js/*.js services/$1/js/*.jsx
+.build/$1/public/js/bundle.js: services/$1/js/*
 	npx webpack --mode=development
 
 .PHONY: $1_js

@@ -18,7 +18,6 @@ import Grid from '../model/Grid';
 import Match from '../model/Match';
 import MatchPair from '../model/MatchPair';
 import MatchPending from '../model/MatchPending';
-import Position from '../model/Position';
 import Winner from '../model/Winner';
 
 /**
@@ -220,11 +219,12 @@ export default class DefaultApi {
      * Make a move in a game
      * @param {String} game ID of game
      * @param {String} token token of player making move
-     * @param {Object.<String, module:model/Position>} position token of player making move
+     * @param {Number} i column in grid
+     * @param {Number} j row in grid
      * @param {module:api/DefaultApi~playCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link String}
      */
-    play(game, token, position, callback) {
+    play(game, token, i, j, callback) {
       let postBody = null;
       // verify the required parameter 'game' is set
       if (game === undefined || game === null) {
@@ -234,9 +234,13 @@ export default class DefaultApi {
       if (token === undefined || token === null) {
         throw new Error("Missing the required parameter 'token' when calling play");
       }
-      // verify the required parameter 'position' is set
-      if (position === undefined || position === null) {
-        throw new Error("Missing the required parameter 'position' when calling play");
+      // verify the required parameter 'i' is set
+      if (i === undefined || i === null) {
+        throw new Error("Missing the required parameter 'i' when calling play");
+      }
+      // verify the required parameter 'j' is set
+      if (j === undefined || j === null) {
+        throw new Error("Missing the required parameter 'j' when calling play");
       }
 
       let pathParams = {
@@ -244,7 +248,8 @@ export default class DefaultApi {
       };
       let queryParams = {
         'token': token,
-        'position': position
+        'i': i,
+        'j': j
       };
       let headerParams = {
       };

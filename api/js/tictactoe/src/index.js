@@ -22,7 +22,6 @@ import MatchPair from './model/MatchPair';
 import MatchPairAllOf from './model/MatchPairAllOf';
 import MatchPending from './model/MatchPending';
 import MatchPendingAllOf from './model/MatchPendingAllOf';
-import Position from './model/Position';
 import Winner from './model/Winner';
 import WinnerAllOf from './model/WinnerAllOf';
 import DefaultApi from './api/DefaultApi';
@@ -119,12 +118,6 @@ export {
      * @property {module:model/MatchPendingAllOf}
      */
     MatchPendingAllOf,
-
-    /**
-     * The Position model constructor.
-     * @property {module:model/Position}
-     */
-    Position,
 
     /**
      * The Winner model constructor.

@@ -199,12 +199,20 @@ paths:
           required: true
           schema:
             type: string
-        - name: position
+        - name: i
           in: query
-          description: token of player making move
+          description: column in grid
           required: true
           schema:
-            $ref: '#/components/schemas/Position'
+            type: integer
+            format: int32
+        - name: j
+          in: query
+          description: row in grid
+          required: true
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
           description: game response
@@ -272,18 +280,6 @@ components:
           format: int32
         message:
           type: string
-    Position:
-      type: object
-      required:
-        - i
-        - j
-      properties:
-        i:
-          type: integer
-          format: int32
-        j:
-          type: integer
-          format: int32
     Grid:
       allOf:
         - type: object

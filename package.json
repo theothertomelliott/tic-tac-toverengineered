@@ -20,13 +20,15 @@
     "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "jsclient": "openapi-generator-cli generate -i services/api/pkg/tictactoeapi/tictactoe.openapi.yaml -g javascript -o api/js/tictactoe && npm install --save api/js/tictactoe"
+    "jsclient": "openapi-generator-cli generate -i services/api/pkg/tictactoeapi/tictactoe.openapi.yaml -g javascript -o api/js/tictactoe && npm install --save api/js/tictactoe",
+    "goserver": "openapi-generator-cli generate -i services/api/pkg/tictactoeapi/tictactoe.openapi.yaml -g go-server -o api/go/server/tictactoe -p outputAsLibrary=true"
   },
   "dependencies": {
     "install": "^0.13.0",
     "querystring-es3": "^0.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tic_tac_toe": "file:api/js/tictactoe"
+    "tic_tac_toe": "file:api/js/tictactoe",
+    "universal-cookie": "^4.0.4"
   }
 }

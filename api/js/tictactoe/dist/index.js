@@ -69,12 +69,6 @@ Object.defineProperty(exports, "MatchPendingAllOf", {
     return _MatchPendingAllOf["default"];
   }
 });
-Object.defineProperty(exports, "Position", {
-  enumerable: true,
-  get: function get() {
-    return _Position["default"];
-  }
-});
 Object.defineProperty(exports, "Winner", {
   enumerable: true,
   get: function get() {
@@ -107,8 +101,6 @@ var _MatchPairAllOf = _interopRequireDefault(require("./model/MatchPairAllOf"));
 var _MatchPending = _interopRequireDefault(require("./model/MatchPending"));
 
 var _MatchPendingAllOf = _interopRequireDefault(require("./model/MatchPendingAllOf"));
-
-var _Position = _interopRequireDefault(require("./model/Position"));
 
 var _Winner = _interopRequireDefault(require("./model/Winner"));
 

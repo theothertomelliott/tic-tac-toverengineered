@@ -32,8 +32,8 @@ func (s *server) Play(ctx echo.Context, g string, params tictactoeapi.PlayParams
 		gameID,
 		player.Mark(mark),
 		grid.Position{
-			X: int(params.Position.I),
-			Y: int(params.Position.J),
+			X: int(params.I),
+			Y: int(params.J),
 		},
 	)
 	if err != nil {

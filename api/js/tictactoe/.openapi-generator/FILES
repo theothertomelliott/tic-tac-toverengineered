@@ -1,5 +1,6 @@
 .babelrc
 .gitignore
+.openapi-generator-ignore
 .travis.yml
 README.md
 docs/DefaultApi.md
@@ -12,7 +13,6 @@ docs/MatchPair.md
 docs/MatchPairAllOf.md
 docs/MatchPending.md
 docs/MatchPendingAllOf.md
-docs/Position.md
 docs/Winner.md
 docs/WinnerAllOf.md
 git_push.sh
@@ -30,6 +30,17 @@ src/model/MatchPair.js
 src/model/MatchPairAllOf.js
 src/model/MatchPending.js
 src/model/MatchPendingAllOf.js
-src/model/Position.js
 src/model/Winner.js
 src/model/WinnerAllOf.js
+test/api/DefaultApi.spec.js
+test/model/Error.spec.js
+test/model/Grid.spec.js
+test/model/GridAllOf.spec.js
+test/model/Match.spec.js
+test/model/MatchAllOf.spec.js
+test/model/MatchPair.spec.js
+test/model/MatchPairAllOf.spec.js
+test/model/MatchPending.spec.js
+test/model/MatchPendingAllOf.spec.js
+test/model/Winner.spec.js
+test/model/WinnerAllOf.spec.js

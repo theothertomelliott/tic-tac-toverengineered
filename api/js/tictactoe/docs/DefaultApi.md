@@ -201,7 +201,7 @@ No authorization required
 
 ## play
 
-> String play(game, token, position)
+> String play(game, token, i, j)
 
 
 
@@ -215,8 +215,9 @@ import TicTacToe from 'tic_tac_toe';
 let apiInstance = new TicTacToe.DefaultApi();
 let game = "game_example"; // String | ID of game
 let token = "token_example"; // String | token of player making move
-let position = {key: null}; // Position | token of player making move
-apiInstance.play(game, token, position, (error, data, response) => {
+let i = 56; // Number | column in grid
+let j = 56; // Number | row in grid
+apiInstance.play(game, token, i, j, (error, data, response) => {
   if (error) {
     console.error(error);
   } else {
@@ -232,7 +233,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **game** | **String**| ID of game | 
  **token** | **String**| token of player making move | 
- **position** | [**Position**](.md)| token of player making move | 
+ **i** | **Number**| column in grid | 
+ **j** | **Number**| row in grid | 
 
 ### Return type
 

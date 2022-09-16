@@ -16,19 +16,15 @@ func TestPlay(t *testing.T) {
 
 	playRes, err := client.PlayWithResponse(context.Background(), player1.GameID, &tictactoeapi.PlayParams{
 		Token: player1.Token,
-		Position: tictactoeapi.Position{
-			I: 0,
-			J: 0,
-		},
+		I:     0,
+		J:     0,
 	})
 	checkResponse(t, playRes, http.StatusOK, err)
 
 	playRes, err = client.PlayWithResponse(context.Background(), player2.GameID, &tictactoeapi.PlayParams{
 		Token: player2.Token,
-		Position: tictactoeapi.Position{
-			I: 0,
-			J: 1,
-		},
+		I:     0,
+		J:     1,
 	})
 	checkResponse(t, playRes, http.StatusOK, err)
 
@@ -54,10 +50,8 @@ func TestPlayOutOfTurn(t *testing.T) {
 
 	playRes, err := client.PlayWithResponse(context.Background(), player2.GameID, &tictactoeapi.PlayParams{
 		Token: player2.Token,
-		Position: tictactoeapi.Position{
-			I: 0,
-			J: 0,
-		},
+		I:     0,
+		J:     0,
 	})
 	// TODO: This should return a different error
 	checkResponse(t, playRes, http.StatusInternalServerError, err)
@@ -72,10 +66,8 @@ func TestPlayWrongGame(t *testing.T) {
 
 	playRes, err := client.PlayWithResponse(context.Background(), player1a.GameID, &tictactoeapi.PlayParams{
 		Token: player1.Token,
-		Position: tictactoeapi.Position{
-			I: 0,
-			J: 0,
-		},
+		I:     0,
+		J:     0,
 	})
 	checkResponse(t, playRes, http.StatusUnauthorized, err)
 }
@@ -88,10 +80,8 @@ func TestPlayInvalidToken(t *testing.T) {
 
 	playRes, err := client.PlayWithResponse(context.Background(), player1.GameID, &tictactoeapi.PlayParams{
 		Token: "invalid",
-		Position: tictactoeapi.Position{
-			I: 0,
-			J: 0,
-		},
+		I:     0,
+		J:     0,
 	})
 	checkResponse(t, playRes, http.StatusUnauthorized, err)
 }

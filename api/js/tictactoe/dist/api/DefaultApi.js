@@ -17,8 +17,6 @@ var _MatchPair = _interopRequireDefault(require("../model/MatchPair"));
 
 var _MatchPending = _interopRequireDefault(require("../model/MatchPending"));
 
-var _Position = _interopRequireDefault(require("../model/Position"));
-
 var _Winner = _interopRequireDefault(require("../model/Winner"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -203,14 +201,15 @@ var DefaultApi = /*#__PURE__*/function () {
      * Make a move in a game
      * @param {String} game ID of game
      * @param {String} token token of player making move
-     * @param {Object.<String, module:model/Position>} position token of player making move
+     * @param {Number} i column in grid
+     * @param {Number} j row in grid
      * @param {module:api/DefaultApi~playCallback} callback The callback function, accepting three arguments: error, data, response
      * data is of type: {@link String}
      */
 
   }, {
     key: "play",
-    value: function play(game, token, position, callback) {
+    value: function play(game, token, i, j, callback) {
       var postBody = null; // verify the required parameter 'game' is set
 
       if (game === undefined || game === null) {
@@ -220,11 +219,16 @@ var DefaultApi = /*#__PURE__*/function () {
 
       if (token === undefined || token === null) {
         throw new _Error["default"]("Missing the required parameter 'token' when calling play");
-      } // verify the required parameter 'position' is set
+      } // verify the required parameter 'i' is set
 
 
-      if (position === undefined || position === null) {
-        throw new _Error["default"]("Missing the required parameter 'position' when calling play");
+      if (i === undefined || i === null) {
+        throw new _Error["default"]("Missing the required parameter 'i' when calling play");
+      } // verify the required parameter 'j' is set
+
+
+      if (j === undefined || j === null) {
+        throw new _Error["default"]("Missing the required parameter 'j' when calling play");
       }
 
       var pathParams = {
@@ -232,7 +236,8 @@ var DefaultApi = /*#__PURE__*/function () {
       };
       var queryParams = {
         'token': token,
-        'position': position
+        'i': i,
+        'j': j
       };
       var headerParams = {};
       var formParams = {};

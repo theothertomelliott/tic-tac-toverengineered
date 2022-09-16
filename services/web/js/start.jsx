@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import Cookies from 'universal-cookie';
 var TicTacToe = require('tic_tac_toe');
 
 var api = new TicTacToe.DefaultApi(new TicTacToe.ApiClient("http://localhost:8081"));
@@ -9,27 +10,38 @@ class Game extends React.Component {
         super(props);
         this.state = {
             currentPlayer: '',
-            winner: {}
+            winner: {},
+            grid: []
         };
+        this.loadState();       
+    }
 
+    loadState = () => {
         let g = this;
-        api.currentPlayer(props.id, function (error, data, response) {
+        api.currentPlayer(this.props.id, function (error, data, response) {
             if (error) {
                 console.error(error);
             } else {
                 g.setState({currentPlayer: data});
             }
         })
-        api.winner(props.id, function (error, data, response) {
+        api.winner(this.props.id, function (error, data, response) {
             if (error) {
                 console.error(error);
             } else {
                 console.log(data);
                 g.setState({winner: data});
             }
-        })
-
-    }
+        });
+        api.gameGrid(this.props.id,
+            function (error, data, response) {
+                if (error) {
+                    console.error(error);
+                } else {
+                    g.setState({grid: data.grid});
+                }
+            });
+      };
 
     render() {
         let finished = this.state.winner.winner || this.state.winner.draw;
@@ -40,10 +52,31 @@ class Game extends React.Component {
             />
             <Grid 
             id={this.props.id}
+            grid={this.state.grid}
             play={(x,y) => {
                 if (!finished) {
-                    // TODO: Use the API to make a move
-                    location.href = "/" + this.props.id + "/play?player=" + this.state.currentPlayer + "&pos={\"i\":" + x + ",\"j\":" + y + "}";
+                    const KeyPlayerTokenX = "TicTacToePlayerToken-X";
+                    const KeyPlayerTokenO = "TicTacToePlayerToken-O";
+                    var keyPlayerToken = KeyPlayerTokenO
+                    if (this.state.currentPlayer == 'X') {
+                        keyPlayerToken = KeyPlayerTokenX;
+                    }
+                    const cookies = new Cookies();
+                    var playerToken = cookies.get(keyPlayerToken);
+                    console.log(playerToken);
+                    var playerTokenBuf = atob(playerToken);
+                    console.log(playerTokenBuf);
+                    console.log(x);
+                    console.log(y);
+                    var g = this;
+                    api.play(this.props.id, playerTokenBuf, x, y, function(error, data, response){
+                        if (error) {
+                            console.error(error);
+                        } else {
+                            console.log(data);
+                            g.loadState();
+                        }
+                    });
                 }
             }}
             />
@@ -72,22 +105,12 @@ function GameHeader(props) {
 class Grid extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {grid: false};
-        var g = this;
-        api.gameGrid(props.id,
-            function (error, data, response) {
-                if (error) {
-                    console.error(error);
-                } else {
-                    g.setState({grid: data.grid});
-                }
-            });
     }
 
     render() {
         return <div className="grid grid-cols-3 gap-2 my-5">
                 <GridInner 
-                grid={this.state.grid}
+                grid={this.props.grid}
                 play={this.props.play}/>
             </div>;
     }

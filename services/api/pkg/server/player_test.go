@@ -22,10 +22,8 @@ func TestCurrentPlayer(t *testing.T) {
 
 	playRes, err := client.PlayWithResponse(context.Background(), player1.GameID, &tictactoeapi.PlayParams{
 		Token: player1.Token,
-		Position: tictactoeapi.Position{
-			I: 0,
-			J: 0,
-		},
+		I:     0,
+		J:     0,
 	})
 	checkResponse(t, playRes, http.StatusOK, err)
 

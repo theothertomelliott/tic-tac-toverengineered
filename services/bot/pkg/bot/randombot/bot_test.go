@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot/randombot"
 )
 
@@ -44,7 +44,7 @@ func TestBotSelectsTheOneValidSpace(t *testing.T) {
 		if err != nil {
 			t.Errorf("test %d> unexpected error: %v", i, err)
 		}
-		expected := tictactoeapi.Position{I: 2, J: 1}
+		expected := bot.Position{I: 2, J: 1}
 		if got != expected {
 			t.Errorf("expected %+v, got %+v", expected, got)
 		}

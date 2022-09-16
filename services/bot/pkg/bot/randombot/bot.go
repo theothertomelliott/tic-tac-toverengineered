@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/bot/pkg/bot"
 )
 
@@ -21,14 +20,14 @@ type randombot struct {
 	random *rand.Rand
 }
 
-func (r *randombot) Move(mark player.Mark, state [][]string) (tictactoeapi.Position, error) {
-	var valid []tictactoeapi.Position
+func (r *randombot) Move(mark player.Mark, state [][]string) (bot.Position, error) {
+	var valid []bot.Position
 	for i, row := range state {
 		for j, m := range row {
 			if m == "" {
 				valid = append(
 					valid,
-					tictactoeapi.Position{
+					bot.Position{
 						I: int32(i),
 						J: int32(j),
 					},
@@ -37,7 +36,7 @@ func (r *randombot) Move(mark player.Mark, state [][]string) (tictactoeapi.Posit
 		}
 	}
 	if len(valid) == 0 {
-		return tictactoeapi.Position{}, fmt.Errorf("no valid moves")
+		return bot.Position{}, fmt.Errorf("no valid moves")
 	}
 	return valid[r.random.Intn(len(valid))], nil
 }

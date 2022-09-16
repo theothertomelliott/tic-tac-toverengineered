@@ -7,9 +7,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 )
+
+type Position struct {
+	I int32 `json:"i"`
+	J int32 `json:"j"`
+}
 
 func (s *Server) play(w http.ResponseWriter, req *http.Request) {
 	gameID := game.ID(mux.Vars(req)["game"])
@@ -40,14 +44,14 @@ func (s *Server) play(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var pos tictactoeapi.Position
+	var pos Position
 	err = json.Unmarshal([]byte(posParams[0]), &pos)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = s.apiclient.Play(req.Context(), string(gameID), string(playerTokenBytes), pos)
+	err = s.apiclient.Play(req.Context(), string(gameID), string(playerTokenBytes), pos.I, pos.J)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

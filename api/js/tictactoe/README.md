@@ -142,7 +142,6 @@ Class | Method | HTTP request | Description
  - [TicTacToe.MatchPairAllOf](docs/MatchPairAllOf.md)
  - [TicTacToe.MatchPending](docs/MatchPending.md)
  - [TicTacToe.MatchPendingAllOf](docs/MatchPendingAllOf.md)
- - [TicTacToe.Position](docs/Position.md)
  - [TicTacToe.Winner](docs/Winner.md)
  - [TicTacToe.WinnerAllOf](docs/WinnerAllOf.md)
 

@@ -9,8 +9,7 @@ import (
 	"time"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/opentelemetry"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/services/space/internal"
@@ -46,8 +45,11 @@ func main() {
 		log.Fatalf("loading position from env:  %v", err)
 	}
 
-	defaultmonitoring.Init(fmt.Sprintf("space-%v", port))
-	defer monitoring.Close()
+	cleanup, err := opentelemetry.Setup(fmt.Sprintf("space-%v", port))
+	if err != nil {
+		log.Fatalf("could not configure telemetry: %v", err)
+	}
+	defer cleanup()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

@@ -10,12 +10,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/opentelemetry"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi/tictactoeapiclient"
 	web "github.com/theothertomelliott/tic-tac-toverengineered/services/web/internal"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
 func getAPIBaseURL() string {
@@ -27,12 +27,15 @@ func getAPIBaseURL() string {
 
 func main() {
 	version.Println()
-	defaultmonitoring.Init("web")
-	defer monitoring.Close()
+	cleanup, err := opentelemetry.Setup("web")
+	if err != nil {
+		log.Fatalf("could not configure telemetry: %v", err)
+	}
+	defer cleanup()
 
 	log.Println("Starting web")
 	client := &http.Client{
-		Transport: monitoring.WrapHTTPTransport(http.DefaultTransport),
+		Transport: otelhttp.NewTransport(http.DefaultTransport),
 		Timeout:   time.Second * 5,
 	}
 

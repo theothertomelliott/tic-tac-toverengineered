@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc/filters"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -21,7 +22,16 @@ func New(port int) *Server {
 // The provided grpc health server (google.golang.org/grpc/health) will also be hosted on this port.
 func NewWithHealthServer(port int, healthServer *health.Server) *Server {
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(monitoring.UnaryServerInterceptor()),
+		grpc.UnaryInterceptor(
+			otelgrpc.UnaryServerInterceptor(
+				// Do not trace health checks
+				otelgrpc.WithInterceptorFilter(
+					filters.Not(
+						filters.HealthCheck(),
+					),
+				),
+			),
+		),
 	)
 
 	// Add health check for all rpc servers

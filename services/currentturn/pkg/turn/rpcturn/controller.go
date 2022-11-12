@@ -3,10 +3,10 @@ package rpcturn
 import (
 	context "context"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	grpc "google.golang.org/grpc"
 )
 
@@ -16,7 +16,7 @@ func ConnectController(target string) (*Controller, error) {
 	c.conn, err = grpc.Dial(
 		target,
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
 	)
 	if err != nil {
 		return nil, err

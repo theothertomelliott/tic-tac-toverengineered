@@ -4,8 +4,7 @@ import (
 	"log"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/defaultmonitoring"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/opentelemetry"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
@@ -16,8 +15,11 @@ import (
 
 func main() {
 	version.Println()
-	defaultmonitoring.Init("currentturn")
-	defer monitoring.Close()
+	cleanup, err := opentelemetry.Setup("currentturn")
+	if err != nil {
+		log.Fatalf("could not configure telemetry: %v", err)
+	}
+	defer cleanup()
 
 	port := env.MustGetInt("PORT", 8080)
 	grpcuiPort := env.MustGetInt("GRPCUI_PORT", 8081)

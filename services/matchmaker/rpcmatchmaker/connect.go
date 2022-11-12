@@ -1,8 +1,8 @@
 package rpcmatchmaker
 
 import (
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 )
 
@@ -12,7 +12,7 @@ func Connect(target string) (matchmaker.MatchMakerClient, error) {
 	conn, err := grpc.Dial(
 		target,
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
 	)
 	if err != nil {
 		return nil, err

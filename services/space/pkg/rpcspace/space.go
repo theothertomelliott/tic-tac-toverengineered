@@ -3,9 +3,10 @@ package rpcspace
 import (
 	context "context"
 
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc/filters"
 	grpc "google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
 )
@@ -16,7 +17,13 @@ func ConnectSpace(target string) (*Space, error) {
 	c.conn, err = grpc.Dial(
 		target,
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor(
+			// Do not trace health checks
+			otelgrpc.WithInterceptorFilter(
+				filters.Not(
+					filters.HealthCheck(),
+				),
+			))),
 	)
 	if err != nil {
 		return nil, err

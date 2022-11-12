@@ -45,6 +45,20 @@ if bare:
         "mongodb",
         serve_cmd="docker run --rm -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
     )
+    local_resource(
+        "jaeger",
+        serve_cmd="""docker run --rm \
+            --platform=linux/amd64 \
+            -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+            -p 5775:5775/udp \
+            -p 6831:6831/udp \
+            -p 6832:6832/udp \
+            -p 5778:5778 \
+            -p 16686:16686 \
+            -p 14268:14268 \
+            -p 9411:9411 \
+            jaegertracing/all-in-one:1.6"""
+    )
 else:
     lightstep_access_token=""
 
@@ -87,6 +101,7 @@ def server(name, port_forwards=[], port="8080", grpcui_port="8081"):
                 "PORT": str(port),
                 "GRPCUI_PORT": str(grpcui_port),
                 "MONGO_CONN": "mongodb://admin:password@localhost:27017",
+                "OTEL_JAEGER_ENDPOINT": "http://localhost:14268/api/traces",
             },
             deps = ["services/" + name, "common"],
             labels=[name]
@@ -133,6 +148,7 @@ def space(name,ports=[]):
                         "XPOS": str(i),
                         "YPOS": str(j),
                         "MONGO_CONN": "mongodb://admin:password@localhost:27017",
+                        "OTEL_JAEGER_ENDPOINT": "http://localhost:14268/api/traces",
                     },
                     deps = ["services/" + name, "common"],
                     resource_deps=[name + "-build"],

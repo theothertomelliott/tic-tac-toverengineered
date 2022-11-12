@@ -9,6 +9,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/opentelemetry"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/server"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/checker/pkg/win/rpcchecker"
@@ -17,9 +19,17 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid/rpcgrid"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/rpcmatchmaker"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker/unsignedtokens"
+	"go.opentelemetry.io/contrib/instrumentation/github.com/labstack/echo/otelecho"
 )
 
 func main() {
+	version.Println()
+	cleanup, err := opentelemetry.Setup("api")
+	if err != nil {
+		log.Fatalf("could not configure telemetry: %v", err)
+	}
+	defer cleanup()
+
 	log.Println("Starting api server")
 	g, err := rpcgrid.ConnectGrid(getGridServerTarget())
 	if err != nil {
@@ -58,6 +68,7 @@ func main() {
 	e := echo.New()
 	e.Pre(healthCheckMiddleWare(hc))
 	e.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
+	e.Use(otelecho.Middleware("api"))
 	tictactoeapi.RegisterHandlers(e, apiServer)
 
 	port := env.Get("PORT", "8080")

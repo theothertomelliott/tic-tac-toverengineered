@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/fullstorydev/grpcui/standalone"
-	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 )
 
@@ -23,7 +23,7 @@ func Start(port, grpcuiPort int) error {
 	cc, err := grpc.Dial(
 		serverAddr,
 		grpc.WithInsecure(),
-		grpc.WithUnaryInterceptor(monitoring.UnaryClientInterceptor()),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
 	)
 	if err != nil {
 		return fmt.Errorf("failed to connect to localhost: %w", err)

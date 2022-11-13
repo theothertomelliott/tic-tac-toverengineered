@@ -18,6 +18,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
 )
 
 func getPosition() (int, int, error) {
@@ -54,9 +55,12 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	opts := options.Client()
+	opts.Monitor = otelmongo.NewMonitor()
+	opts.ApplyURI(os.Getenv("MONGO_CONN"))
 	client, err := mongo.Connect(
 		ctx,
-		options.Client().ApplyURI(os.Getenv("MONGO_CONN")),
+		opts,
 	)
 	if err != nil {
 		log.Fatalf("connecting to mongo:  %v", err)

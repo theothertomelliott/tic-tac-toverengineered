@@ -17,6 +17,8 @@ spec:
         - name: matchmaker
           image: docker.io/tictactoverengineered/matchmaker:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: REPO_SERVER_TARGET
               value: "gamerepo:80"
           ports:

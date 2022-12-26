@@ -2,6 +2,11 @@ version_settings(
     check_updates=True,
     constraint='>=0.22.2'
 ) 
+
+v1alpha1.extension_repo(name='tilt-grafana', url='http://github.com/theothertomelliott/tilt-grafana')
+v1alpha1.extension(name='tilt-grafana', repo_name='tilt-grafana', repo_path='')
+load('ext://tilt-grafana', 'grafana_kubernetes', 'grafana_compose', 'metrics_endpoint')
+
 load('ext://namespace', 'namespace_yaml')
 
 update_settings(max_parallel_updates=5)
@@ -40,28 +45,23 @@ local_resource(
     labels=["test"]
 )
 
+endpoints = {}
+
 if bare:
+    endpoints = grafana_compose(
+        # metrics_endpoints=[
+        #     metrics_endpoint(name='generator', port=2112)
+        # ]
+    )
+
     local_resource(
         "mongodb",
         serve_cmd="docker run --rm -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
     )
-    local_resource(
-        "jaeger",
-        serve_cmd="""docker run --rm \
-            --platform=linux/amd64 \
-            -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
-            -p 5775:5775/udp \
-            -p 6831:6831/udp \
-            -p 6832:6832/udp \
-            -p 5778:5778 \
-            -p 16686:16686 \
-            -p 14268:14268 \
-            -p 9411:9411 \
-            jaegertracing/all-in-one:1.6"""
-    )
 else:
-    lightstep_access_token=""
+    endpoints = grafana_kubernetes()
 
+    lightstep_access_token=""
     if os.path.exists("secrets.yaml"):
         secrets = read_yaml("secrets.yaml")
         lightstep_access_token=secrets["lightstep"]["access_token"]
@@ -74,18 +74,9 @@ else:
         namespace='tictactoe',
         set=[
             "mongodb.statefulset=true",
+            "jaeger.http=http://" + endpoints.jaeger_http + "/api/traces",
             ],
     ))
-
-    # Load the Tilt support Helm chart
-    k8s_yaml(helm(
-        'tilt/charts/otel',
-        namespace='tictactoe',
-        set=[
-            "lightstep.access_token=" + lightstep_access_token,
-            ],
-    ))
-    k8s_resource("jaeger", port_forwards="16686:16686")
 
     k8s_resource("mongodb-standalone", port_forwards="27017:27017")
 
@@ -101,7 +92,7 @@ def server(name, port_forwards=[], port="8080", grpcui_port="8081"):
                 "PORT": str(port),
                 "GRPCUI_PORT": str(grpcui_port),
                 "MONGO_CONN": "mongodb://admin:password@localhost:27017",
-                "OTEL_JAEGER_ENDPOINT": "http://localhost:14268/api/traces",
+                "OTEL_JAEGER_ENDPOINT": "http://" + endpoints.jaeger_http + "/api/traces",
             },
             deps = ["services/" + name, "common"],
             labels=[name]

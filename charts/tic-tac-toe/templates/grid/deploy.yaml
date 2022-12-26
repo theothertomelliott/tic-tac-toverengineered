@@ -17,6 +17,8 @@ spec:
         - name: grid
           image: docker.io/tictactoverengineered/grid:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: placeholder
               value: TEST
             - name: SPACE-0-0

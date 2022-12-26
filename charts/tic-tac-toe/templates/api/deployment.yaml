@@ -17,6 +17,8 @@ spec:
         - name: api
           image: docker.io/tictactoverengineered/api:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: REPO_SERVER_TARGET
               value: "gamerepo:80"
             - name: GRID_SERVER_TARGET

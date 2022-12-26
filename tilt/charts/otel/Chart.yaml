@@ -1,5 +1,0 @@
-apiVersion: v2
-name: tilt-otel
-description: Helper chart for testing locally with OpenTelemetry
-type: application
-version: 0.0.0

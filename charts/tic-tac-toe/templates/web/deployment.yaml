@@ -17,6 +17,8 @@ spec:
         - name: web
           image: docker.io/tictactoverengineered/web:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: API_BASE_URL
               value: "http://api" # TODO: Add route: {{ .Values.routes.api }}
             - name: ROUTE_PREFIX

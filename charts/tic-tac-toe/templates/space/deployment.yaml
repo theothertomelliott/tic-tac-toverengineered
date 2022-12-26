@@ -20,6 +20,8 @@ spec:
       - name: space-{{ $i }}-{{ $j }}
         image: docker.io/tictactoverengineered/space:{{ $root.Chart.Version }}
         env:
+          - name: OTEL_JAEGER_ENDPOINT
+            value:  {{ $root.Values.jaeger.http }}
           - name: PORT
             value: "80{{ $i }}{{ $j }}"
           - name: XPOS

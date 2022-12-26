@@ -17,6 +17,8 @@ spec:
         - name: currentturn
           image: docker.io/tictactoverengineered/currentturn:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: placeholder
               value: TEST
           ports:

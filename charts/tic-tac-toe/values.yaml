@@ -6,3 +6,5 @@ hostname: localhost
 routes:
     api: /api/
     web: /
+jaeger:
+    http: ""

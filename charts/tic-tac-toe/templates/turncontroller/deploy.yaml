@@ -17,6 +17,8 @@ spec:
         - name: turncontroller
           image: docker.io/tictactoverengineered/turncontroller:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: GRID_SERVER_TARGET
               value: "grid:80"
             - name: CURRENT_TURN_SERVER_TARGET

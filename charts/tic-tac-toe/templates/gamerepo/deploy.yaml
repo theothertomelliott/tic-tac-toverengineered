@@ -17,6 +17,8 @@ spec:
         - name: gamerepo
           image: docker.io/tictactoverengineered/gamerepo:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: MONGO_CONN
               value: {{ template "templates.mongodb.connection" . }}
           ports:

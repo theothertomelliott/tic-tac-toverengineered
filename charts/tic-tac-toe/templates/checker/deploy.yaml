@@ -17,6 +17,8 @@ spec:
         - name: checker
           image: docker.io/tictactoverengineered/checker:{{ $.Chart.Version }}
           env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
             - name: GRID_SERVER_TARGET
               value: "grid:80"
           ports:

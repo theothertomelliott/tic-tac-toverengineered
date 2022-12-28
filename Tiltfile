@@ -38,8 +38,16 @@ local_resource(
 )
 
 local_resource(
-    'play',
-    cmd='go run ./services/bot/cmd/onegame http://localhost:8081',
+    'Playwright - Run a Game',
+    cmd='npx playwright test tests/playwright/game.spec.js',
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+    labels=["test"]
+)
+
+local_resource(
+    'Artillery - Load Test Games',
+    cmd='artillery run tests/artillery/games.yml   ',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
     labels=["test"]

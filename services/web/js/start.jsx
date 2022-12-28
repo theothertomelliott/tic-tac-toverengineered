@@ -124,6 +124,7 @@ function GridInner(props) {
                 spaces.push(
                     <GridSpace
                         key={"space:" + i + "," + j}
+                        id={"space:" + i + "," + j}
                         content={space}
                         play={() => {
                            props.play(i,j);
@@ -144,6 +145,7 @@ function GridSpace(props) {
     }
     return <div className="block">
         <button
+            id={props.id}
             className="block w-full rounded-md text-white font-extrabold text-center hover:bg-blue-600 bg-blue-500 p-7 hover:shadow-lg focus:outline-none"
             type="button"
             onClick={props.play}

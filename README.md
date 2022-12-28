@@ -22,6 +22,8 @@ monitoring, tracing and observability tooling.
 - [TailwindCSS](https://tailwindcss.com/)
 - [OpenTelemetry](https://opentelemetry.io/)
 - [Lightstep](https://lightstep.com/)
+- [Playwright](https://playwright.dev/)
+- [Artillery](https://www.artillery.io/) with [artillery-engine-playwright](https://github.com/artilleryio/artillery-engine-playwright)
 
 ## Building and Running Locally
 

@@ -23,7 +23,7 @@ disable_telemetry = "disable_telemetry" in args and args["disable_telemetry"]
 
 local_resource(
     'tests',
-    cmd='go test --short ./...',
+    cmd='make test short',
     deps=['.'],
     ignore=['.output'],
     labels=["test"],

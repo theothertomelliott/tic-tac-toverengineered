@@ -61,4 +61,4 @@ jobs:
       - name: Install tilt
         run: curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
       - name: Run tilt
-        run: tilt ci
+        run: tilt ci -- --disable_telemetry

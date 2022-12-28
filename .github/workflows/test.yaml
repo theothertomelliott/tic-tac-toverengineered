@@ -52,7 +52,9 @@ jobs:
         uses: ./.github/actions/dependencies
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.4.0
       - name: Install tilt
         run: curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
       - name: Run tilt
-        run: tilt
+        run: tilt ci

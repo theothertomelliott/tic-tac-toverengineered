@@ -38,7 +38,11 @@ jobs:
         coverageLocations: |
           ${{github.workspace}}/*.out:gocov
         prefix: github.com/theothertomelliott/tic-tac-toverengineered
-    - name: Build binaries and supporting files
-      run: make services
-    - name: Build Docker images
-      run: make docker
+  docker:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Build binaries and supporting files
+        run: make services
+      - name: Build Docker images
+        run: make docker

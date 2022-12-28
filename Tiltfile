@@ -14,10 +14,12 @@ update_settings(max_parallel_updates=5)
 # Command-line flags
 config.define_bool("bare",args=False,usage="If set, runs resources as bare processes without kubernetes")
 config.define_bool("bots",args=False,usage="If set, run a set of bots to automatically play games")
+config.define_bool("disable_telemetry",args=False,usage="Turn off telemetry resources")
 
 args = config.parse()
 bare = "bare" in args and args["bare"]
 bots = "bots" in args and args["bots"]
+disable_telemetry = "disable_telemetry" in args and args["disable_telemetry"]
 
 local_resource(
     'tests',
@@ -53,9 +55,14 @@ local_resource(
     labels=["test"]
 )
 
-endpoints = {}
+endpoints = struct(
+    jaeger_http="",
+)
 
-if bare:
+def telemetry_bare():
+    if disable_telemetry:
+        return
+
     endpoints = grafana_compose(
         # metrics_endpoints=[
         #     metrics_endpoint(name='generator', port=2112)
@@ -66,8 +73,16 @@ if bare:
         "mongodb",
         serve_cmd="docker run --rm -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
     )
-else:
+
+def telemetry_kubernetes():
+    if disable_telemetry:
+        return
     endpoints = grafana_kubernetes()
+
+if bare:
+    telemetry_bare()
+else:
+    telemetry_kubernetes()
 
     lightstep_access_token=""
     if os.path.exists("secrets.yaml"):

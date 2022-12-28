@@ -52,6 +52,10 @@ jobs:
         uses: ./.github/actions/dependencies
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: azure/setup-helm@v3
+        with:
+          version: 'v3.9.0'
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.4.0
       - name: Install tilt

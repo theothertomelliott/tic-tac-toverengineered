@@ -3,6 +3,10 @@ description: 'sets up common dependencies for all jobs'
 runs:
   using: composite
   steps:
+    - name: Install Protoc
+      uses: arduino/setup-protoc@v1
+      with:
+        version: '3.17.0'
     - uses: actions/setup-go@v2
       with:
         go-version: '^1.16.4' # The Go version to download (if necessary) and use.

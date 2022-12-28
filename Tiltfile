@@ -23,7 +23,7 @@ disable_telemetry = "disable_telemetry" in args and args["disable_telemetry"]
 
 local_resource(
     'tests',
-    cmd='make test short',
+    cmd='make testshort',
     deps=['.'],
     ignore=['.output'],
     labels=["test"],
@@ -32,7 +32,7 @@ local_resource(
 
 local_resource(
     'tests (long)',
-    cmd='go test ./...',
+    cmd='make test',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
     labels=["test"],

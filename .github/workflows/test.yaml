@@ -42,3 +42,9 @@ jobs:
         run: make services
       - name: Build Docker images
         run: make docker
+  tilt:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Install tilt
+        run: curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash

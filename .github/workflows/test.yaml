@@ -60,5 +60,7 @@ jobs:
         uses: helm/kind-action@v1.4.0
       - name: Install tilt
         run: curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+      - name: Install playwright browsers
+        run: npx playwright install --with-deps
       - name: Run tilt
         run: tilt ci -- --disable_telemetry

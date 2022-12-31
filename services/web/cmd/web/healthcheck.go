@@ -52,6 +52,7 @@ func serveWaitingForApiMessage(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusServiceUnavailable)
 	err = t.Execute(w, struct{}{})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

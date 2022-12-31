@@ -42,9 +42,8 @@ local_resource(
 local_resource(
     'Playwright - Run a Game',
     cmd='npx playwright test tests/playwright/game.spec.js',
-    trigger_mode = TRIGGER_MODE_MANUAL,
-    auto_init = False,
-    labels=["test"]
+    labels=["test"],
+    resource_deps=["web"]
 )
 
 local_resource(
@@ -63,7 +62,7 @@ def telemetry_bare():
     if disable_telemetry:
         return
 
-    endpoints = grafana_compose(
+    return grafana_compose(
         # metrics_endpoints=[
         #     metrics_endpoint(name='generator', port=2112)
         # ]
@@ -72,17 +71,17 @@ def telemetry_bare():
 def telemetry_kubernetes():
     if disable_telemetry:
         return
-    endpoints = grafana_kubernetes()
+    return grafana_kubernetes()
 
 if bare:
-    telemetry_bare()
+    endpoints = telemetry_bare()
 
     local_resource(
         "mongodb",
         serve_cmd="docker run --rm -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
     )
 else:
-    telemetry_kubernetes()
+    endpoints = telemetry_kubernetes()
 
     lightstep_access_token=""
     if os.path.exists("secrets.yaml"):

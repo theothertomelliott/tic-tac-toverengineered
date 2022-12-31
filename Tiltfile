@@ -69,11 +69,6 @@ def telemetry_bare():
         # ]
     )
 
-    local_resource(
-        "mongodb",
-        serve_cmd="docker run --rm -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
-    )
-
 def telemetry_kubernetes():
     if disable_telemetry:
         return
@@ -81,6 +76,11 @@ def telemetry_kubernetes():
 
 if bare:
     telemetry_bare()
+
+    local_resource(
+        "mongodb",
+        serve_cmd="docker run --rm -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password -p 27017:27017 mongo:4.0.8",
+    )
 else:
     telemetry_kubernetes()
 

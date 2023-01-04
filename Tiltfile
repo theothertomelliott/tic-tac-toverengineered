@@ -46,8 +46,8 @@ local_resource(
 )
 
 local_resource(
-    'Artillery - Load Test Games',
-    cmd='artillery run tests/artillery/games.yml   ',
+    'k6 - Load Test ',
+    cmd='k6 run ./tests/k6/test.js',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
     labels=["test"]

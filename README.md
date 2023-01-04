@@ -23,7 +23,7 @@ monitoring, tracing and observability tooling.
 - [OpenTelemetry](https://opentelemetry.io/)
 - [Lightstep](https://lightstep.com/)
 - [Playwright](https://playwright.dev/)
-- [Artillery](https://www.artillery.io/) with [artillery-engine-playwright](https://github.com/artilleryio/artillery-engine-playwright)
+- [k6](https://k6.io/)
 
 ## Building and Running Locally
 

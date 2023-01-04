@@ -3,6 +3,7 @@ package grid
 import (
 	"context"
 	"fmt"
+	"sync"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
@@ -46,17 +47,41 @@ type gridImpl struct {
 
 func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark, error) {
 	var out [][]*player.Mark
-	for i, r := range g.spaces {
+
+	// Fill out the grid
+	for _, r := range g.spaces {
 		var row []*player.Mark
-		for j, s := range r {
-			mark, err := s.Mark(ctx, gameID)
-			if err != nil {
-				return nil, fmt.Errorf("could not get mark at (%d,%d): %w", i, j, err)
-			}
-			row = append(row, mark)
+		for range r {
+			row = append(row, nil)
 		}
 		out = append(out, row)
 	}
+
+	var wg sync.WaitGroup
+	wg.Add(len(out) * len(out[0]))
+
+	var errors = make(chan error)
+	for i, r := range g.spaces {
+		for j, s := range r {
+			go func(i, j int, s space.Space) {
+				defer wg.Done()
+				mark, err := s.Mark(ctx, gameID)
+				if err != nil {
+					errors <- fmt.Errorf("could not get mark at (%d,%d): %w", i, j, err)
+					return
+				}
+				out[i][j] = mark
+			}(i, j, s)
+		}
+	}
+	wg.Wait()
+
+	select {
+	case err := <-errors:
+		return nil, err
+	default:
+	}
+
 	return out, nil
 }
 

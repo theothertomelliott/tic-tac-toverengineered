@@ -91,7 +91,10 @@ func TestCanOnlyMarkSpaceOnce(t *testing.T) {
 
 func TestRows(t *testing.T) {
 	g := grid.NewInMemory()
-	sr := g.Rows(context.Background())
+	sr, err := g.Rows(context.Background())
+	if err != nil {
+		t.Error(err)
+	}
 	if len(sr) != 8 {
 		t.Errorf("expected 8 rows, got %d", len(sr))
 	}

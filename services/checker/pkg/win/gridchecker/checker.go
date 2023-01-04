@@ -21,7 +21,11 @@ type checker struct {
 }
 
 func (c *checker) Winner(ctx context.Context, game game.ID) (win.Result, error) {
-	rows := c.grid.Rows(ctx)
+	rows, err := c.grid.Rows(ctx)
+	if err != nil {
+		return win.Result{}, err
+	}
+
 	state, err := c.grid.State(ctx, game)
 	if err != nil {
 		return win.Result{}, err

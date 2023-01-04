@@ -80,7 +80,7 @@ func (g *gridImpl) SetMark(ctx context.Context, game game.ID, p Position, m play
 	return nil
 }
 
-func (g *gridImpl) Rows(ctx context.Context) []Row {
+func (g *gridImpl) Rows(ctx context.Context) ([]Row, error) {
 	p := func(x, y int) Position {
 		return Position{
 			X: x,
@@ -101,5 +101,5 @@ func (g *gridImpl) Rows(ctx context.Context) []Row {
 		// Diagonal
 		{p(0, 0), p(1, 1), p(2, 2)},
 		{p(0, 2), p(1, 1), p(2, 0)},
-	}
+	}, nil
 }

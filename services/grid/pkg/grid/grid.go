@@ -12,7 +12,7 @@ type Grid interface {
 	Mark(context.Context, game.ID, Position) (*player.Mark, error)
 	State(context.Context, game.ID) ([][]*player.Mark, error)
 	SetMark(context.Context, game.ID, Position, player.Mark) error
-	Rows(context.Context) []Row
+	Rows(context.Context) ([]Row, error)
 }
 
 // Position defines a position in the grid

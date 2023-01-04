@@ -71,7 +71,10 @@ func (g *gridServer) SetMarkAtPosition(ctx context.Context, req *rpcgrid.SetMark
 
 func (g *gridServer) Rows(ctx context.Context, req *rpcgrid.RowsRequest) (*rpcgrid.RowsResponse, error) {
 	resp := &rpcgrid.RowsResponse{}
-	rows := g.grid.Rows(ctx)
+	rows, err := g.grid.Rows(ctx)
+	if err != nil {
+		return nil, err
+	}
 	for _, row := range rows {
 		var r rpcgrid.Row
 		for _, p := range row {

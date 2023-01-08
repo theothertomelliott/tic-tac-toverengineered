@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/gammazero/workerpool"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg"
@@ -25,6 +26,7 @@ func New(spaces [][]space.Space) (Grid, error) {
 	}
 	return &gridImpl{
 		spaces: spaces,
+		wp:     workerpool.New(100),
 	}, nil
 }
 
@@ -43,6 +45,7 @@ func NewInMemory() Grid {
 
 type gridImpl struct {
 	spaces [][]space.Space
+	wp     *workerpool.WorkerPool
 }
 
 func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark, error) {
@@ -63,14 +66,16 @@ func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark,
 	var errors = make(chan error)
 	for i, r := range g.spaces {
 		for j, s := range r {
-			go func(i, j int, s space.Space) {
-				defer wg.Done()
-				mark, err := s.Mark(ctx, gameID)
-				if err != nil {
-					errors <- fmt.Errorf("could not get mark at (%d,%d): %w", i, j, err)
-					return
-				}
-				out[i][j] = mark
+			func(i, j int, s space.Space) {
+				g.wp.Submit(func() {
+					defer wg.Done()
+					mark, err := s.Mark(ctx, gameID)
+					if err != nil {
+						errors <- fmt.Errorf("could not get mark at (%d,%d): %w", i, j, err)
+						return
+					}
+					out[i][j] = mark
+				})
 			}(i, j, s)
 		}
 	}

@@ -42,6 +42,8 @@ require (
 	github.com/docker/go-units v0.4.0 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/fullstorydev/grpcurl v1.7.0 // indirect
+	github.com/gammazero/deque v0.2.0 // indirect
+	github.com/gammazero/workerpool v1.1.3 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect

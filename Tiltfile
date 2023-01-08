@@ -85,7 +85,7 @@ k8s_yaml(helm(
 
 k8s_resource("mongodb-standalone", port_forwards="27017:27017")
 
-local_resource("base-image", "make dockerbaseimage")
+docker_build('docker.io/tictactoverengineered/base', 'docker/base')
 
 def server(name, port_forwards=[], port="8080", grpcui_port="8081", local_probe=None):
     local_resource(
@@ -106,7 +106,7 @@ def server(name, port_forwards=[], port="8080", grpcui_port="8081", local_probe=
     k8s_resource(
         name, 
         port_forwards=port_forwards, 
-        resource_deps=[name+'-build', 'base-image'],
+        resource_deps=[name+'-build'],
         labels=[name]
     )
 

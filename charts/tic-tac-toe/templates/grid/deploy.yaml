@@ -5,6 +5,7 @@ metadata:
   labels:
     app: grid
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: grid

@@ -23,13 +23,11 @@ func New(
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 
-	// Add unique index on Game and Position
+	// Add index on Game
 	_, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys: bson.D{
 			{Key: "game", Value: 1},
-			{Key: "position", Value: 1},
 		},
-		Options: options.Index().SetUnique(true),
 	})
 	if err != nil {
 		return nil, err

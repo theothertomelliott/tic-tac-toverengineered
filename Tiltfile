@@ -71,7 +71,7 @@ if os.path.exists("secrets.yaml"):
     secrets = read_yaml("secrets.yaml")
     lightstep_access_token=secrets["lightstep"]["access_token"]
 
-#k8s_yaml(namespace_yaml('tictactoe'))
+k8s_yaml(namespace_yaml('tictactoe'))
 
 # Load the base Helm chart for all resources
 k8s_yaml(helm(

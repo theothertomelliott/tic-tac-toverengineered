@@ -5,7 +5,7 @@ version_settings(
 
 v1alpha1.extension_repo(name='tilt-grafana', url='http://github.com/theothertomelliott/tilt-grafana')
 v1alpha1.extension(name='tilt-grafana', repo_name='tilt-grafana', repo_path='')
-load('ext://tilt-grafana', 'grafana_kubernetes', 'grafana_compose', 'metrics_endpoint')
+load('ext://tilt-grafana', 'grafana_kubernetes')
 
 load('ext://namespace', 'namespace_yaml')
 
@@ -71,7 +71,7 @@ if os.path.exists("secrets.yaml"):
     secrets = read_yaml("secrets.yaml")
     lightstep_access_token=secrets["lightstep"]["access_token"]
 
-k8s_yaml(namespace_yaml('tictactoe'))
+#k8s_yaml(namespace_yaml('tictactoe'))
 
 # Load the base Helm chart for all resources
 k8s_yaml(helm(
@@ -128,13 +128,21 @@ def space(name,ports=[]):
         ]
     )
 
-    k8s_resource(name, resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-0-0', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-0-1', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-0-2', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-1-0', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-1-1', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-1-2', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-2-0', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-2-1', resource_deps=[name+'-build'], labels=["space"])
+    k8s_resource(name+'-2-2', resource_deps=[name+'-build'], labels=["space"])
 
 server("api", port_forwards="8081:8080",port=8081)
 server("web", port_forwards="8080:8080",port=8080, local_probe=probe(http_get=http_get_action(8080)))
 server("gamerepo", port_forwards=["8082:8080", "8083:8081"], port=8082,grpcui_port=8083)
 server("currentturn", port_forwards=["8084:8080", "8085:8081"], port=8084,grpcui_port=8085)
-server("grid", port_forwards=["8086:8080", "8087:8081"], port=8086,grpcui_port=8087)
+server("grid", port_forwards=["8086:8080", "8087:8081", "2112:2112"], port=8086,grpcui_port=8087)
 server("checker", port_forwards=["8088:8080", "8089:8081"], port=8088,grpcui_port=8089)
 server("turncontroller", port_forwards=["8090:8080", "8091:8081"], port=8090,grpcui_port=8091)
 server("matchmaker", port_forwards=["8092:8080", "8093:8081"], port=8092,grpcui_port=8093)

@@ -13,6 +13,9 @@ spec:
     metadata:
       labels:
         app: grid
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: http-metrics
     spec:
       containers:
         - name: grid
@@ -43,6 +46,9 @@ spec:
           ports:
             - containerPort: 8080
             - containerPort: 8081
+            - name: http-metrics
+              containerPort: 2112
+              protocol: TCP
 ---
 apiVersion: v1
 kind: Service

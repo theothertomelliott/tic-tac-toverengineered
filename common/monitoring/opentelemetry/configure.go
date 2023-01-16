@@ -32,6 +32,8 @@ func Setup(serviceName string) (func() error, error) {
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.TraceContext{})
 
+	go CreatePrometheusHandler()
+
 	return func() error { return tp.Shutdown(ctx) }, nil
 }
 

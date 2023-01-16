@@ -8,9 +8,10 @@ metadata:
 spec:
   selector:
     app: space
+    space: {{ $i }}-{{ $j }}
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80{{ $i }}{{ $j }}
+      targetPort: 8080
   {{- end }}
 {{- end }}

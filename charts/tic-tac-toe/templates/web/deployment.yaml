@@ -12,6 +12,9 @@ spec:
     metadata:
       labels:
         app: web
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: http-metrics
     spec:
       containers:
         - name: web
@@ -25,6 +28,9 @@ spec:
               value: {{ .Values.routes.web }}
           ports:
             - containerPort: 8080
+            - name: http-metrics
+              containerPort: 2112
+              protocol: TCP
           readinessProbe:
             httpGet:
               path: /

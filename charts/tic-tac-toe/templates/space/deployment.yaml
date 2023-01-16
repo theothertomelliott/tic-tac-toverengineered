@@ -1,30 +1,37 @@
+{{- $root := . -}}
+{{- range $i := tuple 0 1 2 -}}
+  {{- range $j := tuple 0 1 2 }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: space
+  name: space-{{ $i }}-{{ $j }}
   labels:
     app: space
+    space: {{ $i }}-{{ $j }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: space
+      space: {{ $i }}-{{ $j }}
   template:
     metadata:
       labels:
         app: space
+        space: {{ $i }}-{{ $j }}
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: http-metrics
     spec:
       containers:
-    {{- $root := . -}}
-    {{- range $i := tuple 0 1 2 -}}
-      {{- range $j := tuple 0 1 2 }}
-      - name: space-{{ $i }}-{{ $j }}
+      - name: space
         image: docker.io/tictactoverengineered/space:{{ $root.Chart.Version }}
         env:
           - name: OTEL_JAEGER_ENDPOINT
             value:  {{ $root.Values.jaeger.http }}
           - name: PORT
-            value: "80{{ $i }}{{ $j }}"
+            value: "8080"
           - name: XPOS
             value: "{{ $i }}"
           - name: YPOS
@@ -36,6 +43,9 @@ spec:
             value: {{ template "templates.storage.mongodb.connection" $root }}
           {{- end }}
         ports:
-        - containerPort: 80{{ $i }}{{ $j }}
-      {{- end }}
-    {{- end }}
+        - containerPort: 8080
+        - name: http-metrics
+          containerPort: 2112
+          protocol: TCP
+  {{- end }}
+{{- end }}

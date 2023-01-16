@@ -1,9 +1,11 @@
 package rpcserver
 
 import (
+	"context"
 	"fmt"
 	"net"
 
+	"github.com/rakyll/goutil/pprofutil"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc/filters"
 	"google.golang.org/grpc"
@@ -18,20 +20,28 @@ func New(port int) *Server {
 	return NewWithHealthServer(port, nil)
 }
 
+func ChainedServerInterceptor() grpc.UnaryServerInterceptor {
+	pprofInterceptor := pprofutil.UnaryServerInterceptor()
+	otelInterceptor := otelgrpc.UnaryServerInterceptor(
+		// Do not trace health checks
+		otelgrpc.WithInterceptorFilter(
+			filters.Not(
+				filters.HealthCheck(),
+			),
+		),
+	)
+	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp interface{}, err error) {
+		return pprofInterceptor(ctx, req, info, func(ctx context.Context, req interface{}) (interface{}, error) {
+			return otelInterceptor(ctx, req, info, handler)
+		})
+	}
+}
+
 // NewWithHealthServer creates an RPC server that will listen on the specified port
 // The provided grpc health server (google.golang.org/grpc/health) will also be hosted on this port.
 func NewWithHealthServer(port int, healthServer *health.Server) *Server {
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(
-			otelgrpc.UnaryServerInterceptor(
-				// Do not trace health checks
-				otelgrpc.WithInterceptorFilter(
-					filters.Not(
-						filters.HealthCheck(),
-					),
-				),
-			),
-		),
+		grpc.UnaryInterceptor(ChainedServerInterceptor()),
 	)
 
 	// Add health check for all rpc servers

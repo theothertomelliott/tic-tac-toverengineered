@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/env"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/opentelemetry"
@@ -9,6 +10,8 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/internal/gamerepo"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game/inmemoryrepository"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game/rpcrepository"
 )
 
@@ -23,10 +26,17 @@ func main() {
 	port := env.MustGetInt("PORT", 8080)
 	grpcuiPort := env.MustGetInt("GRPCUI_PORT", 8081)
 
-	repoBackend, backendCleanup, err := getMongoGameRepositoryBackend()
-	defer backendCleanup()
-	if err != nil {
-		log.Fatalf("could not create backend: %v", err)
+	var repoBackend game.Repository
+
+	if os.Getenv("STORAGE_TYPE") == "mongodb" {
+		var backendCleanup func()
+		repoBackend, backendCleanup, err = getMongoGameRepositoryBackend()
+		defer backendCleanup()
+		if err != nil {
+			log.Fatalf("could not create backend: %v", err)
+		}
+	} else {
+		repoBackend = inmemoryrepository.New()
 	}
 
 	rpcServer := rpcserver.New(port)

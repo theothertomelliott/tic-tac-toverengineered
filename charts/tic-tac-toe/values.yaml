@@ -1,6 +1,7 @@
-mongodb:
-    statefulset: true
-# connection: mongodb://admin:password@database:27017
+storage:
+    type: mongodb
+    mongodb:
+        statefulset: true
 
 hostname: localhost
 routes:

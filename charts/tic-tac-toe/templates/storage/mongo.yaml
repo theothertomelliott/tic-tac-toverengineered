@@ -1,5 +1,5 @@
 # Based on https://medium.com/@dilipkumar/standalone-mongodb-on-kubernetes-cluster-19e7b5896b27
-{{ if .Values.mongodb.statefulset }}
+{{ if and (eq .Values.storage.type "mongodb") (.Values.storage.mongodb.statefulset) }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

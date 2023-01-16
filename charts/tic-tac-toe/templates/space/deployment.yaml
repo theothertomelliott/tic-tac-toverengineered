@@ -5,7 +5,7 @@ metadata:
   labels:
     app: space
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: space
@@ -29,8 +29,12 @@ spec:
             value: "{{ $i }}"
           - name: YPOS
             value: "{{ $j }}"
+          - name: STORAGE_TYPE
+            value: {{ $root.Values.storage.type }}
+          {{- if eq $root.Values.storage.type "mongodb"}}
           - name: MONGO_CONN
-            value: {{ template "templates.mongodb.connection" $root }}
+            value: {{ template "templates.storage.mongodb.connection" $root }}
+          {{- end }}
         ports:
         - containerPort: 80{{ $i }}{{ $j }}
       {{- end }}

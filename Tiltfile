@@ -78,12 +78,13 @@ k8s_yaml(helm(
     'charts/tic-tac-toe',
     namespace='tictactoe',
     set=[
-        "mongodb.statefulset=true",
+        "storage.type=memory",
         "jaeger.http=http://" + endpoints.jaeger_http + "/api/traces",
         ],
 ))
 
-k8s_resource("mongodb-standalone", port_forwards="27017:27017")
+# Only needed if using mongodb with the stateful set
+# k8s_resource("mongodb-standalone", port_forwards="27017:27017")
 
 docker_build('docker.io/tictactoverengineered/base', 'docker/base')
 

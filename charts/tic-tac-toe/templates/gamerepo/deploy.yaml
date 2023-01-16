@@ -19,8 +19,12 @@ spec:
           env:
             - name: OTEL_JAEGER_ENDPOINT
               value:  {{ .Values.jaeger.http }}
+            - name: STORAGE_TYPE
+              value: {{ .Values.storage.type }}
+            {{- if eq .Values.storage.type "mongodb"}} 
             - name: MONGO_CONN
-              value: {{ template "templates.mongodb.connection" . }}
+              value: {{ template "templates.storage.mongodb.connection" . }}
+            {{- end}}
           ports:
             - containerPort: 8080
             - containerPort: 8081

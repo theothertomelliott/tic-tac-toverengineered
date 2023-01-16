@@ -11,7 +11,9 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/rpc/rpcui/rpcserver"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/version"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/services/space/internal"
+	spacepkg "github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg/rpcspace"
+	"github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg/spaceinmemory"
 )
 
 func main() {
@@ -33,10 +35,17 @@ func main() {
 	}
 	defer otelCleanup()
 
-	spaceBackend, mongoCleanup, err := getMongoSpaceBackend(x, y)
-	defer mongoCleanup()
-	if err != nil {
-		log.Fatal(err)
+	var spaceBackend spacepkg.Space
+
+	if os.Getenv("STORAGE_TYPE") == "mongodb" {
+		var mongoCleanup func()
+		spaceBackend, mongoCleanup, err = getMongoSpaceBackend(x, y)
+		defer mongoCleanup()
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		spaceBackend = spaceinmemory.New()
 	}
 
 	rpcServer := rpcserver.New(port)

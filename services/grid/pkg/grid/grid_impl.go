@@ -26,7 +26,7 @@ func New(spaces [][]space.Space) (Grid, error) {
 	}
 	return &gridImpl{
 		spaces: spaces,
-		wp:     workerpool.New(100),
+		wp:     workerpool.New(10),
 	}, nil
 }
 
@@ -67,7 +67,7 @@ func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark,
 	for i, r := range g.spaces {
 		for j, s := range r {
 			func(i, j int, s space.Space) {
-				g.wp.Submit(func() {
+				go func() {
 					defer wg.Done()
 					mark, err := s.Mark(ctx, gameID)
 					if err != nil {
@@ -75,7 +75,7 @@ func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark,
 						return
 					}
 					out[i][j] = mark
-				})
+				}()
 			}(i, j, s)
 		}
 	}

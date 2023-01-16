@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: api
   labels:
-    app: api
+    app: tictactoe
+    job: api
 spec:
   selector:
     matchLabels:
-      app: api
+      app: tictactoe
+      job: api
   template:
     metadata:
       labels:
-        app: api
+        app: tictactoe
+        job: api
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics

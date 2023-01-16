@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: checker
   labels:
-    app: checker
+    app: tictactoe
+    job: checker
 spec:
   selector:
     matchLabels:
-      app: checker
+      app: tictactoe
+      job: checker
   template:
     metadata:
       labels:
-        app: checker
+        app: tictactoe
+        job: checker
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
@@ -37,7 +40,8 @@ metadata:
   name: checker
 spec:
   selector:
-    app: checker
+    app: tictactoe
+    job: checker
   ports:
     - protocol: TCP
       port: 80

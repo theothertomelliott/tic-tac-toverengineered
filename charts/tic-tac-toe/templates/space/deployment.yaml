@@ -7,18 +7,21 @@ kind: Deployment
 metadata:
   name: space-{{ $i }}-{{ $j }}
   labels:
-    app: space
+    app: tictactoe
+    job: space
     space: {{ $i }}-{{ $j }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: space
+      app: tictactoe
+      job: space
       space: {{ $i }}-{{ $j }}
   template:
     metadata:
       labels:
-        app: space
+        app: tictactoe
+        job: space
         space: {{ $i }}-{{ $j }}
       annotations:
         prometheus.io/scrape: 'true'

@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: gamerepo
   labels:
-    app: gamerepo
+    app: tictactoe
+    job: gamerepo
 spec:
   selector:
     matchLabels:
-      app: gamerepo
+      app: tictactoe
+      job: gamerepo
   template:
     metadata:
       labels:
-        app: gamerepo
+        app: tictactoe
+        job: gamerepo
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
@@ -41,7 +44,8 @@ metadata:
   name: gamerepo
 spec:
   selector:
-    app: gamerepo
+    app: tictactoe
+    job: gamerepo
   ports:
     - protocol: TCP
       port: 80

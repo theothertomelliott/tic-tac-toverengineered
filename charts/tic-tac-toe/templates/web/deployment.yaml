@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: web
   labels:
-    app: web
+    app: tictactoe
+    job: web
 spec:
   selector:
     matchLabels:
-      app: web
+      app: tictactoe
+      job: web
   template:
     metadata:
       labels:
-        app: web
+        app: tictactoe
+        job: web
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics

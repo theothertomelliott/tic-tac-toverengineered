@@ -3,16 +3,19 @@ kind: Deployment
 metadata:
   name: grid
   labels:
-    app: grid
+    app: tictactoe
+    job: grid
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grid
+      app: tictactoe
+      job: grid
   template:
     metadata:
       labels:
-        app: grid
+        app: tictactoe
+        job: grid
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
@@ -56,7 +59,8 @@ metadata:
   name: grid
 spec:
   selector:
-    app: grid
+    app: tictactoe
+    job: grid
   ports:
     - protocol: TCP
       port: 80

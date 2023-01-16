@@ -4,7 +4,8 @@ metadata:
   name: api
 spec:
   selector:
-    app: api
+    app: tictactoe
+    job: api
   ports:
     - protocol: TCP
       port: 80

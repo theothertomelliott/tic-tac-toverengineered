@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: currentturn
   labels:
-    app: currentturn
+    app: tictactoe
+    job: currentturn
 spec:
   selector:
     matchLabels:
-      app: currentturn
+      app: tictactoe
+      job: currentturn
   template:
     metadata:
       labels:
-        app: currentturn
+        app: tictactoe
+        job: currentturn
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
@@ -37,7 +40,8 @@ metadata:
   name: currentturn
 spec:
   selector:
-    app: currentturn
+    app: tictactoe
+    job: currentturn
   ports:
     - protocol: TCP
       port: 80

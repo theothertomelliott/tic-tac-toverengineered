@@ -7,7 +7,8 @@ metadata:
   name: space-{{ $i }}-{{ $j }}
 spec:
   selector:
-    app: space
+    app: tictactoe
+    job: space
     space: {{ $i }}-{{ $j }}
   ports:
     - protocol: TCP

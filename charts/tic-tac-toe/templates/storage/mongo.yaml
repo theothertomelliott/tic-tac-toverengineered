@@ -10,11 +10,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: database
+      app: tictactoe
+      job: database
   template:
     metadata:
       labels:
-        app: database
+        app: tictactoe
+        job: database
         selector: mongodb-standalone
     spec:
       containers:
@@ -32,9 +34,11 @@ metadata:
   name: database
   namespace: tictactoe
   labels:
-    app: database
+    app: tictactoe
+    job: database
 spec:
   clusterIP: None
   selector:
-    app: database
+    app: tictactoe
+    job: database
 {{ end }}

@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: turncontroller
   labels:
-    app: turncontroller
+    app: tictactoe
+    job: turncontroller
 spec:
   selector:
     matchLabels:
-      app: turncontroller
+      app: tictactoe
+      job: turncontroller
   template:
     metadata:
       labels:
-        app: turncontroller
+        app: tictactoe
+        job: turncontroller
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
@@ -41,7 +44,8 @@ metadata:
   name: turncontroller
 spec:
   selector:
-    app: turncontroller
+    app: tictactoe
+    job: turncontroller
   ports:
     - protocol: TCP
       port: 80

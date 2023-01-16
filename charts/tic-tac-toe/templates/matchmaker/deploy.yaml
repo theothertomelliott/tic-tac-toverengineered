@@ -3,15 +3,18 @@ kind: Deployment
 metadata:
   name: matchmaker
   labels:
-    app: matchmaker
+    app: tictactoe
+    job: matchmaker
 spec:
   selector:
     matchLabels:
-      app: matchmaker
+      app: tictactoe
+      job: matchmaker
   template:
     metadata:
       labels:
-        app: matchmaker
+        app: tictactoe
+        job: matchmaker
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
@@ -37,7 +40,8 @@ metadata:
   name: matchmaker
 spec:
   selector:
-    app: matchmaker
+    app: tictactoe
+    job: matchmaker
   ports:
     - protocol: TCP
       port: 80

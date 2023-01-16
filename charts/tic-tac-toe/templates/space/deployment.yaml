@@ -26,6 +26,8 @@ spec:
       annotations:
         prometheus.io/scrape: 'true'
         prometheus.io/port: http-metrics
+        phlare.grafana.com/scrape: "true"
+        phlare.grafana.com/port: http-metrics
     spec:
       containers:
       - name: space

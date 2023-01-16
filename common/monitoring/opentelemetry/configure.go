@@ -32,7 +32,8 @@ func Setup(serviceName string) (func() error, error) {
 	otel.SetTracerProvider(tp)
 	otel.SetTextMapPropagator(propagation.TraceContext{})
 
-	go CreatePrometheusHandler()
+	// Create an endpoint for scraped telemetry (not hooked into opentelemetry for the moment)
+	go CreateTelemetryEndpoint()
 
 	return func() error { return tp.Shutdown(ctx) }, nil
 }

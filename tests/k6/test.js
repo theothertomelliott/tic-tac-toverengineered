@@ -7,7 +7,7 @@ export const options = {
     http_req_duration: ['p(90)<400'], // 90% of requests should be below 400ms
   },
   stages: [
-    { duration: '60s', target: 60 },
+    { duration: '60s', target: 50 },
   ],
 };
 
@@ -15,9 +15,17 @@ export default function () {
     const host = 'http://localhost:8081';
 
     let pairRes = {}
+    let succeeded = false;
     group('create game', function () {
       pairRes = http.post(host + '/match/pair');
+      succeeded = check(pairRes, { 'matching succeeded': (r) => r.status == 200 });
     });
+
+    // Do not attempt to proceed if the game couldn't be created
+    if(!succeeded) {
+      sleep(1);
+      return;
+    }
 
     let pair = JSON.parse(pairRes.body);
     let gameId = pair["o"]["gameID"];

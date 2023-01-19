@@ -5,6 +5,7 @@ storage:
 
 hostname: localhost
 routes:
+    allinoneapi: /allinone/
     api: /api/
     web: /
 jaeger:

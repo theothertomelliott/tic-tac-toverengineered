@@ -1,0 +1,17 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: allinoneapi
+spec:
+  rules:
+  - host: {{ .Values.hostname }}
+    http:
+      paths:
+      - path: {{ .Values.routes.allinoneapi }}
+        pathType: Prefix
+        backend:
+          service:
+            name: web
+            port: 
+              number: 80

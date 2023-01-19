@@ -7,6 +7,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/matchmaker"
+	"go.opentelemetry.io/otel"
 )
 
 func New(
@@ -57,6 +58,10 @@ type matchMaker struct {
 }
 
 func (m *matchMaker) RequestPair(ctx context.Context, req *matchmaker.RequestPairRequest) (*matchmaker.RequestPairResponse, error) {
+	tracer := otel.GetTracerProvider().Tracer("MatchMaker")
+	ctx, span := tracer.Start(ctx, "RequestPair")
+	defer span.End()
+
 	game, err := m.games.New(ctx)
 	if err != nil {
 		return nil, err
@@ -88,6 +93,10 @@ func (m *matchMaker) RequestPair(ctx context.Context, req *matchmaker.RequestPai
 }
 
 func (m *matchMaker) Request(ctx context.Context, req *matchmaker.RequestRequest) (*matchmaker.RequestResponse, error) {
+	tracer := otel.GetTracerProvider().Tracer("MatchMaker")
+	ctx, span := tracer.Start(ctx, "Request")
+	defer span.End()
+
 	id := uuid.New().String()
 	partner, err := m.queue.Dequeue(ctx)
 	if err != nil {
@@ -130,6 +139,10 @@ func (m *matchMaker) Request(ctx context.Context, req *matchmaker.RequestRequest
 }
 
 func (m *matchMaker) Check(ctx context.Context, req *matchmaker.CheckRequest) (*matchmaker.CheckResponse, error) {
+	tracer := otel.GetTracerProvider().Tracer("MatchMaker")
+	ctx, span := tracer.Start(ctx, "Check")
+	defer span.End()
+
 	match, err := m.matches.Get(ctx, req.RequestId)
 	return &matchmaker.CheckResponse{
 		Match: match,

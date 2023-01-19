@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: allinoneapi
+  labels:
+    app: tictactoe
+    job: allinoneapi
+spec:
+  selector:
+    matchLabels:
+      app: tictactoe
+      job: allinoneapi
+  template:
+    metadata:
+      labels:
+        app: tictactoe
+        job: allinoneapi
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: http-metrics
+        phlare.grafana.com/scrape: "true"
+        phlare.grafana.com/port: http-metrics
+    spec:
+      containers:
+        - name: allinoneapi
+          image: docker.io/tictactoverengineered/allinoneapi:{{ $.Chart.Version }}
+          env:
+            - name: OTEL_JAEGER_ENDPOINT
+              value:  {{ .Values.jaeger.http }}
+            - name: REPO_SERVER_TARGET
+              value: "gamerepo:80"
+            - name: GRID_SERVER_TARGET
+              value: "grid:80"
+            - name: CURRENT_TURN_SERVER_TARGET
+              value: "currentturn:80"
+            - name: CHECKER_SERVER_TARGET
+              value: "checker:80"
+            - name: TURN_CONTROLLER_SERVER_TARGET
+              value: "turncontroller:80"
+            - name: "MATCHMAKER_SERVER_TARGET"
+              value: "matchmaker:80"
+            - name: ROUTE_PREFIX
+              value: {{ .Values.routes.allinoneapi }}
+          ports:
+            - containerPort: 8080
+            - name: http-metrics
+              containerPort: 2112
+              protocol: TCP

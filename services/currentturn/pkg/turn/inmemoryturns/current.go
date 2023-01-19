@@ -7,6 +7,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
+	"go.opentelemetry.io/otel"
 )
 
 // NewCurrentTurn creates an in-memory instance of turn.Current
@@ -22,6 +23,10 @@ type current struct {
 }
 
 func (c *current) Player(ctx context.Context, g game.ID) (player.Mark, error) {
+	tracer := otel.GetTracerProvider().Tracer("CurrentTurn")
+	ctx, span := tracer.Start(ctx, "Player")
+	defer span.End()
+
 	c.markMtx.Lock()
 	defer c.markMtx.Unlock()
 
@@ -34,6 +39,10 @@ func (c *current) Player(ctx context.Context, g game.ID) (player.Mark, error) {
 }
 
 func (c *current) Next(ctx context.Context, g game.ID) error {
+	tracer := otel.GetTracerProvider().Tracer("CurrentTurn")
+	ctx, span := tracer.Start(ctx, "Next")
+	defer span.End()
+
 	prev, err := c.Player(ctx, g)
 	if err != nil {
 		return err

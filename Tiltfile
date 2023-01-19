@@ -46,8 +46,16 @@ local_resource(
 )
 
 local_resource(
-    'k6 - Load Test ',
+    'k6 - Load Test',
     cmd='k6 run ./tests/k6/test.js',
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+    labels=["test"]
+)
+
+local_resource(
+    'k6 - Load Test (all-in-one)',
+    cmd='k6 run ./tests/k6/testallinone.js',
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
     labels=["test"]
@@ -138,6 +146,7 @@ def space(name,ports=[]):
     k8s_resource(name+'-2-1', resource_deps=[name+'-build'], labels=["space"])
     k8s_resource(name+'-2-2', resource_deps=[name+'-build'], labels=["space"])
 
+server("allinoneapi", port_forwards="8079:8080",port=8079)
 server("api", port_forwards="8081:8080",port=8081)
 server("web", port_forwards="8080:8080",port=8080, local_probe=probe(http_get=http_get_action(8080)))
 server("gamerepo", port_forwards=["8082:8080", "8083:8081"], port=8082,grpcui_port=8083)

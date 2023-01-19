@@ -10,6 +10,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	space "github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/space/pkg/spaceinmemory"
+	"go.opentelemetry.io/otel"
 )
 
 // New creates a Grid from a given array of spaces.
@@ -49,6 +50,10 @@ type gridImpl struct {
 }
 
 func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark, error) {
+	tracer := otel.GetTracerProvider().Tracer("Grid")
+	ctx, span := tracer.Start(ctx, "State")
+	defer span.End()
+
 	var out [][]*player.Mark
 
 	// Fill out the grid
@@ -59,6 +64,8 @@ func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark,
 		}
 		out = append(out, row)
 	}
+
+	span.End()
 
 	var wg sync.WaitGroup
 	wg.Add(len(out) * len(out[0]))
@@ -76,9 +83,12 @@ func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark,
 					}
 					out[i][j] = mark
 				}()
+
+				span.End()
 			}(i, j, s)
 		}
 	}
+
 	wg.Wait()
 
 	select {
@@ -91,6 +101,10 @@ func (g *gridImpl) State(ctx context.Context, gameID game.ID) ([][]*player.Mark,
 }
 
 func (g *gridImpl) Mark(ctx context.Context, game game.ID, p Position) (*player.Mark, error) {
+	tracer := otel.GetTracerProvider().Tracer("Grid")
+	ctx, span := tracer.Start(ctx, "Mark")
+	defer span.End()
+
 	m, err := g.spaces[p.X][p.Y].Mark(ctx, game)
 	if err != nil {
 		return nil, fmt.Errorf("%v: %w", p, err)
@@ -99,6 +113,10 @@ func (g *gridImpl) Mark(ctx context.Context, game game.ID, p Position) (*player.
 }
 
 func (g *gridImpl) SetMark(ctx context.Context, game game.ID, p Position, m player.Mark) error {
+	tracer := otel.GetTracerProvider().Tracer("Grid")
+	ctx, span := tracer.Start(ctx, "SetMark")
+	defer span.End()
+
 	if existing, err := g.Mark(ctx, game, p); err != nil {
 		return fmt.Errorf("could not confirm space was not marked: %w", err)
 	} else if existing != nil {
@@ -111,6 +129,10 @@ func (g *gridImpl) SetMark(ctx context.Context, game game.ID, p Position, m play
 }
 
 func (g *gridImpl) Rows(ctx context.Context) ([]Row, error) {
+	tracer := otel.GetTracerProvider().Tracer("Grid")
+	ctx, span := tracer.Start(ctx, "Rows")
+	defer span.End()
+
 	p := func(x, y int) Position {
 		return Position{
 			X: x,

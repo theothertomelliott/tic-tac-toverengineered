@@ -7,6 +7,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/checker/pkg/win"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
+	"go.opentelemetry.io/otel"
 )
 
 // New creates a Checker for a given grid
@@ -21,6 +22,10 @@ type checker struct {
 }
 
 func (c *checker) Winner(ctx context.Context, game game.ID) (win.Result, error) {
+	tracer := otel.GetTracerProvider().Tracer("Checker")
+	ctx, span := tracer.Start(ctx, "Winner")
+	defer span.End()
+
 	rows, err := c.grid.Rows(ctx)
 	if err != nil {
 		return win.Result{}, err

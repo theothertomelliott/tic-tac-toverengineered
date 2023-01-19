@@ -9,6 +9,7 @@ import (
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/currentturn/pkg/turn"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/gamerepo/pkg/game"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
+	"go.opentelemetry.io/otel"
 )
 
 func New(
@@ -30,10 +31,18 @@ type controller struct {
 }
 
 func (c *controller) NextPlayer(ctx context.Context, g game.ID) (player.Mark, error) {
+	tracer := otel.GetTracerProvider().Tracer("TurnController")
+	ctx, span := tracer.Start(ctx, "NextPlayer")
+	defer span.End()
+
 	return c.current.Player(ctx, g)
 }
 
 func (c *controller) TakeTurn(ctx context.Context, g game.ID, m player.Mark, p grid.Position) error {
+	tracer := otel.GetTracerProvider().Tracer("TurnController")
+	ctx, span := tracer.Start(ctx, "TakeTurn")
+	defer span.End()
+
 	// Ensure it's this player's turn
 	curM, err := c.current.Player(ctx, g)
 	if err != nil {

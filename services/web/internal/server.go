@@ -1,7 +1,7 @@
 package web
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,7 +20,7 @@ type Server struct {
 }
 
 func (s *Server) AddRoutes(r *mux.Router) {
-	fmt.Println("Adding routes")
+	log.Println("Adding routes")
 	r.Handle("/", otelhttp.NewHandler(http.HandlerFunc(s.index), "index"))
 	r.Handle("/new", otelhttp.NewHandler(http.HandlerFunc(s.newGame), "newgame"))
 	r.Handle("/{game}", otelhttp.NewHandler(http.HandlerFunc(s.gameview), "gameview"))

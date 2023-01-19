@@ -1,10 +1,10 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/logctx"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 )
 
@@ -17,7 +17,7 @@ func (s *server) GameGrid(ctx echo.Context, game string) error {
 
 	out, err := s.grid.State(ctx.Request().Context(), gameID)
 	if err != nil {
-		fmt.Println("error getting grid state: ", err)
+		logctx.Printf(ctx.Request().Context(), "error getting grid state: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 	var gridOut tictactoeapi.Grid

@@ -2,18 +2,19 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/theothertomelliott/tic-tac-toverengineered/common/monitoring/logctx"
 	"github.com/theothertomelliott/tic-tac-toverengineered/common/player"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/api/pkg/tictactoeapi"
 	"github.com/theothertomelliott/tic-tac-toverengineered/services/grid/pkg/grid"
 )
 
 // (POST /{game}/play)
-func (s *server) Play(ctx echo.Context, g string, params tictactoeapi.PlayParams) error {
-	gameID, err := s.verifyID(ctx, g)
+func (s *server) Play(ectx echo.Context, g string, params tictactoeapi.PlayParams) error {
+	ctx := ectx.Request().Context()
+	gameID, err := s.verifyID(ectx, g)
 	if err != nil {
 		return err
 	}
@@ -28,7 +29,7 @@ func (s *server) Play(ctx echo.Context, g string, params tictactoeapi.PlayParams
 	}
 
 	err = s.turn.TakeTurn(
-		ctx.Request().Context(),
+		ctx,
 		gameID,
 		player.Mark(mark),
 		grid.Position{
@@ -37,9 +38,9 @@ func (s *server) Play(ctx echo.Context, g string, params tictactoeapi.PlayParams
 		},
 	)
 	if err != nil {
-		log.Printf("error taking turn: %T, %v", err, err)
+		logctx.Printf(ctx, "error taking turn: %v", err)
 		return echo.NewHTTPError(http.StatusInternalServerError, fmt.Sprintf("turn could not be made: %v", err))
 	}
 
-	return ctx.JSON(200, "ok")
+	return ectx.JSON(200, "ok")
 }

@@ -47,7 +47,10 @@ local_resource(
 
 local_resource(
     'k6 - Load Test',
-    cmd='k6 run ./tests/k6/test.js',
+    cmd='k6 run ./tests/k6/test.js -o experimental-prometheus-rw',
+    env={
+        "K6_PROMETHEUS_RW_SERVER_URL": "http://localhost:9090/api/v1/write"
+    },
     trigger_mode = TRIGGER_MODE_MANUAL,
     auto_init = False,
     labels=["test"]

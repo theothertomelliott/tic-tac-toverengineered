@@ -12,6 +12,11 @@ A simple Tic Tac Toe game build with an excessive number of microservices.
 To provide an easy to understand project with a non-trivial number of microservices to try out
 monitoring, tracing and observability tooling.
 
+## Architecture
+
+![Architecture diagram](architecture.png)
+[Diagram in D2 Playground](https://play.d2lang.com/?script=bJFBbsMgEEX3cwqWjdRKzF960bsQghKrtrGooy6q3r0iATwesmMe876_xRyXa7ycB_NLxjyKD8aPyU-B_oh-wtl8fBq3jkRuHfPZ31MKy7bd01LR1c0hhTW2OY2Xes57Pi5bitMUUgu5Bf-1j7Pb_G12mVC5ajlU0x-Lz7ZEu3EoQMfPtZAe1wYvbsQPUrYz_F6dD9aqmdUMJbASWAmsBSgBSgCISpXhScybfbenAllArhAC4lR83n1uPrOA1WcI2HzsPpoPFrD6gIDNt1Y-Z2nfIxwevTTv1rg3-YWJ3kRv4mD-BwAA__8%3D&layout=elk&)
+
 ## Technologies
 
 - [Go](https://golang.org/)

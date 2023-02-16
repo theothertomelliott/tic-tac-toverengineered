@@ -67,6 +67,17 @@ local_resource(
     labels=["test"]
 )
 
+local_resource(
+    'k6 - Load Test (recorded)',
+    cmd='k6 run ./tests/k6/recorded.js -o experimental-prometheus-rw',
+    env={
+        "K6_PROMETHEUS_RW_SERVER_URL": "http://localhost:9090/api/v1/write"
+    },
+    trigger_mode = TRIGGER_MODE_MANUAL,
+    auto_init = False,
+    labels=["test"]
+)
+
 endpoints = struct(
     jaeger_http="",
 )

@@ -7,6 +7,8 @@
 
 A simple Tic Tac Toe game build with an excessive number of microservices.
 
+![Screenshot of a game](screenshot.png)
+
 ## Goal
 
 To provide an easy to understand project with a non-trivial number of microservices to try out

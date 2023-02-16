@@ -58,15 +58,3 @@ helm install \
     --create-namespace --namespace tictactoe \
     tic-tac-toverengineered/tic-tac-toe --generate-name
 ```
-
-## Secrets
-
-Secrets are picked up by Tilt from _secrets.yaml_ (which is gitignored). Currently, only a
-Lightstep access token is required.
-
-Add the following content to _secrets.yaml_ to enable tracing:
-
-```
-lightstep:
-  access_token: <access token>
-```

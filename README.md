@@ -28,7 +28,6 @@ monitoring, tracing and observability tooling.
 - [Tilt](https://tilt.dev/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [OpenTelemetry](https://opentelemetry.io/)
-- [Lightstep](https://lightstep.com/)
 - [Playwright](https://playwright.dev/)
 - [k6](https://k6.io/)
 

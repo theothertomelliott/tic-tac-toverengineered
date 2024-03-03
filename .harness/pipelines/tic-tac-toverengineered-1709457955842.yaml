@@ -1,0 +1,54 @@
+pipeline:
+  identifier: Build_theothertomelliott_tic_tac_toverengineered_1709457958718
+  name: Build tic-tac-toverengineered
+  orgIdentifier: default
+  projectIdentifier: default_project
+  properties:
+    ci:
+      codebase:
+        build: <+input>
+        connectorRef: account.Github_OAuth_1709457905524
+        repoName: theothertomelliott/tic-tac-toverengineered
+  stages:
+    - stage:
+        identifier: build
+        name: build
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  identifier: gobuild
+                  name: go_build
+                  spec:
+                    command: go build
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: gotestcoverage
+                  name: go_test_coverage
+                  spec:
+                    command: go test -coverprofile=coverage.out ./...
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: gotestreport
+                  name: go_test_report
+                  spec:
+                    command: "export GOBIN=/home/harness/go/bin\n\t\texport PATH=/home/harness/go/bin:$PATH\n\t\techo $PATH\n\t\tgo install github.com/jstemmer/go-junit-report/v2@latest\n\t\tgo test -v 2>&1 ./... | go-junit-report -set-exit-code > report.xml"
+                  timeout: ""
+                  type: Run
+              - step:
+                  identifier: installdependencies
+                  name: install dependencies
+                  spec:
+                    command: npm install
+                  timeout: ""
+                  type: Run
+          platform:
+            arch: Arm64
+            os: MacOS
+          runtime:
+            spec: {}
+            type: Docker
+        type: CI

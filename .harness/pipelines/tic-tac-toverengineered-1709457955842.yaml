@@ -19,10 +19,10 @@ pipeline:
             steps:
               - step:
                   identifier: gobuild
-                  name: make
+                  name: Test
                   spec:
                     shell: Sh
-                    command: make
+                    command: make test
                   timeout: ""
                   type: Run
           platform:

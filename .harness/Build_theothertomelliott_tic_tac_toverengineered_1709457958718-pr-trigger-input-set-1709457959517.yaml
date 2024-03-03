@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_theothertomelliott_tic_tac_toverengineered_1709457958718-pr-trigger-input-set
+  identifier: Build_theothertomelliott_tic_tac_toverengineered_1709457958718prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_theothertomelliott_tic_tac_toverengineered_1709457958718
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>

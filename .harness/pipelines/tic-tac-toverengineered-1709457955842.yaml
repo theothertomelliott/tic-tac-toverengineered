@@ -22,7 +22,10 @@ pipeline:
                   name: Test
                   spec:
                     shell: Sh
-                    command: make test
+                    command: |-
+                      pwd
+                      ls
+                      make test
                   timeout: ""
                   type: Run
           platform:

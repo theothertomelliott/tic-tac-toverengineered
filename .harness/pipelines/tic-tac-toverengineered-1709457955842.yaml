@@ -23,8 +23,11 @@ pipeline:
                   spec:
                     shell: Sh
                     command: |-
+                      echo "pwd:"
                       pwd
-                      ls
+                      echo "ls:"
+                      ls -la
+                      echo "make:"
                       make test
                   timeout: ""
                   type: Run
